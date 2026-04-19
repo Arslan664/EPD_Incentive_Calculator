@@ -25,10 +25,36 @@ export function useSupabaseData(fallbackData: IncentiveRecord[]) {
           return;
         }
 
+        // Native relational fetch! No SQL View required!
         const { data: remoteData, error: fetchError } = await supabase
-          .from("v_dashboard_detailed")
-          .select("*")
-          .order("name", { ascending: true });
+          .from("quarterly_performance")
+          .select(`
+            total_actual,
+            total_plan,
+            tcfa_pct,
+            time_in_coaching_pct,
+            reimbursable_months_pct,
+            target_incentive,
+            status,
+            representatives!inner(
+              name,
+              positions(title),
+              promo_lines(name),
+              cities(name)
+            ),
+            quarters!inner(
+              label,
+              year,
+              quarter_num,
+              exchange_rate_lc_usd
+            ),
+            product_performance(
+              portfolio_num,
+              actual_value,
+              plan_value,
+              products(name)
+            )
+          `);
 
         if (fetchError) {
           throw fetchError;
@@ -36,35 +62,49 @@ export function useSupabaseData(fallbackData: IncentiveRecord[]) {
 
         if (remoteData && remoteData.length > 0) {
           // Transform Database format to expected IncentiveRecord structure
-          const transformedData: IncentiveRecord[] = remoteData.map((row: any) => ({
-            Name: row.name,
-            Position: row.position,
-            Position_Sum: row.position,
-            PromoLine: row.promo_line,
-            Quarter: row.quarter,
-            Year: row.year?.toString() || "2017",
-            Country: row.country || "Kazakhstan", // Currently not in view, you can adjust
+          const transformedData: IncentiveRecord[] = remoteData.map((row: any) => {
+            const rep = row.representatives;
+            const qrt = row.quarters;
+            const posTitle = rep.positions?.title || "Unknown";
+            const pLineName = rep.promo_lines?.name || "Unknown";
             
-            // Real fields from db mapped back
-            TotalAct: row.total_actual?.toString() || "0",
-            TotalPlan: row.total_plan?.toString() || "0",
+            // Unpack dynamic nested products
+            const prods = row.product_performance || [];
+            const getP = (num: number) => prods.find((p: any) => p.portfolio_num === num);
             
-            P1Name: row.p1_name || "Product 1",
-            P1Act: row.p1_actual?.toString() || "0",
-            P1Plan: row.p1_plan?.toString() || "0",
-            
-            P2Name: row.p2_name || "Product 2",
-            P2Act: row.p2_actual?.toString() || "0",
-            P2Plan: row.p2_plan?.toString() || "0",
-            
-            P3Name: row.p3_name || "Product 3",
-            P3Act: row.p3_actual?.toString() || "0",
-            P3Plan: row.p3_plan?.toString() || "0",
-            
-            TCFA_Act: row.tcfa_pct ? `${row.tcfa_pct}%` : "0%",
+            const p1 = getP(1);
+            const p2 = getP(2);
+            const p3 = getP(3);
+            const p4 = getP(4);
+
+            return {
+              Name: rep.name,
+              Position: posTitle,
+              Position_Sum: posTitle,
+              PromoLine: pLineName,
+              Quarter: qrt.label,
+              Year: qrt.year?.toString() || "2017",
+              Country: rep.cities?.name || "Kazakhstan", 
+              
+              TotalAct: row.total_actual?.toString() || "0",
+              TotalPlan: row.total_plan?.toString() || "0",
+              
+              P1Name: p1?.products?.name || "",
+              P1Act: p1?.actual_value?.toString() || "0",
+              P1Plan: p1?.plan_value?.toString() || "0",
+              
+              P2Name: p2?.products?.name || "",
+              P2Act: p2?.actual_value?.toString() || "0",
+              P2Plan: p2?.plan_value?.toString() || "0",
+              
+              P3Name: p3?.products?.name || "",
+              P3Act: p3?.actual_value?.toString() || "0",
+              P3Plan: p3?.plan_value?.toString() || "0",
+              
+              TCFA_Act: row.tcfa_pct ? `${row.tcfa_pct}%` : "0%",
             
             // To be compatible with old sums handling, just placeholders
-            Id_Sum: row.rep_id,
+            Id_Sum: "0",
             TargetForQuarter_Sum: row.target_incentive?.toString() || "0",
             ReimbursableMonths_Sum: row.reimbursable_months_pct?.toString() || "100",
             TargetBase_Sum: "0",
@@ -80,8 +120,9 @@ export function useSupabaseData(fallbackData: IncentiveRecord[]) {
             IncCoaching_Sum: "0",
             FieldWork_Sum: "0",
             TotalIncentive_Sum: "0",
-            Team_Sum: row.promo_line,
-          }));
+            Team_Sum: pLineName,
+            };
+          });
 
           setData(transformedData);
         } else {

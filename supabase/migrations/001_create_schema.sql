@@ -281,14 +281,32 @@ SELECT
     qp.reimbursable_months_pct,
     qp.reimbursed_months,
     qp.target_incentive,
-    qp.status AS work_status
+    qp.status AS work_status,
+    MAX(CASE WHEN pp.portfolio_num = 1 THEN pr.name END) AS p1_name,
+    MAX(CASE WHEN pp.portfolio_num = 1 THEN pp.actual_value END) AS p1_actual,
+    MAX(CASE WHEN pp.portfolio_num = 1 THEN pp.plan_value END) AS p1_plan,
+    MAX(CASE WHEN pp.portfolio_num = 2 THEN pr.name END) AS p2_name,
+    MAX(CASE WHEN pp.portfolio_num = 2 THEN pp.actual_value END) AS p2_actual,
+    MAX(CASE WHEN pp.portfolio_num = 2 THEN pp.plan_value END) AS p2_plan,
+    MAX(CASE WHEN pp.portfolio_num = 3 THEN pr.name END) AS p3_name,
+    MAX(CASE WHEN pp.portfolio_num = 3 THEN pp.actual_value END) AS p3_actual,
+    MAX(CASE WHEN pp.portfolio_num = 3 THEN pp.plan_value END) AS p3_plan,
+    MAX(CASE WHEN pp.portfolio_num = 4 THEN pr.name END) AS p4_name,
+    MAX(CASE WHEN pp.portfolio_num = 4 THEN pp.actual_value END) AS p4_actual,
+    MAX(CASE WHEN pp.portfolio_num = 4 THEN pp.plan_value END) AS p4_plan
 FROM representatives r
 LEFT JOIN positions p ON r.position_id = p.id
 LEFT JOIN promo_lines pl ON r.promo_line_id = pl.id
 LEFT JOIN cities c ON r.city_id = c.id
 LEFT JOIN quarterly_performance qp ON qp.representative_id = r.id
 LEFT JOIN quarters q ON qp.quarter_id = q.id
-WHERE qp.id IS NOT NULL;
+LEFT JOIN product_performance pp ON pp.quarterly_performance_id = qp.id
+LEFT JOIN products pr ON pp.product_id = pr.id
+WHERE qp.id IS NOT NULL
+GROUP BY 
+    r.id, r.name, p.title, pl.name, c.name, q.label, q.year, q.quarter_num, q.exchange_rate_lc_usd,
+    qp.total_actual, qp.total_plan, qp.overall_achievement_pct, qp.tcfa_pct, qp.time_in_coaching_pct,
+    qp.reimbursable_months_pct, qp.reimbursed_months, qp.target_incentive, qp.status;
 
 -- View: Dashboard Summary — Base data for computed incentive calculations
 -- The actual financial calculations (target base, product amounts, TCFA/coaching

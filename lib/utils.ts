@@ -1,7 +1,14 @@
+import { clsx, type ClassValue } from "clsx";
+import { twMerge } from "tailwind-merge";
+
 /**
  * Utility functions for parsing and formatting numerical data
  * from the EPD Incentive dataset.
  */
+
+export function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs));
+}
 
 /** Parse a comma/space-separated number string into a float */
 export const cleanNum = (str: string | number | null | undefined): number => {

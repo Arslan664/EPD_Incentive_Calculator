@@ -6,6 +6,7 @@
 
 import type { IncentiveRecord } from "@/lib/types";
 import { cleanNum, formatNum, getPct } from "@/lib/utils";
+import { buildPerformanceInputFromRecord, computeSummaryRow } from "@/lib/incentiveCalculations";
 
 interface DetailedViewProps {
   data: IncentiveRecord[];
@@ -86,10 +87,15 @@ export default function DetailedView({ data }: DetailedViewProps) {
         {data.map((d, idx) => {
           const tAct = cleanNum(d.TotalAct);
           const tPlan = cleanNum(d.TotalPlan);
+          
+          // Leverage the computation engine to guarantee dynamic sync
+          const input = buildPerformanceInputFromRecord(d);
+          const computed = computeSummaryRow(input);
+          
           const tcfaVal = d.TCFA_Act || "0%";
           const tcfaNum = parseFloat(tcfaVal.replace("%", ""));
-          const tarBase = cleanNum(d.TargetBase_Sum || d.TotalTarget);
-          const tarInc = cleanNum(d.TotalIncentive_Sum || d.TotalIncentive);
+          const tarBase = computed.targetBaseLC;
+          const tarInc = computed.totalIncentiveLC;
 
           return (
             <tr key={`${d.Name}-${idx}`} className="fade-in">
