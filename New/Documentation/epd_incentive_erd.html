@@ -1,0 +1,188 @@
+
+<style>
+#erd-wrap { padding: 8px 0 16px; }
+#erd-wrap svg { width: 100%; height: auto; }
+.erd-title { font-size: 13px; font-weight: 500; color: var(--color-text-secondary); margin-bottom: 8px; letter-spacing: 0.03em; }
+</style>
+<div id="erd-wrap">
+  <div class="erd-title">EPD Incentive System — Entity Relationship Diagram</div>
+  <div id="erd"></div>
+</div>
+<script type="module">
+import mermaid from 'https://esm.sh/mermaid@11/dist/mermaid.esm.min.mjs';
+const dark = matchMedia('(prefers-color-scheme: dark)').matches;
+await document.fonts.ready;
+mermaid.initialize({
+  startOnLoad: false,
+  theme: 'base',
+  fontFamily: '"Anthropic Sans", sans-serif',
+  themeVariables: {
+    darkMode: dark,
+    fontSize: '12px',
+    fontFamily: '"Anthropic Sans", sans-serif',
+    lineColor: dark ? '#9c9a92' : '#73726c',
+    textColor: dark ? '#c2c0b6' : '#3d3d3a',
+    primaryColor: dark ? '#3C3489' : '#EEEDFE',
+    primaryBorderColor: dark ? '#AFA9EC' : '#7F77DD',
+    primaryTextColor: dark ? '#CECBF6' : '#26215C',
+    secondaryColor: dark ? '#085041' : '#E1F5EE',
+    secondaryBorderColor: dark ? '#5DCAA5' : '#0F6E56',
+    secondaryTextColor: dark ? '#9FE1CB' : '#04342C',
+    tertiaryColor: dark ? '#3C1010' : '#FAECE7',
+    tertiaryBorderColor: dark ? '#F0997B' : '#993C1D',
+    tertiaryTextColor: dark ? '#F5C4B3' : '#4A1B0C',
+    edgeLabelBackground: dark ? '#2C2C2A' : '#F1EFE8',
+    attributeBackgroundColorEven: dark ? '#26215C' : '#EEEDFE',
+    attributeBackgroundColorOdd: dark ? '#1e1c40' : '#F5F4FE',
+  },
+});
+
+const diagram = `erDiagram
+  REPRESENTATIVE {
+    uuid rep_id PK
+    varchar name
+    varchar position
+    date start_date
+    boolean is_active
+  }
+  QUARTER {
+    uuid quarter_id PK
+    int year
+    int quarter_number
+    decimal exchange_rate_lc_usd
+    date start_date
+    date end_date
+  }
+  REP_QUARTER_STATUS {
+    uuid status_id PK
+    uuid rep_id FK
+    uuid quarter_id FK
+    varchar work_status
+    decimal reimbursable_months_pct
+    int months_worked
+  }
+  PROMO_LINE {
+    uuid promo_line_id PK
+    varchar name
+    varchar description
+  }
+  PORTFOLIO {
+    uuid portfolio_id PK
+    uuid promo_line_id FK
+    varchar name
+    decimal share_weight_pct
+    int portfolio_index
+  }
+  PRODUCT {
+    uuid product_id PK
+    uuid portfolio_id FK
+    varchar name
+    varchar code
+    boolean is_active
+  }
+  SALES_PLAN {
+    uuid plan_id PK
+    uuid rep_id FK
+    uuid product_id FK
+    uuid quarter_id FK
+    decimal plan_units
+    decimal plan_value_lc
+  }
+  SALES_ACTUAL {
+    uuid actual_id PK
+    uuid rep_id FK
+    uuid product_id FK
+    uuid quarter_id FK
+    decimal actual_units
+    decimal actual_value_lc
+    date recorded_date
+  }
+  CALL_PLAN {
+    uuid call_plan_id PK
+    uuid rep_id FK
+    uuid quarter_id FK
+    int planned_calls
+  }
+  CALL_ACTUAL {
+    uuid call_actual_id PK
+    uuid rep_id FK
+    uuid quarter_id FK
+    int actual_calls
+    decimal tcfa_pct
+  }
+  PAYMENT_COEFFICIENT {
+    uuid coeff_id PK
+    decimal achievement_pct_min
+    decimal achievement_pct_max
+    decimal multiplier
+    varchar tier_label
+  }
+  INCENTIVE_RESULT {
+    uuid result_id PK
+    uuid rep_id FK
+    uuid quarter_id FK
+    decimal target_incentive_base_lc
+    decimal sales_result_incentive_lc
+    decimal tcfa_incentive_lc
+    decimal total_incentive_lc
+    decimal total_incentive_usd
+    timestamp calculated_at
+  }
+  PORTFOLIO_INCENTIVE_SPLIT {
+    uuid split_id PK
+    uuid result_id FK
+    uuid portfolio_id FK
+    decimal achievement_pct
+    decimal applied_multiplier
+    decimal incentive_contribution_lc
+  }
+
+  REPRESENTATIVE ||--o{ REP_QUARTER_STATUS : "has status in"
+  QUARTER        ||--o{ REP_QUARTER_STATUS : "covers"
+  PROMO_LINE     ||--o{ PORTFOLIO          : "contains"
+  PORTFOLIO      ||--o{ PRODUCT            : "groups"
+  REPRESENTATIVE ||--o{ SALES_PLAN         : "assigned"
+  PRODUCT        ||--o{ SALES_PLAN         : "planned for"
+  QUARTER        ||--o{ SALES_PLAN         : "scoped to"
+  REPRESENTATIVE ||--o{ SALES_ACTUAL       : "records"
+  PRODUCT        ||--o{ SALES_ACTUAL       : "sold in"
+  QUARTER        ||--o{ SALES_ACTUAL       : "within"
+  REPRESENTATIVE ||--o{ CALL_PLAN          : "assigned"
+  QUARTER        ||--o{ CALL_PLAN          : "scoped to"
+  REPRESENTATIVE ||--o{ CALL_ACTUAL        : "achieves"
+  QUARTER        ||--o{ CALL_ACTUAL        : "within"
+  REPRESENTATIVE ||--o{ INCENTIVE_RESULT   : "receives"
+  QUARTER        ||--o{ INCENTIVE_RESULT   : "computed for"
+  INCENTIVE_RESULT ||--o{ PORTFOLIO_INCENTIVE_SPLIT : "broken into"
+  PORTFOLIO      ||--o{ PORTFOLIO_INCENTIVE_SPLIT   : "contributes to"
+  PAYMENT_COEFFICIENT ||--o{ PORTFOLIO_INCENTIVE_SPLIT : "applied via"
+`;
+
+const { svg } = await mermaid.render('erd-svg', diagram);
+document.getElementById('erd').innerHTML = svg;
+
+setTimeout(() => {
+  document.querySelectorAll('#erd svg .node').forEach(node => {
+    const firstPath = node.querySelector('path[d]');
+    if (!firstPath) return;
+    const d = firstPath.getAttribute('d');
+    const nums = d.match(/-?[\d.]+/g)?.map(Number);
+    if (!nums || nums.length < 8) return;
+    const xs = [nums[0], nums[2], nums[4], nums[6]];
+    const ys = [nums[1], nums[3], nums[5], nums[7]];
+    const x = Math.min(...xs), y = Math.min(...ys);
+    const w = Math.max(...xs) - x, h = Math.max(...ys) - y;
+    const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+    rect.setAttribute('x', x); rect.setAttribute('y', y);
+    rect.setAttribute('width', w); rect.setAttribute('height', h);
+    rect.setAttribute('rx', '8');
+    for (const a of ['fill', 'stroke', 'stroke-width', 'class', 'style']) {
+      if (firstPath.hasAttribute(a)) rect.setAttribute(a, firstPath.getAttribute(a));
+    }
+    firstPath.replaceWith(rect);
+  });
+  document.querySelectorAll('#erd svg .row-rect-odd path, #erd svg .row-rect-even path').forEach(p => {
+    p.setAttribute('stroke', 'none');
+  });
+}, 300);
+</script>

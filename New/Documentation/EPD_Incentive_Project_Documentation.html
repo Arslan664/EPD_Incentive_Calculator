@@ -1,0 +1,1622 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EPD Incentive System — Project Documentation</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --primary: #1e40af;
+      --primary-light: #3b82f6;
+      --primary-dim: #dbeafe;
+      --accent: #0891b2;
+      --accent-dim: #cffafe;
+      --success: #059669;
+      --success-dim: #d1fae5;
+      --warning: #d97706;
+      --warning-dim: #fef3c7;
+      --danger: #dc2626;
+      --danger-dim: #fee2e2;
+      --dark: #0f172a;
+      --dark-2: #1e293b;
+      --dark-3: #334155;
+      --text: #1e293b;
+      --text-muted: #64748b;
+      --text-light: #94a3b8;
+      --border: #e2e8f0;
+      --bg: #f8fafc;
+      --panel: #ffffff;
+      --sidebar-w: 280px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.65;
+      font-size: 15px;
+    }
+
+    /* ── COVER ────────────────────────────────── */
+    .cover {
+      background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 50%, #0891b2 100%);
+      color: white;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 60px 40px;
+      position: relative;
+      overflow: hidden;
+    }
+    .cover::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    }
+    .cover-badge {
+      display: inline-block;
+      background: rgba(255,255,255,0.15);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255,255,255,0.25);
+      border-radius: 100px;
+      padding: 6px 20px;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 32px;
+    }
+    .cover h1 {
+      font-size: clamp(2.2rem, 5vw, 3.8rem);
+      font-weight: 800;
+      line-height: 1.15;
+      margin-bottom: 20px;
+      letter-spacing: -0.02em;
+    }
+    .cover h1 span { color: #7dd3fc; }
+    .cover p {
+      font-size: 1.1rem;
+      color: rgba(255,255,255,0.75);
+      max-width: 640px;
+      margin-bottom: 48px;
+    }
+    .cover-meta {
+      display: flex;
+      gap: 40px;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-bottom: 48px;
+    }
+    .cover-meta-item { text-align: center; }
+    .cover-meta-item .label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; color: rgba(255,255,255,0.5); }
+    .cover-meta-item .value { font-size: 1rem; font-weight: 600; color: #7dd3fc; margin-top: 4px; }
+    .cover-toc {
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 12px;
+      padding: 24px 32px;
+      display: flex;
+      gap: 32px;
+      flex-wrap: wrap;
+      justify-content: center;
+      max-width: 760px;
+    }
+    .cover-toc a {
+      color: rgba(255,255,255,0.8);
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: color 0.2s;
+    }
+    .cover-toc a:hover { color: #7dd3fc; }
+    .cover-toc .num {
+      width: 22px; height: 22px;
+      background: rgba(255,255,255,0.15);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 11px; font-weight: 700;
+    }
+
+    /* ── DOCUMENT BODY ────────────────────────── */
+    .doc-body {
+      display: flex;
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 48px 32px;
+      gap: 40px;
+    }
+
+    /* ── SIDEBAR ──────────────────────────────── */
+    .sidebar {
+      width: var(--sidebar-w);
+      flex-shrink: 0;
+      position: sticky;
+      top: 32px;
+      align-self: flex-start;
+      max-height: calc(100vh - 64px);
+      overflow-y: auto;
+    }
+    .sidebar-nav {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+    }
+    .sidebar-nav h3 {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-light);
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
+    .nav-group { margin-bottom: 20px; }
+    .nav-group-title {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--primary);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 6px;
+      padding-bottom: 6px;
+      border-bottom: 1px solid var(--border);
+    }
+    .sidebar-nav a {
+      display: block;
+      padding: 5px 8px;
+      font-size: 13px;
+      color: var(--text-muted);
+      text-decoration: none;
+      border-radius: 6px;
+      transition: all 0.15s;
+    }
+    .sidebar-nav a:hover { background: var(--primary-dim); color: var(--primary); }
+
+    /* ── CONTENT ──────────────────────────────── */
+    .content { flex: 1; min-width: 0; }
+    .section {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 40px;
+      margin-bottom: 32px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 28px;
+      padding-bottom: 20px;
+      border-bottom: 2px solid var(--border);
+    }
+    .section-icon {
+      width: 48px; height: 48px;
+      border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.4rem;
+      flex-shrink: 0;
+    }
+    .icon-blue { background: var(--primary-dim); }
+    .icon-cyan { background: var(--accent-dim); }
+    .icon-green { background: var(--success-dim); }
+    .icon-amber { background: var(--warning-dim); }
+    .icon-red { background: var(--danger-dim); }
+    .icon-purple { background: #ede9fe; }
+    .section-header-text .section-num {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--primary-light);
+      font-weight: 600;
+    }
+    .section-header-text h2 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--dark);
+      margin: 2px 0;
+      letter-spacing: -0.01em;
+    }
+    .section-header-text p { font-size: 14px; color: var(--text-muted); }
+
+    h3 { font-size: 1.1rem; font-weight: 700; color: var(--dark); margin: 24px 0 12px; }
+    h4 { font-size: 0.95rem; font-weight: 600; color: var(--dark-2); margin: 16px 0 8px; }
+    p { color: var(--text); margin-bottom: 12px; }
+    ul, ol { padding-left: 20px; margin-bottom: 12px; }
+    li { margin-bottom: 6px; color: var(--text); }
+    strong { color: var(--dark); }
+
+    /* Cards */
+    .card-grid { display: grid; gap: 16px; margin: 16px 0; }
+    .card-grid-2 { grid-template-columns: repeat(2, 1fr); }
+    .card-grid-3 { grid-template-columns: repeat(3, 1fr); }
+    .card-grid-4 { grid-template-columns: repeat(4, 1fr); }
+    .card {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 20px;
+    }
+    .card-label {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-light);
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+    .card-value {
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: var(--primary);
+      line-height: 1;
+    }
+    .card-sub { font-size: 13px; color: var(--text-muted); margin-top: 4px; }
+    .card-icon { font-size: 1.8rem; margin-bottom: 10px; }
+
+    /* Callouts */
+    .callout {
+      border-left: 4px solid;
+      border-radius: 0 8px 8px 0;
+      padding: 14px 18px;
+      margin: 16px 0;
+      font-size: 14px;
+    }
+    .callout-info { background: var(--primary-dim); border-color: var(--primary); }
+    .callout-success { background: var(--success-dim); border-color: var(--success); }
+    .callout-warning { background: var(--warning-dim); border-color: var(--warning); }
+    .callout-danger { background: var(--danger-dim); border-color: var(--danger); }
+    .callout strong { display: block; margin-bottom: 4px; }
+
+    /* Tables */
+    .table-wrap { overflow-x: auto; border-radius: 8px; border: 1px solid var(--border); margin: 16px 0; }
+    table { width: 100%; border-collapse: collapse; font-size: 14px; }
+    thead th {
+      background: var(--bg);
+      padding: 12px 16px;
+      text-align: left;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      border-bottom: 1px solid var(--border);
+      white-space: nowrap;
+    }
+    tbody td { padding: 11px 16px; border-bottom: 1px solid var(--border); color: var(--text); }
+    tbody tr:last-child td { border-bottom: none; }
+    tbody tr:hover { background: var(--bg); }
+    .td-code { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--primary); }
+    .td-badge {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 100px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+    .badge-blue { background: var(--primary-dim); color: var(--primary); }
+    .badge-green { background: var(--success-dim); color: var(--success); }
+    .badge-amber { background: var(--warning-dim); color: var(--warning); }
+
+    /* Code */
+    pre, code {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+    }
+    pre {
+      background: var(--dark);
+      color: #e2e8f0;
+      border-radius: 10px;
+      padding: 20px;
+      overflow-x: auto;
+      line-height: 1.6;
+      margin: 16px 0;
+    }
+    code { background: var(--bg); border: 1px solid var(--border); border-radius: 4px; padding: 2px 6px; font-size: 12px; }
+
+    /* Images */
+    .img-frame {
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      margin: 20px 0;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+    }
+    .img-frame img { width: 100%; display: block; }
+    .img-caption {
+      background: var(--bg);
+      padding: 10px 16px;
+      font-size: 13px;
+      color: var(--text-muted);
+      border-top: 1px solid var(--border);
+      display: flex; align-items: center; gap: 8px;
+    }
+    .img-caption::before { content: '🖼'; font-size: 1rem; }
+
+    /* Formulas */
+    .formula-box {
+      background: var(--dark);
+      color: #7dd3fc;
+      border-radius: 10px;
+      padding: 20px 24px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 14px;
+      line-height: 2;
+      margin: 16px 0;
+    }
+    .formula-box .comment { color: #64748b; }
+    .formula-box .value { color: #86efac; }
+    .formula-box .operator { color: #f9a8d4; }
+
+    /* Architecture flow */
+    .flow-container {
+      display: flex;
+      gap: 0;
+      align-items: stretch;
+      overflow-x: auto;
+      margin: 20px 0;
+    }
+    .flow-layer {
+      flex: 1;
+      min-width: 160px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .flow-layer-header {
+      background: var(--primary);
+      color: white;
+      padding: 10px 14px;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      border-radius: 8px 8px 0 0;
+    }
+    .flow-layer-body {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 0 0 8px 8px;
+      padding: 12px;
+      flex: 1;
+    }
+    .flow-item {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 8px 12px;
+      font-size: 13px;
+      margin-bottom: 8px;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .flow-arrow {
+      display: flex;
+      align-items: center;
+      padding: 0 12px;
+      color: var(--primary-light);
+      font-size: 1.5rem;
+    }
+
+    /* Steps */
+    .step-list { counter-reset: step; list-style: none; padding: 0; }
+    .step-list li {
+      counter-increment: step;
+      display: flex;
+      gap: 16px;
+      margin-bottom: 20px;
+      align-items: flex-start;
+    }
+    .step-list li::before {
+      content: counter(step);
+      width: 28px; height: 28px;
+      background: var(--primary);
+      color: white;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 13px; font-weight: 700;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+    .step-content strong { display: block; margin-bottom: 4px; color: var(--dark); }
+
+    /* ERD */
+    .erd-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+    .erd-entity {
+      border: 2px solid var(--primary);
+      border-radius: 10px;
+      overflow: hidden;
+      font-size: 13px;
+    }
+    .erd-entity-name {
+      background: var(--primary);
+      color: white;
+      padding: 8px 14px;
+      font-weight: 700;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .erd-field {
+      padding: 6px 14px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .erd-field:last-child { border-bottom: none; }
+    .erd-field-name { color: var(--dark); font-size: 12px; }
+    .erd-field-type { color: var(--text-light); font-size: 11px; }
+    .erd-pk { color: var(--warning); }
+    .erd-fk { color: var(--accent); }
+
+    /* Pill tags */
+    .tags { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0; }
+    .tag {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 100px;
+      font-size: 12px;
+      font-weight: 600;
+      border: 1px solid;
+    }
+    .tag-blue { background: var(--primary-dim); border-color: var(--primary-light); color: var(--primary); }
+    .tag-green { background: var(--success-dim); border-color: var(--success); color: var(--success); }
+    .tag-amber { background: var(--warning-dim); border-color: var(--warning); color: var(--warning); }
+    .tag-purple { background: #ede9fe; border-color: #8b5cf6; color: #6d28d9; }
+    .tag-cyan { background: var(--accent-dim); border-color: var(--accent); color: var(--accent); }
+
+    /* Timeline */
+    .timeline { list-style: none; padding: 0; position: relative; }
+    .timeline::before { content: ''; position: absolute; left: 14px; top: 0; bottom: 0; width: 2px; background: var(--border); }
+    .timeline li { display: flex; gap: 20px; margin-bottom: 24px; position: relative; }
+    .timeline-dot {
+      width: 28px; height: 28px;
+      background: var(--primary);
+      border-radius: 50%;
+      flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 12px; color: white; font-weight: 700;
+      z-index: 1;
+    }
+    .timeline-content strong { display: block; color: var(--dark); margin-bottom: 4px; font-size: 15px; }
+    .timeline-content span { font-size: 13px; color: var(--text-muted); }
+
+    /* Divider */
+    .divider { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
+
+    /* Responsive */
+    @media (max-width: 900px) {
+      .doc-body { flex-direction: column; padding: 24px 16px; }
+      .sidebar { width: 100%; position: static; }
+      .card-grid-2, .card-grid-3, .card-grid-4 { grid-template-columns: 1fr 1fr; }
+      .erd-grid { grid-template-columns: 1fr 1fr; }
+      .section { padding: 24px 20px; }
+    }
+    @media (max-width: 600px) {
+      .card-grid-2, .card-grid-3, .card-grid-4 { grid-template-columns: 1fr; }
+      .erd-grid { grid-template-columns: 1fr; }
+    }
+
+    /* Print */
+    @media print {
+      .sidebar { display: none; }
+      .cover { page-break-after: always; }
+      .section { break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════
+     COVER PAGE
+══════════════════════════════════════════ -->
+<section class="cover">
+  <div class="cover-badge">📋 Development Brief · Confidential</div>
+  <h1>EPD <span>Incentive Management</span><br>System Documentation</h1>
+  <p>Established Pharmaceuticals Division — Medical Representative Incentive Calculation, Dashboard Reporting & Custom Application Development Specification</p>
+
+  <div class="cover-meta">
+    <div class="cover-meta-item">
+      <div class="label">Country</div>
+      <div class="value">Kazakhstan (KZ)</div>
+    </div>
+    <div class="cover-meta-item">
+      <div class="label">Period</div>
+      <div class="value">2017 — Q1/Q2</div>
+    </div>
+    <div class="cover-meta-item">
+      <div class="label">Active Representatives</div>
+      <div class="value">~89 Reps</div>
+    </div>
+    <div class="cover-meta-item">
+      <div class="label">Currency</div>
+      <div class="value">LC (KZT)</div>
+    </div>
+    <div class="cover-meta-item">
+      <div class="label">Total Q2 Incentive Pool</div>
+      <div class="value">43.67M LC</div>
+    </div>
+  </div>
+
+  <div class="cover-toc">
+    <a href="#s1"><span class="num">1</span> Project Overview</a>
+    <a href="#s2"><span class="num">2</span> Data Architecture</a>
+    <a href="#s3"><span class="num">3</span> Incentive Logic</a>
+    <a href="#s4"><span class="num">4</span> UI/UX Wireframes</a>
+    <a href="#s5"><span class="num">5</span> ERD (Database)</a>
+    <a href="#s6"><span class="num">6</span> System Architecture</a>
+    <a href="#s7"><span class="num">7</span> App Screens</a>
+    <a href="#s8"><span class="num">8</span> Dev Roadmap</a>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════
+     DOCUMENT BODY
+══════════════════════════════════════════ -->
+<div class="doc-body">
+
+  <!-- SIDEBAR -->
+  <nav class="sidebar">
+    <div class="sidebar-nav">
+      <h3>Contents</h3>
+      <div class="nav-group">
+        <div class="nav-group-title">📖 Overview</div>
+        <a href="#s1">1. Project Overview</a>
+        <a href="#s1-scope">Scope & Objectives</a>
+        <a href="#s1-users">Stakeholders & Users</a>
+      </div>
+      <div class="nav-group">
+        <div class="nav-group-title">🗂 Data Layer</div>
+        <a href="#s2">2. Data Architecture</a>
+        <a href="#s2-sheets">Source Data Sheets</a>
+        <a href="#s2-products">Product / Promo Lines</a>
+        <a href="#s2-staff">Staff Input Rules</a>
+      </div>
+      <div class="nav-group">
+        <div class="nav-group-title">🧮 Incentive Logic</div>
+        <a href="#s3">3. Incentive Calculation</a>
+        <a href="#s3-formula">Core Formula</a>
+        <a href="#s3-sales">Sales Result Component</a>
+        <a href="#s3-tcfa">TCFA Component</a>
+        <a href="#s3-coaching">Coaching / TIC</a>
+        <a href="#s3-coeff">Payment Coefficients</a>
+        <a href="#s3-reimbursable">Reimbursable Months</a>
+      </div>
+      <div class="nav-group">
+        <div class="nav-group-title">🎨 UI/UX</div>
+        <a href="#s4">4. Wireframes</a>
+        <a href="#s4-detailed">Detailed Performance View</a>
+        <a href="#s4-summary">Financial Summary View</a>
+        <a href="#s4-filters">Filter System</a>
+      </div>
+      <div class="nav-group">
+        <div class="nav-group-title">🗄 Database</div>
+        <a href="#s5">5. ERD Diagram</a>
+        <a href="#s5-entities">Entity Definitions</a>
+        <a href="#s5-relations">Relationships</a>
+        <a href="#s5-schema">SQL Schema</a>
+      </div>
+      <div class="nav-group">
+        <div class="nav-group-title">🏗 Architecture</div>
+        <a href="#s6">6. System Architecture</a>
+        <a href="#s6-current">Current MVP</a>
+        <a href="#s6-target">Target Architecture</a>
+      </div>
+      <div class="nav-group">
+        <div class="nav-group-title">📱 App Modules</div>
+        <a href="#s7">7. Application Modules</a>
+      </div>
+      <div class="nav-group">
+        <div class="nav-group-title">🗓 Roadmap</div>
+        <a href="#s8">8. Development Roadmap</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- CONTENT -->
+  <main class="content">
+
+    <!-- ── SECTION 1: PROJECT OVERVIEW ──────── -->
+    <section class="section" id="s1">
+      <div class="section-header">
+        <div class="section-icon icon-blue">📊</div>
+        <div class="section-header-text">
+          <div class="section-num">Section 01</div>
+          <h2>Project Overview</h2>
+          <p>Background, business objectives, and stakeholder map</p>
+        </div>
+      </div>
+
+      <p>The <strong>EPD (Established Pharmaceuticals Division) Incentive Management System</strong> is a custom web application designed to replace the existing manual Excel-based incentive calculation workflow used by Abbott's Kazakhstan affiliate.</p>
+
+      <p>Currently, quarterly incentive payouts for medical and pharmaceutical representatives are calculated in a complex multi-sheet Excel workbook (<code>EPD New Incentive File.xlsx</code>). This workbook interlinks staff data, product portfolios, sales actuals vs. plans, call frequency targets, and coaching activities to produce final incentive amounts in Local Currency (LC = KZT).</p>
+
+      <div class="callout callout-info">
+        <strong>💡 Business Driver</strong>
+        The current Excel model requires manual updates each quarter, is error-prone when staff changes occur mid-quarter, lacks audit trails, requires manual consolidation across countries, and cannot produce real-time visual reporting for management review.
+      </div>
+
+      <h3 id="s1-scope">Scope & Objectives</h3>
+      <div class="card-grid card-grid-2">
+        <div class="card">
+          <div class="card-icon">🎯</div>
+          <strong>Primary Goal</strong>
+          <p>Automate the quarterly incentive calculation engine to replace the Excel workbook with a structured database-backed web application.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">📈</div>
+          <strong>Dashboard Reporting</strong>
+          <p>Provide an interactive management dashboard with dual-view reporting: Actual vs. Plan Performance + Financial Summary.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">🔒</div>
+          <strong>Data Integrity</strong>
+          <p>Enforce strict column typing in PostgreSQL, eliminate formula dependencies on external workbooks, and maintain audit history.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">🌍</div>
+          <strong>Multi-Country Ready</strong>
+          <p>Support multiple countries (KZ = Kazakhstan, GE = Georgia) and per-quarter exchange rate management for LC/USD conversion.</p>
+        </div>
+      </div>
+
+      <h3 id="s1-users">Stakeholders & Users</h3>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Role</th>
+              <th>Access Level</th>
+              <th>Primary Use Case</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Country Manager / HR</strong></td>
+              <td><span class="td-badge badge-blue">Admin</span></td>
+              <td>Upload quarterly data, manage staff, set targets, approve payouts</td>
+            </tr>
+            <tr>
+              <td><strong>Regional Manager</strong></td>
+              <td><span class="td-badge badge-green">Manager</span></td>
+              <td>View team performance, filter by rep, compare Q achievements</td>
+            </tr>
+            <tr>
+              <td><strong>Finance Team</strong></td>
+              <td><span class="td-badge badge-amber">Finance</span></td>
+              <td>Access Summary Calculation view, export LC reports, manage exchange rates</td>
+            </tr>
+            <tr>
+              <td><strong>Medical Representative</strong></td>
+              <td><span class="td-badge badge-blue">Read-Only</span></td>
+              <td>View personal incentive breakdown (future self-service portal)</td>
+            </tr>
+            <tr>
+              <td><strong>IT Developer</strong></td>
+              <td><span class="td-badge badge-blue">Super Admin</span></td>
+              <td>Manage data imports, configure promo lines, monitor system</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Key Metrics (Q2 2017 — KZ Market)</h3>
+      <div class="card-grid card-grid-4">
+        <div class="card">
+          <div class="card-label">Total Representatives</div>
+          <div class="card-value">89</div>
+          <div class="card-sub">Active in Q2 2017</div>
+        </div>
+        <div class="card">
+          <div class="card-label">Total Target Pool</div>
+          <div class="card-value">39.4M</div>
+          <div class="card-sub">LC (Planned Quarter)</div>
+        </div>
+        <div class="card">
+          <div class="card-label">Total Incentive Paid</div>
+          <div class="card-value">43.7M</div>
+          <div class="card-sub">LC (includes over-achievement)</div>
+        </div>
+        <div class="card">
+          <div class="card-label">Exchange Rate Q2</div>
+          <div class="card-value">332.70</div>
+          <div class="card-sub">LC/USD (Q2 2017)</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── SECTION 2: DATA ARCHITECTURE ─────── -->
+    <section class="section" id="s2">
+      <div class="section-header">
+        <div class="section-icon icon-cyan">🗂️</div>
+        <div class="section-header-text">
+          <div class="section-num">Section 02</div>
+          <h2>Data Architecture</h2>
+          <p>Source Excel sheets, their purpose, and data mapping</p>
+        </div>
+      </div>
+
+      <h3 id="s2-sheets">Source Excel Sheets & CSV Exports</h3>
+      <p>The Excel workbook <code>EPD New Incentive File.xlsx</code> contains the following interlinked sheets, each exported to CSV for the current MVP application:</p>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Sheet / CSV File</th>
+              <th>Type</th>
+              <th>Purpose</th>
+              <th>Key Fields</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="td-code">Staff_Input.csv</td>
+              <td><span class="td-badge badge-blue">Master</span></td>
+              <td>Employee roster with working status per quarter</td>
+              <td>Name, Position, Starting date, Q1–Q4 Status (Worked / Leave)</td>
+            </tr>
+            <tr>
+              <td class="td-code">Promo_Product_Input.csv</td>
+              <td><span class="td-badge badge-blue">Config</span></td>
+              <td>Maps Promo Lines to Portfolios and Products with Share weights</td>
+              <td>Promo-line, Portfolio 1–4, Share%, Product names per portfolio</td>
+            </tr>
+            <tr>
+              <td class="td-code">INPUT_ASSUMPTIONS_CALC.csv</td>
+              <td><span class="td-badge badge-green">Transactional</span></td>
+              <td>Actual vs. Plan sales per rep per product, plus TCFA %, Payment Coefficients</td>
+              <td>ACT/PLAN per product, % Achievement, Payment Coefficient, Reimbursable Months</td>
+            </tr>
+            <tr>
+              <td class="td-code">Summary_calculation.csv</td>
+              <td><span class="td-badge badge-amber">Output</span></td>
+              <td>Final calculated incentive amounts per rep per quarter in LC</td>
+              <td>Target Incentive, Target Base, Sales Result, TCFA Amount, Total Incentive LC</td>
+            </tr>
+            <tr>
+              <td class="td-code">TCFA.csv</td>
+              <td><span class="td-badge badge-green">Source</span></td>
+              <td>Target Call Frequency Achievement per rep (managed by region)</td>
+              <td>Rep Name, Region, Q1–Q2 TCFA %, Grand Total</td>
+            </tr>
+            <tr>
+              <td class="td-code">TIC.csv</td>
+              <td><span class="td-badge badge-green">Source</span></td>
+              <td>Time In Coaching (field accompaniment) monthly achievement for Regional Managers</td>
+              <td>RM Name, Region, Monthly % Achievement, Grand Total</td>
+            </tr>
+            <tr>
+              <td class="td-code">Mapping.csv</td>
+              <td><span class="td-badge badge-blue">Reference</span></td>
+              <td>Cross-reference table linking reps to regions, doctors, products</td>
+              <td>Rep–Doctor–Product mapping matrix</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3 id="s2-products">Promo Lines, Portfolios & Product Mapping</h3>
+      <p>Each representative is assigned to exactly one <strong>Promo Line</strong>. Each Promo Line contains up to 4 <strong>Portfolios</strong>, each with a defined <strong>Share %</strong> (weights summing to 100%). Each portfolio contains 1–4 specific products.</p>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Promo Line</th>
+              <th>P1 — Share</th>
+              <th>P2 — Share</th>
+              <th>P3 — Share</th>
+              <th>P4 — Share</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Line 1</strong></td>
+              <td>CREON, DUPHALAC — <span class="td-badge badge-blue">50%</span></td>
+              <td>HEPTRAL, DUSPATALIN — <span class="td-badge badge-blue">35%</span></td>
+              <td>IRS 19, IMUDON — <span class="td-badge badge-amber">10%</span></td>
+              <td>GANATON, DUPHABEARS — <span class="td-badge badge-green">5%</span></td>
+            </tr>
+            <tr>
+              <td><strong>Line 2</strong></td>
+              <td>DUPHASTON, FEMOSTON — <span class="td-badge badge-blue">30%</span></td>
+              <td>PHYSIOTENS, TRICOR, OMACOR — <span class="td-badge badge-blue">25%</span></td>
+              <td>HEPTRAL — <span class="td-badge badge-blue">25%</span></td>
+              <td>BETASERC, DUPHALAC, CREON — <span class="td-badge badge-amber">20%</span></td>
+            </tr>
+            <tr>
+              <td><strong>Line 2 (big cities)</strong></td>
+              <td>CREON, DUPHALAC — <span class="td-badge badge-amber">10%</span></td>
+              <td>PHYSIOTENS, TRICOR, OMACOR — <span class="td-badge badge-blue">30%</span></td>
+              <td>HEPTRAL — <span class="td-badge badge-blue">30%</span></td>
+              <td>BETASERC — <span class="td-badge badge-blue">30%</span></td>
+            </tr>
+            <tr>
+              <td><strong>Line 3 (big cities)</strong></td>
+              <td>DUPHASTON — <span class="td-badge badge-blue">45%</span></td>
+              <td>FEMOSTON — <span class="td-badge badge-blue">25%</span></td>
+              <td>DUPHALAC, OVATEL — <span class="td-badge badge-blue">25%</span></td>
+              <td>CREON — <span class="td-badge badge-green">5%</span></td>
+            </tr>
+            <tr>
+              <td><strong>Pharma Line</strong></td>
+              <td>CREON — <span class="td-badge badge-blue">45%</span></td>
+              <td>DUPHALAC — <span class="td-badge badge-blue">30%</span></td>
+              <td>IRS 19, IMUDON — <span class="td-badge badge-amber">15%</span></td>
+              <td>DUPHABEARS — <span class="td-badge badge-amber">10%</span></td>
+            </tr>
+            <tr>
+              <td><strong>Regional Manager-1</strong></td>
+              <td>GASTRO — <span class="td-badge badge-blue">50%</span></td>
+              <td>GYNECOLOGY — <span class="td-badge badge-blue">25%</span></td>
+              <td>CARDIO-NEURO — <span class="td-badge badge-amber">20%</span></td>
+              <td>IMMUNOLOGY — <span class="td-badge badge-green">5%</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="callout callout-warning">
+        <strong>⚠️ Design Note for Developers</strong>
+        Product assignments per Promo Line can change between Q1 and Q2 (verified in Promo_Product_Input.csv). The database must store a historical snapshot of portfolio–product mapping per quarter. Do NOT assume a single static mapping is valid across all quarters.
+      </div>
+
+      <h3 id="s2-staff">Staff Status & Reimbursable Month Rules</h3>
+      <p>Staff working status determines the <strong>Reimbursable Months %</strong> field, which directly scales the Target Incentive Base down for partial-quarter workers:</p>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Staff Status</th><th>Months Worked</th><th>Reimbursable Months %</th><th>Example</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Worked full quarter</td><td>3 months</td><td><strong>100%</strong></td><td>Full Target Base is applied</td></tr>
+            <tr><td>Joined mid-quarter (Newcomer)</td><td>2 months</td><td><strong>67%</strong></td><td>Target Base × 0.67</td></tr>
+            <tr><td>Joined last month (Newcomer)</td><td>1 month</td><td><strong>33%</strong></td><td>Target Base × 0.33</td></tr>
+            <tr><td>On Maternity Leave (partial)</td><td>2 months</td><td><strong>67%</strong></td><td>Leave portion excluded</td></tr>
+            <tr><td>Absent entire quarter</td><td>0 months</td><td><strong>0%</strong></td><td>No incentive payable</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ── SECTION 3: INCENTIVE LOGIC ───────── -->
+    <section class="section" id="s3">
+      <div class="section-header">
+        <div class="section-icon icon-green">🧮</div>
+        <div class="section-header-text">
+          <div class="section-num">Section 03</div>
+          <h2>Incentive Calculation Logic</h2>
+          <p>The complete formula, coefficients, and business rules for computing each rep's payout</p>
+        </div>
+      </div>
+
+      <h3 id="s3-formula">Core Formula</h3>
+      <div class="formula-box">
+        <span class="comment">// TOTAL INCENTIVE (LC) = </span><br>
+        &nbsp;&nbsp;<span class="value">Incentive Amount (Sales Result)</span><br>
+        &nbsp;&nbsp;<span class="operator">+ </span><span class="value">Incentive Amount (TCFA)</span><br>
+        &nbsp;&nbsp;<span class="operator">+ </span><span class="value">Incentive Amount (Coaching / TIC)</span><br>
+        &nbsp;&nbsp;<span class="operator">+ </span><span class="value">Field Work Achievement Bonus</span><br>
+        <br>
+        <span class="comment">// WHERE:</span><br>
+        <span class="value">Target Base LC</span> = Target Incentive for Quarter LC <span class="operator">×</span> Reimbursable Months %<br>
+        <span class="value">Target Sales Result LC</span> = Target Base LC <span class="operator">×</span> 0.80 <span class="comment">// 80% weight for sales</span><br>
+        <span class="value">Target TCFA LC</span> = Target Base LC <span class="operator">×</span> 0.20 <span class="comment">// 20% weight for TCFA</span>
+      </div>
+
+      <div class="img-frame">
+        <img src="C:\Users\ArslanSohail\.gemini\antigravity\brain\72012c64-d1bd-4bbd-a790-d69ac41efa32\epd_incentive_formula_diagram_1776403671002.png" alt="Incentive Calculation Formula Diagram" />
+        <div class="img-caption">Figure 3.1 — EPD Incentive Calculation Component Breakdown</div>
+      </div>
+
+      <h3 id="s3-sales">Component 1: Sales Result Incentive</h3>
+      <p>This is the largest component (~80% of total target base). It rewards reps for achieving their sales plans across all product portfolios.</p>
+
+      <ol class="step-list">
+        <li>
+          <div class="step-content">
+            <strong>Compute weighted % Achievement per Portfolio</strong>
+            <span>For each portfolio (P1–P4): sum (ACT product values / PLAN product values) weighted by portfolio share %</span>
+          </div>
+        </li>
+        <li>
+          <div class="step-content">
+            <strong>Compute overall % Achievement</strong>
+            <span>% Overall = Σ (Portfolio Share × Portfolio % Achievement)</span>
+          </div>
+        </li>
+        <li>
+          <div class="step-content">
+            <strong>Look up Payment Coefficient</strong>
+            <span>Based on overall % Achievement, find the applicable multiplier from the coefficient table (see Section 3.5)</span>
+          </div>
+        </li>
+        <li>
+          <div class="step-content">
+            <strong>Apply per-Portfolio coefficient (where applicable)</strong>
+            <span>Some portfolios may have individual multipliers that apply to that portfolio's incentive contribution</span>
+          </div>
+        </li>
+        <li>
+          <div class="step-content">
+            <strong>Sum all portfolio incentive contributions</strong>
+            <span>Incentive Amount (Sales Result) = Σ [Portfolio_i Target × Coeff_i]</span>
+          </div>
+        </li>
+      </ol>
+
+      <div class="formula-box">
+        <span class="comment">// Portfolio Incentive Contribution:</span><br>
+        <span class="value">P_incentive</span> = (Target_Base_LC <span class="operator">×</span> Target_Sales_Result_pct) <span class="operator">×</span> Portfolio_Share <span class="operator">×</span> Payment_Coefficient<br>
+        <br>
+        <span class="comment">// Example (Line 1, P1=CREON+DUPHALAC, Share=50%, Coeff=2.5):</span><br>
+        <span class="value">P1_incentive</span> = 316,420 <span class="operator">×</span> 0.50 <span class="operator">×</span> 2.5 = <span class="value">395,525 LC</span>
+      </div>
+
+      <h3 id="s3-tcfa">Component 2: TCFA Incentive (Target Call Frequency Achievement)</h3>
+      <p>TCFA measures how well a rep hit their planned number of customer visits/calls during the quarter. Each rep has a personal visit target (CP_Personal_target), tracked per region.</p>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>TCFA Achievement</th><th>TCFA Coefficient</th><th>Incentive Amount</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>≥ 95%</td><td><span class="td-badge badge-green">1.00 (Full)</span></td><td>Target TCFA LC × 1.0</td></tr>
+            <tr><td>90%–94%</td><td><span class="td-badge badge-amber">0.50 (Partial)</span></td><td>Target TCFA LC × 0.5</td></tr>
+            <tr><td>&lt; 90%</td><td><span class="td-badge badge-blue">0.00 (None)</span></td><td>No TCFA incentive paid</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="callout callout-success">
+        <strong>✅ TCFA Data Source</strong>
+        TCFA % values come from CRM system records (managed by region in Kazakhstan). Each territory (e.g., KZ-ALM1, KZ-SKO) has a Regional Manager responsible for their team's TCFA reporting. The TCFA.csv export contains Q1 and Q2 actuals per rep.
+      </div>
+
+      <h3 id="s3-coaching">Component 3: Time in Coaching / Field Work (Regional Managers Only)</h3>
+      <p>This component applies <strong>only to Regional Managers</strong>. It rewards the time spent accompanying Medical Representatives in the field (coaching visits).</p>
+
+      <ul>
+        <li><strong>Target:</strong> 3 coaching sessions per month × 3 months = 9 sessions per quarter</li>
+        <li><strong>Measurement:</strong> Monthly % achievement (Actual sessions / Planned sessions)</li>
+        <li><strong>TIC Coefficient:</strong> 1.0 if average monthly TIC ≥ 50%, 0.0 if below</li>
+        <li><strong>Impact:</strong> Can add up to 20% additional incentive on top of the base for RMs</li>
+      </ul>
+
+      <h3 id="s3-coeff">Payment Coefficient Table</h3>
+      <p>The payment coefficient is the core multiplier applied to incentive targets. It creates a progressive scale that rewards high performance and penalizes underperformance:</p>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>% Achievement Band</th>
+              <th>Coefficient</th>
+              <th>Incentive Multiple</th>
+              <th>Business Interpretation</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>&lt; 70%</td><td class="td-code">0.00</td><td>None</td><td>Significantly below plan — no incentive</td></tr>
+            <tr><td>70% – 79%</td><td class="td-code">0.50</td><td>Half incentive</td><td>Materially below plan</td></tr>
+            <tr><td>80% – 89%</td><td class="td-code">0.70–0.90</td><td>Scaled partial</td><td>Below plan, partial reward</td></tr>
+            <tr><td>90% – 99%</td><td class="td-code">0.80–1.00</td><td>Near-full (~90%)</td><td>Near plan — rewarded appropriately</td></tr>
+            <tr><td>100%</td><td class="td-code">1.00</td><td>Full target</td><td>Plan achieved exactly</td></tr>
+            <tr><td>100% – 109%</td><td class="td-code">1.20–1.50</td><td>20–50% bonus</td><td>Over-achievement — bonus tier</td></tr>
+            <tr><td>110% – 119%</td><td class="td-code">1.70–2.00</td><td>70–100% bonus</td><td>Strong over-achievement</td></tr>
+            <tr><td>120% – 129%</td><td class="td-code">2.15–2.30</td><td>2x+ bonus</td><td>Exceptional performance</td></tr>
+            <tr><td>≥ 150%</td><td class="td-code">2.50 (cap)</td><td>2.5x cap</td><td>Capped at 2.5× to manage payout risk</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="callout callout-warning">
+        <strong>⚠️ Per-Portfolio Coefficients</strong>
+        The data shows that each portfolio (P1, P2, P3, P4) can receive an <strong>independent multiplier</strong>, not just an overall one. This means the calculation engine must apply coefficients at the portfolio level, not just the rep level. The "check sales" and individual "Payment coefficient" columns in INPUT_ASSUMPTIONS_CALC confirm this.
+      </div>
+
+      <h3 id="s3-reimbursable">Reimbursable Months % — Impact on All Components</h3>
+      <p>The <strong>Reimbursable Months %</strong> scales the <em>Target Incentive Base</em> before any coefficient is applied. This means partial-quarter employees have proportionally lower targets AND proportionally lower maximums:</p>
+      <div class="formula-box">
+        <span class="value">Target Base_adjusted</span> = Target Incentive for Quarter LC <span class="operator">×</span> Reimbursable Months %<br>
+        <br>
+        <span class="comment">// Example: Rep joined mid-quarter (67% reimbursable):</span><br>
+        Target for Quarter = 395,525 LC<br>
+        Reimbursable = 67% → <span class="value">Target Base = 263,683 LC</span><br>
+        <span class="comment">// All subsequent incentive calculations use 263,683 as the base</span>
+      </div>
+    </section>
+
+    <!-- ── SECTION 4: UI / UX WIREFRAMES ──────── -->
+    <section class="section" id="s4">
+      <div class="section-header">
+        <div class="section-icon icon-purple">🎨</div>
+        <div class="section-header-text">
+          <div class="section-num">Section 04</div>
+          <h2>UI/UX Wireframes & Design System</h2>
+          <p>Dashboard layout, views, filters, and component specifications</p>
+        </div>
+      </div>
+
+      <p>The application has two primary report views accessible via a <strong>View Format</strong> toggle dropdown. Both share the same navigation header and filter bar.</p>
+
+      <h3>Design System Tokens</h3>
+      <div class="card-grid card-grid-4">
+        <div class="card" style="border-left: 4px solid #0369a1;">
+          <div class="card-label">Primary Color</div>
+          <div class="card-value" style="font-size:1rem; color:#0369a1;">#0369a1</div>
+          <div class="card-sub">Deep Professional Blue</div>
+        </div>
+        <div class="card" style="border-left: 4px solid #15803d;">
+          <div class="card-label">Success (Good %)</div>
+          <div class="card-value" style="font-size:1rem; color:#15803d;">#15803d</div>
+          <div class="card-sub">Achievement ≥ 100%</div>
+        </div>
+        <div class="card" style="border-left: 4px solid #b91c1c;">
+          <div class="card-label">Danger (Bad %)</div>
+          <div class="card-value" style="font-size:1rem; color:#b91c1c;">#b91c1c</div>
+          <div class="card-sub">Achievement &lt; 100%</div>
+        </div>
+        <div class="card" style="border-left: 4px solid #e0f2fe;">
+          <div class="card-label">Team Badge BG</div>
+          <div class="card-value" style="font-size:1rem; color:#0284c7;">#e0f2fe</div>
+          <div class="card-sub">Promo Line Chip</div>
+        </div>
+      </div>
+
+      <div class="tags" style="margin-top:16px;">
+        <span class="tag tag-blue">Font: Segoe UI / Inter</span>
+        <span class="tag tag-cyan">Layout: Sticky Top Nav</span>
+        <span class="tag tag-green">Responsive: 1400px max-width</span>
+        <span class="tag tag-purple">Table: Horizontal Scroll</span>
+        <span class="tag tag-amber">Icons: Font Awesome 6</span>
+      </div>
+
+      <h3 id="s4-detailed">View 1 — Actual vs Plan Performance (Detailed View)</h3>
+      <p>This is the default view. It shows each rep's sales performance per product against their plan, along with TCFA and final incentive.</p>
+
+      <div class="img-frame">
+        <img src="C:\Users\ArslanSohail\.gemini\antigravity\brain\72012c64-d1bd-4bbd-a790-d69ac41efa32\epd_dashboard_wireframe_1776403617185.png" alt="EPD Dashboard Detailed View Wireframe" />
+        <div class="img-caption">Figure 4.1 — Actual vs Plan Performance View (Detailed Dashboard)</div>
+      </div>
+
+      <p><strong>Columns in Detailed View:</strong></p>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Column</th><th>Data Source</th><th>Component</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Rep Name + Country</td><td>Staff Input</td><td>Text + Sub-label</td></tr>
+            <tr><td>Position & Team (badge)</td><td>Staff Input + Promo Line</td><td>Badge chip + Quarter/Year </td></tr>
+            <tr><td>Total Plan (LC)</td><td>INPUT_ASSUMPTIONS_CALC → Total PLAN</td><td>Formatted number</td></tr>
+            <tr><td>Total Actual (LC) + %</td><td>INPUT_ASSUMPTIONS_CALC → Total ACT</td><td>Number + green/red % badge</td></tr>
+            <tr><td>Product Breakdown</td><td>All ACT/PLAN per portfolio product</td><td>Mini list with Actual / Plan + %</td></tr>
+            <tr><td>TCFA (Actual)</td><td>TCFA.csv → Grand Total</td><td>Color-coded % badge</td></tr>
+            <tr><td>Target Base (LC)</td><td>Summary_calculation → Target Base</td><td>Formatted number</td></tr>
+            <tr><td>Final Incentive (LC) ★</td><td>Summary_calculation → Total Incentive</td><td>Large bold green number</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3 id="s4-summary">View 2 — Summary Calculation (Financial View)</h3>
+      <p>This view mirrors the Excel Summary Calculation sheet exactly, providing a financial breakdown including all incentive sub-components.</p>
+
+      <div class="img-frame">
+        <img src="C:\Users\ArslanSohail\.gemini\antigravity\brain\72012c64-d1bd-4bbd-a790-d69ac41efa32\epd_financial_view_wireframe_1776403656465.png" alt="Financial Summary View Wireframe" />
+        <div class="img-caption">Figure 4.2 — Summary Calculation (Financials) View — mirrors the Excel output sheet</div>
+      </div>
+
+      <p><strong>Columns in Financial Summary View:</strong></p>
+      <div class="tags">
+        <span class="tag tag-blue">No</span>
+        <span class="tag tag-blue">Name</span>
+        <span class="tag tag-blue">Position</span>
+        <span class="tag tag-blue">Target Incentive (Quarter, LC)</span>
+        <span class="tag tag-blue">Reimbursable Months %</span>
+        <span class="tag tag-blue">Target Base (LC)</span>
+        <span class="tag tag-cyan">Target Inc (Sales Result)</span>
+        <span class="tag tag-cyan">Product 1 – 4 Contribution</span>
+        <span class="tag tag-cyan">Inc Amount (Sales Result)</span>
+        <span class="tag tag-green">Target Inc (TCFA)</span>
+        <span class="tag tag-amber">Target Inc (Coaching)</span>
+        <span class="tag tag-green">Inc Amount (TCFA)</span>
+        <span class="tag tag-amber">Inc Amount (Coaching)</span>
+        <span class="tag tag-amber">Amount Field Work</span>
+        <span class="tag tag-purple">🌟 Total Incentive (LC)</span>
+      </div>
+
+      <h3 id="s4-filters">Filter System Specification</h3>
+      <p>All 6 filters are AND-combined (all active filters must match). The filter state persists until the Reset button is pressed.</p>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Filter</th><th>Type</th><th>Data Source</th><th>Default</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>🌍 Country</td><td>Dropdown</td><td>Derived from staff metadata (KZ / GE)</td><td>All Countries</td></tr>
+            <tr><td>📅 Year</td><td>Dropdown</td><td>Quarter data year (2017, 2018…)</td><td>All Years</td></tr>
+            <tr><td>📊 Quarter</td><td>Dropdown</td><td>Period identifier (Q1, Q2, Q3, Q4)</td><td>All Quarters</td></tr>
+            <tr><td>💊 Promo Line</td><td>Dropdown</td><td>PromoLine field (Line 1, Line 2, Pharma…)</td><td>All Teams</td></tr>
+            <tr><td>👤 Medical Representative</td><td>Dropdown</td><td>Unique rep names</td><td>All Reps</td></tr>
+            <tr><td>📋 View Format</td><td>Toggle Dropdown</td><td>Hardcoded (detailed / summary)</td><td>Actual vs Plan</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ── SECTION 5: ERD ────────────────────── -->
+    <section class="section" id="s5">
+      <div class="section-header">
+        <div class="section-icon icon-amber">🗄️</div>
+        <div class="section-header-text">
+          <div class="section-num">Section 05</div>
+          <h2>Entity Relationship Diagram (ERD)</h2>
+          <p>Database schema, entities, and relationship definitions for the production system</p>
+        </div>
+      </div>
+
+      <div class="callout callout-info">
+        <strong>📌 Target Database</strong>
+        The recommended database engine is <strong>PostgreSQL 15+</strong> with UUID primary keys, strict type enforcement, and soft-delete support (is_deleted flag). JSON fields may be used for flexible product configurations per quarter.
+      </div>
+
+      <h3 id="s5-entities">Core Entity Definitions</h3>
+
+      <div class="erd-grid">
+        <!-- REPRESENTATIVE -->
+        <div class="erd-entity">
+          <div class="erd-entity-name" style="background:#1e40af;">👤 REPRESENTATIVE</div>
+          <div class="erd-field"><span class="erd-field-name erd-pk">🔑 rep_id</span><span class="erd-field-type">uuid PK</span></div>
+          <div class="erd-field"><span class="erd-field-name">employee_code</span><span class="erd-field-type">varchar(20)</span></div>
+          <div class="erd-field"><span class="erd-field-name">full_name</span><span class="erd-field-type">varchar(150)</span></div>
+          <div class="erd-field"><span class="erd-field-name">position</span><span class="erd-field-type">varchar(60)</span></div>
+          <div class="erd-field"><span class="erd-field-name">start_date</span><span class="erd-field-type">date</span></div>
+          <div class="erd-field"><span class="erd-field-name">country</span><span class="erd-field-type">char(2)</span></div>
+          <div class="erd-field"><span class="erd-field-name">region</span><span class="erd-field-type">varchar(50)</span></div>
+          <div class="erd-field"><span class="erd-field-name">is_active</span><span class="erd-field-type">boolean</span></div>
+          <div class="erd-field"><span class="erd-field-name">created_at</span><span class="erd-field-type">timestamptz</span></div>
+        </div>
+
+        <!-- QUARTER -->
+        <div class="erd-entity">
+          <div class="erd-entity-name" style="background:#0891b2;">📅 QUARTER</div>
+          <div class="erd-field"><span class="erd-field-name erd-pk">🔑 quarter_id</span><span class="erd-field-type">uuid PK</span></div>
+          <div class="erd-field"><span class="erd-field-name">year</span><span class="erd-field-type">smallint</span></div>
+          <div class="erd-field"><span class="erd-field-name">quarter_number</span><span class="erd-field-type">smallint (1–4)</span></div>
+          <div class="erd-field"><span class="erd-field-name">country</span><span class="erd-field-type">char(2)</span></div>
+          <div class="erd-field"><span class="erd-field-name">exchange_rate_lc_usd</span><span class="erd-field-type">decimal(12,4)</span></div>
+          <div class="erd-field"><span class="erd-field-name">start_date</span><span class="erd-field-type">date</span></div>
+          <div class="erd-field"><span class="erd-field-name">end_date</span><span class="erd-field-type">date</span></div>
+          <div class="erd-field"><span class="erd-field-name">status</span><span class="erd-field-type">varchar(20)</span></div>
+        </div>
+
+        <!-- REP_QUARTER_STATUS -->
+        <div class="erd-entity">
+          <div class="erd-entity-name" style="background:#0891b2;">📋 REP_QUARTER_STATUS</div>
+          <div class="erd-field"><span class="erd-field-name erd-pk">🔑 status_id</span><span class="erd-field-type">uuid PK</span></div>
+          <div class="erd-field"><span class="erd-field-name erd-fk">🔗 rep_id</span><span class="erd-field-type">uuid FK → REP</span></div>
+          <div class="erd-field"><span class="erd-field-name erd-fk">🔗 quarter_id</span><span class="erd-field-type">uuid FK → QUARTER</span></div>
+          <div class="erd-field"><span class="erd-field-name">promo_line_id</span><span class="erd-field-type">uuid FK</span></div>
+          <div class="erd-field"><span class="erd-field-name">work_status</span><span class="erd-field-type">varchar(30)</span></div>
+          <div class="erd-field"><span class="erd-field-name">leave_start_date</span><span class="erd-field-type">date</span></div>
+          <div class="erd-field"><span class="erd-field-name">leave_end_date</span><span class="erd-field-type">date</span></div>
+          <div class="erd-field"><span class="erd-field-name">months_worked</span><span class="erd-field-type">smallint</span></div>
+          <div class="erd-field"><span class="erd-field-name">reimbursable_pct</span><span class="erd-field-type">decimal(5,4)</span></div>
+          <div class="erd-field"><span class="erd-field-name">target_incentive_lc</span><span class="erd-field-type">decimal(14,2)</span></div>
+        </div>
+
+        <!-- PROMO_LINE -->
+        <div class="erd-entity">
+          <div class="erd-entity-name" style="background:#059669;">💊 PROMO_LINE</div>
+          <div class="erd-field"><span class="erd-field-name erd-pk">🔑 promo_line_id</span><span class="erd-field-type">uuid PK</span></div>
+          <div class="erd-field"><span class="erd-field-name">name</span><span class="erd-field-type">varchar(60)</span></div>
+          <div class="erd-field"><span class="erd-field-name">description</span><span class="erd-field-type">text</span></div>
+          <div class="erd-field"><span class="erd-field-name">is_active</span><span class="erd-field-type">boolean</span></div>
+        </div>
+
+        <!-- PORTFOLIO -->
+        <div class="erd-entity">
+          <div class="erd-entity-name" style="background:#059669;">📦 PORTFOLIO</div>
+          <div class="erd-field"><span class="erd-field-name erd-pk">🔑 portfolio_id</span><span class="erd-field-type">uuid PK</span></div>
+          <div class="erd-field"><span class="erd-field-name erd-fk">🔗 promo_line_id</span><span class="erd-field-type">uuid FK</span></div>
+          <div class="erd-field"><span class="erd-field-name erd-fk">🔗 quarter_id</span><span class="erd-field-type">uuid FK</span></div>
+          <div class="erd-field"><span class="erd-field-name">portfolio_index</span><span class="erd-field-type">smallint (1–4)</span></div>
+          <div class="erd-field"><span class="erd-field-name">share_weight_pct</span><span class="erd-field-type">decimal(5,4)</span></div>
+          <div class="erd-field"><span class="erd-field-name">name</span><span class="erd-field-type">varchar(60)</span></div>
+        </div>
+
+        <!-- PRODUCT -->
+        <div class="erd-entity">
+          <div class="erd-entity-name" style="background:#059669;">💊 PRODUCT</div>
+          <div class="erd-field"><span class="erd-field-name erd-pk">🔑 product_id</span><span class="erd-field-type">uuid PK</span></div>
+          <div class="erd-field"><span class="erd-field-name erd-fk">🔗 portfolio_id</span><span class="erd-field-type">uuid FK</span></div>
+          <div class="erd-field"><span class="erd-field-name">product_code</span><span class="erd-field-type">varchar(30)</span></div>
+          <div class="erd-field"><span class="erd-field-name">product_name</span><span class="erd-field-type">varchar(80)</span></div>
+          <div class="erd-field"><span class="erd-field-name">product_index</span><span class="erd-field-type">smallint (1–4)</span></div>
+          <div class="erd-field"><span class="erd-field-name">is_active</span><span class="erd-field-type">boolean</span></div>
+        </div>
+
+        <!-- SALES_PLAN -->
+        <div class="erd-entity">
+          <div class="erd-entity-name" style="background:#d97706;">📈 SALES_PLAN</div>
+          <div class="erd-field"><span class="erd-field-name erd-pk">🔑 plan_id</span><span class="erd-field-type">uuid PK</span></div>
+          <div class="erd-field"><span class="erd-field-name erd-fk">🔗 rep_id</span><span class="erd-field-type">uuid FK</span></div>
+          <div class="erd-field"><span class="erd-field-name erd-fk">🔗 product_id</span><span class="erd-field-type">uuid FK</span></div>
+          <div class="erd-field"><span class="erd-field-name erd-fk">🔗 quarter_id</span><span class="erd-field-type">uuid FK</span></div>
+          <div class="erd-field"><span class="erd-field-name">plan_value_lc</span><span class="erd-field-type">decimal(14,2)</span></div>
+          <div class="erd-field"><span class="erd-field-name">uploaded_at</span><span class="erd-field-type">timestamptz</span></div>
+        </div>
+
+        <!-- SALES_ACTUAL -->
+        <div class="erd-entity">
+          <div class="erd-entity-name" style="background:#d97706;">📉 SALES_ACTUAL</div>
+          <div class="erd-field"><span class="erd-field-name erd-pk">🔑 actual_id</span><span class="erd-field-type">uuid PK</span></div>
+          <div class="erd-field"><span class="erd-field-name erd-fk">🔗 rep_id</span><span class="erd-field-type">uuid FK</span></div>
+          <div class="erd-field"><span class="erd-field-name erd-fk">🔗 product_id</span><span class="erd-field-type">uuid FK</span></div>
+          <div class="erd-field"><span class="erd-field-name erd-fk">🔗 quarter_id</span><span class="erd-field-type">uuid FK</span></div>
+          <div class="erd-field"><span class="erd-field-name">actual_value_lc</span><span class="erd-field-type">decimal(14,2)</span></div>
+          <div class="erd-field"><span class="erd-field-name">recorded_date</span><span class="erd-field-type">date</span></div>
+          <div class="erd-field"><span class="erd-field-name">source</span><span class="erd-field-type">varchar(20)</span></div>
+        </div>
+
+        <!-- INCENTIVE_RESULT -->
+        <div class="erd-entity">
+          <div class="erd-entity-name" style="background:#7c3aed;">🏆 INCENTIVE_RESULT</div>
+          <div class="erd-field"><span class="erd-field-name erd-pk">🔑 result_id</span><span class="erd-field-type">uuid PK</span></div>
+          <div class="erd-field"><span class="erd-field-name erd-fk">🔗 rep_id</span><span class="erd-field-type">uuid FK</span></div>
+          <div class="erd-field"><span class="erd-field-name erd-fk">🔗 quarter_id</span><span class="erd-field-type">uuid FK</span></div>
+          <div class="erd-field"><span class="erd-field-name">target_base_lc</span><span class="erd-field-type">decimal(14,2)</span></div>
+          <div class="erd-field"><span class="erd-field-name">sales_result_lc</span><span class="erd-field-type">decimal(14,2)</span></div>
+          <div class="erd-field"><span class="erd-field-name">tcfa_incentive_lc</span><span class="erd-field-type">decimal(14,2)</span></div>
+          <div class="erd-field"><span class="erd-field-name">coaching_lc</span><span class="erd-field-type">decimal(14,2)</span></div>
+          <div class="erd-field"><span class="erd-field-name">field_work_lc</span><span class="erd-field-type">decimal(14,2)</span></div>
+          <div class="erd-field"><span class="erd-field-name">total_incentive_lc</span><span class="erd-field-type">decimal(14,2)</span></div>
+          <div class="erd-field"><span class="erd-field-name">total_incentive_usd</span><span class="erd-field-type">decimal(14,2)</span></div>
+          <div class="erd-field"><span class="erd-field-name">status</span><span class="erd-field-type">varchar(20)</span></div>
+          <div class="erd-field"><span class="erd-field-name">calculated_at</span><span class="erd-field-type">timestamptz</span></div>
+          <div class="erd-field"><span class="erd-field-name">approved_by</span><span class="erd-field-type">varchar(100)</span></div>
+          <div class="erd-field"><span class="erd-field-name">approved_at</span><span class="erd-field-type">timestamptz</span></div>
+        </div>
+      </div>
+
+      <h3 id="s5-relations">Entity Relationships Summary</h3>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>From</th><th>Relationship</th><th>To</th><th>Cardinality</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>REPRESENTATIVE</td><td>has quarterly status in</td><td>REP_QUARTER_STATUS</td><td>1 : many</td></tr>
+            <tr><td>QUARTER</td><td>governs</td><td>REP_QUARTER_STATUS</td><td>1 : many</td></tr>
+            <tr><td>PROMO_LINE</td><td>contains</td><td>PORTFOLIO</td><td>1 : many (per quarter)</td></tr>
+            <tr><td>PORTFOLIO</td><td>groups</td><td>PRODUCT</td><td>1 : many</td></tr>
+            <tr><td>REPRESENTATIVE</td><td>has sales plan</td><td>SALES_PLAN</td><td>1 : many</td></tr>
+            <tr><td>PRODUCT</td><td>is planned for</td><td>SALES_PLAN</td><td>1 : many</td></tr>
+            <tr><td>REPRESENTATIVE</td><td>records actuals</td><td>SALES_ACTUAL</td><td>1 : many</td></tr>
+            <tr><td>QUARTER</td><td>scopes</td><td>SALES_ACTUAL</td><td>1 : many</td></tr>
+            <tr><td>REPRESENTATIVE</td><td>receives</td><td>INCENTIVE_RESULT</td><td>1 : many</td></tr>
+            <tr><td>QUARTER</td><td>computed for</td><td>INCENTIVE_RESULT</td><td>1 : many</td></tr>
+            <tr><td>REPRESENTATIVE</td><td>has TCFA record</td><td>CALL_ACTUAL</td><td>1 : many</td></tr>
+            <tr><td>PAYMENT_COEFFICIENT</td><td>applies to</td><td>INCENTIVE_RESULT</td><td>many : many (via portfolio split)</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3 id="s5-schema">Key SQL Schema Snippet</h3>
+      <pre>-- ══════════════════════════════════════
+-- EPD Incentive — Core Tables
+-- PostgreSQL 15+ | UUID extension required
+-- ══════════════════════════════════════
+
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+
+CREATE TABLE representative (
+  rep_id           UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  employee_code    VARCHAR(20) UNIQUE NOT NULL,
+  full_name        VARCHAR(150) NOT NULL,
+  position         VARCHAR(60) NOT NULL,  -- 'Medical Representative' | 'Regional Manager' | 'Pharm Representative'
+  country          CHAR(2) NOT NULL,      -- 'KZ' | 'GE'
+  region           VARCHAR(50),
+  start_date       DATE NOT NULL,
+  is_active        BOOLEAN DEFAULT TRUE,
+  created_at       TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE TABLE quarter (
+  quarter_id        UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  year              SMALLINT NOT NULL,
+  quarter_number    SMALLINT NOT NULL CHECK (quarter_number BETWEEN 1 AND 4),
+  country           CHAR(2) NOT NULL,
+  exchange_rate_lc_usd DECIMAL(12,4),
+  start_date        DATE NOT NULL,
+  end_date          DATE NOT NULL,
+  status            VARCHAR(20) DEFAULT 'active', -- 'active' | 'locked' | 'archived'
+  UNIQUE (year, quarter_number, country)
+);
+
+CREATE TABLE incentive_result (
+  result_id           UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  rep_id              UUID NOT NULL REFERENCES representative(rep_id),
+  quarter_id          UUID NOT NULL REFERENCES quarter(quarter_id),
+  target_base_lc      DECIMAL(14,2) NOT NULL DEFAULT 0,
+  sales_result_lc     DECIMAL(14,2) NOT NULL DEFAULT 0,
+  tcfa_incentive_lc   DECIMAL(14,2) NOT NULL DEFAULT 0,
+  coaching_lc         DECIMAL(14,2) NOT NULL DEFAULT 0,
+  field_work_lc       DECIMAL(14,2) NOT NULL DEFAULT 0,
+  total_incentive_lc  DECIMAL(14,2) GENERATED ALWAYS AS
+                      (sales_result_lc + tcfa_incentive_lc + coaching_lc + field_work_lc) STORED,
+  total_incentive_usd DECIMAL(14,2),
+  status              VARCHAR(20) DEFAULT 'draft', -- 'draft' | 'calculated' | 'approved' | 'paid'
+  calculated_at       TIMESTAMPTZ,
+  approved_by         VARCHAR(100),
+  approved_at         TIMESTAMPTZ,
+  UNIQUE (rep_id, quarter_id)
+);</pre>
+    </section>
+
+    <!-- ── SECTION 6: ARCHITECTURE ──────────── -->
+    <section class="section" id="s6">
+      <div class="section-header">
+        <div class="section-icon icon-red">🏗️</div>
+        <div class="section-header-text">
+          <div class="section-num">Section 06</div>
+          <h2>System Architecture</h2>
+          <p>Current MVP architecture and target production architecture for the custom application</p>
+        </div>
+      </div>
+
+      <h3 id="s6-current">Phase 1 — Current MVP Architecture (HTML/JS/CSV)</h3>
+      <p>The current MVP is a fully client-side static web app with no backend. Data is pre-parsed from CSV exports into JavaScript files. This provides zero infrastructure dependencies but has limitations for multi-user editing, security, and live data.</p>
+
+      <div class="img-frame">
+        <img src="C:\Users\ArslanSohail\.gemini\antigravity\brain\72012c64-d1bd-4bbd-a790-d69ac41efa32\epd_system_architecture_1776403603073.png" alt="EPD System Architecture Diagram" />
+        <div class="img-caption">Figure 6.1 — EPD Incentive System Architecture (Current MVP → Target Production)</div>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Layer</th><th>Current MVP</th><th>Target Production</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>Data Source</strong></td><td>CSV files manually exported from Excel</td><td>Direct PostgreSQL DB with structured import API</td></tr>
+            <tr><td><strong>Data Processing</strong></td><td>PowerShell scripts (parse_data.ps1, parse_detailed.ps1)</td><td>Backend REST API (Node.js / Django) with calculation engine</td></tr>
+            <tr><td><strong>Application</strong></td><td>Static HTML/CSS/JS (no server needed)</td><td>React/Next.js SPA with authenticated routes</td></tr>
+            <tr><td><strong>State/Storage</strong></td><td>JavaScript variables in browser memory</td><td>PostgreSQL + Redis cache for repeated calculations</td></tr>
+            <tr><td><strong>Security</strong></td><td>None (open file access)</td><td>JWT authentication, RBAC, audit logs</td></tr>
+            <tr><td><strong>Deployment</strong></td><td>Open local HTML file</td><td>Docker container on cloud (Azure / AWS)</td></tr>
+            <tr><td><strong>Export</strong></td><td>export_excel.ps1 (basic)</td><td>Server-side Excel/PDF generation on-demand</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3 id="s6-target">Phase 2 — Target Production Architecture</h3>
+      <div class="flow-container">
+        <div class="flow-layer">
+          <div class="flow-layer-header" style="background:#dc2626;">📥 Data Input</div>
+          <div class="flow-layer-body">
+            <div class="flow-item">🗂 Excel Upload Portal</div>
+            <div class="flow-item">📋 Staff Management UI</div>
+            <div class="flow-item">🎯 Targets Configuration</div>
+            <div class="flow-item">📊 Sales Data Import (API / CSV)</div>
+          </div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-layer">
+          <div class="flow-layer-header" style="background:#d97706;">⚙️ Backend API</div>
+          <div class="flow-layer-body">
+            <div class="flow-item">🧮 Incentive Engine</div>
+            <div class="flow-item">🔐 Auth / RBAC</div>
+            <div class="flow-item">📤 Export Service</div>
+            <div class="flow-item">✅ Approval Workflow</div>
+          </div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-layer">
+          <div class="flow-layer-header" style="background:#059669;">🗄 Database</div>
+          <div class="flow-layer-body">
+            <div class="flow-item">🐘 PostgreSQL 15+</div>
+            <div class="flow-item">⚡ Redis Cache</div>
+            <div class="flow-item">📦 S3 / Blob Storage</div>
+            <div class="flow-item">📜 Audit Logs Table</div>
+          </div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-layer">
+          <div class="flow-layer-header" style="background:#1e40af;">🖥 Frontend</div>
+          <div class="flow-layer-body">
+            <div class="flow-item">📊 Dashboard (React)</div>
+            <div class="flow-item">👤 Rep Self-Service</div>
+            <div class="flow-item">📑 Reports (PDF/Excel)</div>
+            <div class="flow-item">⚙️ Admin Panel</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── SECTION 7: APP MODULES ────────────── -->
+    <section class="section" id="s7">
+      <div class="section-header">
+        <div class="section-icon icon-cyan">📱</div>
+        <div class="section-header-text">
+          <div class="section-num">Section 07</div>
+          <h2>Application Module Specification</h2>
+          <p>Required modules and features for the full production application</p>
+        </div>
+      </div>
+
+      <h3>Module 1 — Authentication & RBAC</h3>
+      <ul>
+        <li>JWT-based login with role assignment (Admin, Finance, Manager, Read-only)</li>
+        <li>Password reset, session management, audit log of all logins</li>
+        <li>Country-scoped data isolation (KZ users see only KZ data)</li>
+      </ul>
+
+      <h3>Module 2 — Data Management (Admin)</h3>
+      <ul>
+        <li><strong>Staff Management:</strong> Add / edit / deactivate representatives, record leave and position changes</li>
+        <li><strong>Quarter Setup:</strong> Create quarters, set exchange rate LC/USD, lock quarters post-approval</li>
+        <li><strong>Promo Line Configuration:</strong> Configure portfolio–product mappings per promo line per quarter</li>
+        <li><strong>Payment Coefficient Table:</strong> Update threshold bands and multipliers per business cycle</li>
+      </ul>
+
+      <h3>Module 3 — Data Import Pipeline</h3>
+      <ul>
+        <li><strong>Sales Actuals Import:</strong> Upload CSV or Excel, validate columns, display import preview with error summary before committing</li>
+        <li><strong>TCFA Import:</strong> Upload TCFA achievement file per region per quarter</li>
+        <li><strong>TIC Import:</strong> Upload Time in Coaching data for RMs</li>
+        <li><strong>Manual Override:</strong> Allow Finance to override individual fields with audit reason</li>
+      </ul>
+
+      <h3>Module 4 — Incentive Calculation Engine</h3>
+      <ul>
+        <li>Run quarterly calculation for all reps or individual re-run per rep</li>
+        <li>Calculation versioning: keep multiple calculation runs, mark one as "official"</li>
+        <li>Produce calculation audit trail: inputs used, coefficient applied, result per component</li>
+        <li>Auto-convert LC to USD using quarter exchange rate</li>
+      </ul>
+
+      <h3>Module 5 — Reporting Dashboard</h3>
+      <ul>
+        <li>Dual-view (Detailed + Financial Summary) with all 6 filters</li>
+        <li>Summary KPI cards: Total Pool, Avg Incentive, Over/Under achievers count, TCFA avg</li>
+        <li>Team leaderboard (sort by total incentive, TCFA %, achievement %)</li>
+        <li>Export current filtered view to Excel or PDF</li>
+        <li>Quarter-over-Quarter comparison chart per rep or team</li>
+      </ul>
+
+      <h3>Module 6 — Approval & Payout Workflow</h3>
+      <ul>
+        <li>Finance reviews calculated results → status: Draft → Reviewed</li>
+        <li>Country Manager approves → status: Approved</li>
+        <li>Generate payment file (CSV/Excel) for payroll system integration</li>
+        <li>Mark as Paid → locks record from editing</li>
+        <li>Email notifications to relevant stakeholders at each status change</li>
+      </ul>
+
+      <div class="callout callout-success">
+        <strong>💡 Key Open Questions for Client</strong>
+        <ol style="margin-top: 8px; padding-left: 20px;">
+          <li>Should the exchange rate be applied at import time (LC values locked in DB) or displayed dynamically from a configurable rate field?</li>
+          <li>Is the upload process a direct drop of the exact Excel format, or do we design a standard import template?</li>
+          <li>Should product names in the UI be the exact chemical names (CREON, HEPTRAL) or mapped to generic Portfolio labels (Product 1, Product 2)?</li>
+          <li>Is there an active external workbook dependency (BC_KZ_2017_V10_FINAL.XLSM) that needs to be ingested into the database?</li>
+          <li>Will the self-service portal for individual reps be in scope for Phase 1?</li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- ── SECTION 8: ROADMAP ──────────────── -->
+    <section class="section" id="s8">
+      <div class="section-header">
+        <div class="section-icon icon-purple">🗓️</div>
+        <div class="section-header-text">
+          <div class="section-num">Section 08</div>
+          <h2>Development Roadmap</h2>
+          <p>Phased delivery plan for migrating from MVP to production application</p>
+        </div>
+      </div>
+
+      <ul class="timeline">
+        <li>
+          <div class="timeline-dot">1</div>
+          <div class="timeline-content">
+            <strong>Phase 0 — Completed: HTML/JS MVP (Current State)</strong>
+            <span>Static dashboard reading from pre-parsed JS data files. Dual-view table, 6-filter system. Validates all business logic and UI design patterns.</span>
+          </div>
+        </li>
+        <li>
+          <div class="timeline-dot">2</div>
+          <div class="timeline-content">
+            <strong>Phase 1 — Database Design & Migration (3–4 weeks)</strong>
+            <span>Set up PostgreSQL schema. Migrate all CSV data into normalized tables. Build data validation layer. Create import API endpoints for future automation.</span>
+          </div>
+        </li>
+        <li>
+          <div class="timeline-dot">3</div>
+          <div class="timeline-content">
+            <strong>Phase 2 — Backend API & Calculation Engine (4–5 weeks)</strong>
+            <span>Build RESTful API (Node.js/Express or Django REST). Implement the full incentive calculation engine as a service. Add authentication and RBAC system.</span>
+          </div>
+        </li>
+        <li>
+          <div class="timeline-dot">4</div>
+          <div class="timeline-content">
+            <strong>Phase 3 — Frontend SPA (React/Next.js) (4–5 weeks)</strong>
+            <span>Rebuild dashboard as production SPA connected to backend API. Add admin panel: staff management, quarter config, promo line setup. Approval workflow UI.</span>
+          </div>
+        </li>
+        <li>
+          <div class="timeline-dot">5</div>
+          <div class="timeline-content">
+            <strong>Phase 4 — Import / Export & Reporting (2–3 weeks)</strong>
+            <span>Excel import wizard with validation. PDF/Excel export of incentive reports. Quarter-over-Quarter comparison charts. Payroll file generation.</span>
+          </div>
+        </li>
+        <li>
+          <div class="timeline-dot">6</div>
+          <div class="timeline-content">
+            <strong>Phase 5 — UAT, Multi-Country Expansion & Go-Live (3–4 weeks)</strong>
+            <span>User acceptance testing with Finance & HR teams. Add Georgia (GE) country support. Deploy to cloud infrastructure. Training and handover.</span>
+          </div>
+        </li>
+      </ul>
+
+      <h3>Technology Recommendations</h3>
+      <div class="card-grid card-grid-3">
+        <div class="card">
+          <div class="card-label">Frontend</div>
+          <div class="tags">
+            <span class="tag tag-blue">React 18+</span>
+            <span class="tag tag-cyan">Next.js 14</span>
+            <span class="tag tag-purple">Tailwind CSS</span>
+            <span class="tag tag-green">Recharts / Chart.js</span>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-label">Backend</div>
+          <div class="tags">
+            <span class="tag tag-green">Node.js + Express</span>
+            <span class="tag tag-blue">Prisma ORM</span>
+            <span class="tag tag-amber">JWT Auth</span>
+            <span class="tag tag-cyan">ExcelJS (exports)</span>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-label">Infrastructure</div>
+          <div class="tags">
+            <span class="tag tag-purple">PostgreSQL 15</span>
+            <span class="tag tag-blue">Redis Cache</span>
+            <span class="tag tag-amber">Docker Compose</span>
+            <span class="tag tag-green">Azure / AWS</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer style="text-align:center; padding: 24px 0; color: var(--text-light); font-size: 13px; border-top: 1px solid var(--border);">
+      <p>EPD Incentive System — Project Documentation &nbsp;·&nbsp; Established Pharmaceuticals Division &nbsp;·&nbsp; Kazakhstan</p>
+      <p style="margin-top: 4px;">Generated: April 2026 &nbsp;·&nbsp; Version 1.0 &nbsp;·&nbsp; Confidential — For Development Team Use Only</p>
+    </footer>
+
+  </main>
+</div>
+</body>
+</html>

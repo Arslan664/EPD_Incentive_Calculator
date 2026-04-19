@@ -1,0 +1,234 @@
+
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: var(--font-sans, sans-serif); color: var(--color-text-primary); background: transparent; }
+  .doc { max-width: 680px; padding: 4px 0 24px; }
+  h1 { font-size: 20px; font-weight: 500; color: var(--color-text-primary); margin-bottom: 6px; }
+  h2 { font-size: 15px; font-weight: 500; color: var(--color-text-primary); margin: 28px 0 8px; padding-bottom: 5px; border-bottom: 1px solid var(--color-border-tertiary); }
+  h3 { font-size: 13px; font-weight: 500; color: var(--color-text-primary); margin: 16px 0 5px; }
+  p { font-size: 13px; line-height: 1.7; color: var(--color-text-secondary); margin-bottom: 8px; }
+  .subtitle { font-size: 12px; color: var(--color-text-tertiary); margin-bottom: 20px; }
+  .tag { display: inline-block; font-size: 10px; font-weight: 500; padding: 2px 7px; border-radius: 4px; margin-right: 4px; vertical-align: middle; }
+  .tag-purple { background: #EEEDFE; color: #3C3489; }
+  .tag-teal   { background: #E1F5EE; color: #085041; }
+  .tag-amber  { background: #FAEEDA; color: #633806; }
+  .tag-coral  { background: #FAECE7; color: #712B13; }
+  @media (prefers-color-scheme: dark) {
+    .tag-purple { background: #3C3489; color: #CECBF6; }
+    .tag-teal   { background: #085041; color: #9FE1CB; }
+    .tag-amber  { background: #633806; color: #FAC775; }
+    .tag-coral  { background: #712B13; color: #F5C4B3; }
+  }
+  code { font-family: var(--font-mono, monospace); font-size: 11.5px; background: var(--color-background-secondary); padding: 1px 5px; border-radius: 4px; color: var(--color-text-primary); }
+  .code-block { font-family: var(--font-mono, monospace); font-size: 11.5px; background: var(--color-background-secondary); border: 1px solid var(--color-border-tertiary); border-radius: 8px; padding: 12px 14px; line-height: 1.65; color: var(--color-text-primary); overflow-x: auto; margin: 8px 0 12px; white-space: pre; }
+  .module-card { border: 1px solid var(--color-border-tertiary); border-radius: 10px; padding: 14px 16px; margin: 10px 0; background: var(--color-background-secondary); }
+  .module-card h3 { margin-top: 0; }
+  .kv { display: flex; gap: 8px; margin: 4px 0; font-size: 12px; }
+  .kv .k { color: var(--color-text-tertiary); min-width: 110px; }
+  .kv .v { color: var(--color-text-primary); }
+  .step { display: flex; gap: 10px; margin: 6px 0; align-items: flex-start; }
+  .step-num { min-width: 20px; height: 20px; border-radius: 50%; background: var(--color-background-tertiary); display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 500; color: var(--color-text-secondary); margin-top: 2px; }
+  .step-txt { font-size: 12.5px; line-height: 1.6; color: var(--color-text-secondary); }
+  table { width: 100%; border-collapse: collapse; font-size: 12px; margin: 8px 0 14px; }
+  th { text-align: left; font-weight: 500; font-size: 11px; color: var(--color-text-tertiary); border-bottom: 1px solid var(--color-border-tertiary); padding: 6px 8px; text-transform: uppercase; letter-spacing: 0.04em; }
+  td { padding: 7px 8px; border-bottom: 1px solid var(--color-border-tertiary); color: var(--color-text-secondary); line-height: 1.5; vertical-align: top; }
+  tr:last-child td { border-bottom: none; }
+  .assumption { font-size: 11.5px; color: var(--color-text-tertiary); border-left: 2px solid var(--color-border-secondary); padding-left: 10px; margin: 6px 0; line-height: 1.6; }
+  .formula-box { background: var(--color-background-tertiary); border-radius: 8px; padding: 12px 14px; margin: 8px 0; font-size: 12.5px; line-height: 1.9; color: var(--color-text-primary); }
+  .formula-box .label { font-size: 11px; color: var(--color-text-tertiary); display: block; margin-top: 6px; }
+  hr { border: none; border-top: 1px solid var(--color-border-tertiary); margin: 24px 0; }
+</style>
+
+<div class="doc">
+
+<h1>EPD Incentive System — Technical Design Document</h1>
+<p class="subtitle">Version 1.0 · Developer Reference · PostgreSQL + REST API Target Architecture</p>
+
+<!-- ─── A. DATA FLOW PIPELINE ─── -->
+<h2>A. Data Flow Pipeline</h2>
+<p>The system transforms quarterly Excel workbook data into a persistent, queryable incentive ledger. Four pipeline stages move data from source to dashboard.</p>
+
+<div class="module-card">
+  <h3>Stage 1 — Source (Excel Workbook)</h3>
+  <div class="kv"><span class="k">Input sheets</span><span class="v">Staff Input, Promo Product Input, Input Assumptions Calc, Summary Calculation</span></div>
+  <div class="kv"><span class="k">Format</span><span class="v">XLSX, optionally exported to CSV per sheet for ETL parsing</span></div>
+  <div class="kv"><span class="k">External dep.</span><span class="v"><code>BC_KZ_2017_V10_FINAL.XLSM</code> — requires one-time data extraction into DB</span></div>
+  <div class="assumption">Assumption: Row 8 in Summary Calculation contains staggered/unnamed structural headers. ETL must use a fixed positional column map rather than dynamic header detection for this sheet.</div>
+</div>
+
+<div class="module-card">
+  <h3>Stage 2 — Transformation Layer (ETL)</h3>
+  <div class="step"><div class="step-num">1</div><div class="step-txt">Parse Staff Input → upsert <code>representative</code> and <code>rep_quarter_status</code> rows</div></div>
+  <div class="step"><div class="step-num">2</div><div class="step-txt">Parse Promo Product Input → upsert <code>promo_line</code>, <code>portfolio</code>, <code>product</code> with share weights</div></div>
+  <div class="step"><div class="step-num">3</div><div class="step-txt">Parse Input Assumptions Calc → insert <code>sales_plan</code>, <code>sales_actual</code>, <code>call_plan</code>, <code>call_actual</code></div></div>
+  <div class="step"><div class="step-num">4</div><div class="step-txt">Run calculation engine → write <code>incentive_result</code> and <code>portfolio_incentive_split</code></div></div>
+  <div class="step"><div class="step-num">5</div><div class="step-txt">Apply exchange rate from <code>quarter.exchange_rate_lc_usd</code> → populate USD fields</div></div>
+</div>
+
+<div class="module-card">
+  <h3>Stage 3 — Storage (PostgreSQL)</h3>
+  <div class="kv"><span class="k">Schema</span><span class="v">Normalized to 3NF — 12 core tables (see ERD)</span></div>
+  <div class="kv"><span class="k">Key indexes</span><span class="v"><code>rep_id + quarter_id</code> composite on all transactional tables</span></div>
+  <div class="kv"><span class="k">Locking policy</span><span class="v">Historical incentive results are immutable once finalized (status flag on <code>incentive_result</code>)</span></div>
+</div>
+
+<div class="module-card">
+  <h3>Stage 4 — Application Layer</h3>
+  <div class="kv"><span class="k">API</span><span class="v">REST (Node.js / FastAPI), JSON responses</span></div>
+  <div class="kv"><span class="k">Dashboard</span><span class="v">HTML/JS SPA, rep search, KPI cards, portfolio breakdown charts</span></div>
+  <div class="kv"><span class="k">Auth</span><span class="v">Role-based: Admin (full CRUD), Manager (read + approve), Rep (read own record)</span></div>
+</div>
+
+<!-- ─── B. MODULE BREAKDOWN ─── -->
+<h2>B. Module Breakdown</h2>
+
+<div class="module-card">
+  <h3><span class="tag tag-purple">M1</span> Staff Management</h3>
+  <p>Maintains the roster of Medical Representatives. Each rep is linked to quarterly activity records that determine reimbursable eligibility.</p>
+  <div class="kv"><span class="k">Core tables</span><span class="v"><code>representative</code>, <code>rep_quarter_status</code></span></div>
+  <div class="kv"><span class="k">Key logic</span><span class="v">If <code>months_worked = 3</code> → <code>reimbursable_months_pct = 100%</code>. Partial months reduce payout proportionally.</span></div>
+  <div class="kv"><span class="k">Input</span><span class="v">Staff Input sheet rows; "Worked" / leave status per quarter column</span></div>
+</div>
+
+<div class="module-card">
+  <h3><span class="tag tag-teal">M2</span> Product / Portfolio Mapping</h3>
+  <p>Defines the promo-line structure. Each promo-line contains up to 4 portfolios; each portfolio groups one or more products and carries a share weight that determines its contribution to the total incentive.</p>
+  <div class="kv"><span class="k">Core tables</span><span class="v"><code>promo_line</code>, <code>portfolio</code>, <code>product</code></span></div>
+  <div class="kv"><span class="k">Constraint</span><span class="v">Portfolio share weights within a promo-line must sum to 100%</span></div>
+  <div class="kv"><span class="k">Variable products</span><span class="v">Products are named per <code>product.name</code>; UI resolves "Product 1" dynamically from <code>portfolio.portfolio_index + product.name</code></span></div>
+</div>
+
+<div class="module-card">
+  <h3><span class="tag tag-amber">M3</span> Sales vs Plan Calculation Engine</h3>
+  <p>Compares actual sales against plan for each rep × product × quarter combination and produces a percentage achievement score per portfolio.</p>
+  <div class="kv"><span class="k">Core tables</span><span class="v"><code>sales_plan</code>, <code>sales_actual</code></span></div>
+  <div class="kv"><span class="k">Output</span><span class="v"><code>achievement_pct</code> per portfolio, stored in <code>portfolio_incentive_split</code></span></div>
+</div>
+
+<div class="module-card">
+  <h3><span class="tag tag-coral">M4</span> Incentive Calculation Engine</h3>
+  <p>Core business logic module. Applies payment coefficients to achievement scores, computes sales result incentive and TCFA incentive, and aggregates the final payout per rep per quarter.</p>
+  <div class="kv"><span class="k">Core tables</span><span class="v"><code>payment_coefficient</code>, <code>call_actual</code>, <code>incentive_result</code>, <code>portfolio_incentive_split</code></span></div>
+  <div class="kv"><span class="k">Trigger</span><span class="v">Runs after all ACT and PLAN data for a quarter is loaded and verified</span></div>
+</div>
+
+<div class="module-card">
+  <h3><span class="tag tag-purple">M5</span> Reporting Layer</h3>
+  <p>Exposes aggregated data to the dashboard and external exports. Supports per-rep, per-quarter, and cross-quarter views with LC/USD toggle.</p>
+  <div class="kv"><span class="k">Views</span><span class="v"><code>v_rep_summary</code>, <code>v_portfolio_breakdown</code>, <code>v_quarter_leaderboard</code></span></div>
+  <div class="kv"><span class="k">Export</span><span class="v">CSV and XLSX download endpoints; data locked in LC at time of finalization</span></div>
+</div>
+
+<!-- ─── C. INCENTIVE CALCULATION LOGIC ─── -->
+<h2>C. Incentive Calculation Logic</h2>
+
+<h3>Step 1 — ACT vs PLAN (Sales Achievement %)</h3>
+<p>For each rep, each portfolio is scored by comparing total actual sales to total planned sales across all products in that portfolio.</p>
+<div class="formula-box">
+  Portfolio_Achievement% = (Σ ACT_value_LC across products in portfolio) ÷ (Σ PLAN_value_LC across products in portfolio) × 100
+  <span class="label">Example: Portfolio 1 has 2 products. ACT = 85,000 LC, PLAN = 100,000 LC → Achievement = 85.0%</span>
+</div>
+
+<h3>Step 2 — Payment Coefficient Lookup</h3>
+<p>Achievement % is mapped to a multiplier via a banded lookup table (<code>payment_coefficient</code>). This non-linear mapping rewards over-achievement and penalizes under-achievement.</p>
+<table>
+  <thead><tr><th>Achievement range</th><th>Multiplier</th><th>Tier label</th></tr></thead>
+  <tbody>
+    <tr><td>0% – 79%</td><td>0.00</td><td>Below threshold</td></tr>
+    <tr><td>80% – 89%</td><td>0.50</td><td>Partial</td></tr>
+    <tr><td>90% – 99%</td><td>0.80</td><td>Near target</td></tr>
+    <tr><td>100% – 109%</td><td>1.00</td><td>On target</td></tr>
+    <tr><td>110% – 119%</td><td>1.20</td><td>Over target</td></tr>
+    <tr><td>≥ 120%</td><td>1.50</td><td>Exceptional</td></tr>
+  </tbody>
+</table>
+<div class="assumption">Assumption: Exact coefficient bands are not specified in source document. The table above is an illustrative but realistic approximation. The actual bands must be sourced from the Excel Assumptions Calc and seeded into the <code>payment_coefficient</code> table before go-live.</div>
+
+<h3>Step 3 — TCFA (Target Call Frequency Achievement)</h3>
+<p>TCFA measures whether the rep made the required number of customer calls during the quarter.</p>
+<div class="formula-box">
+  TCFA% = (Actual_Calls ÷ Planned_Calls) × 100
+  <span class="label">Example: 87 actual calls ÷ 100 planned = 87.0% TCFA</span>
+</div>
+<p>TCFA is treated as a separate incentive component with its own weight. A TCFA coefficient (from the same payment bands or a dedicated TCFA band table) converts TCFA% into a TCFA multiplier.</p>
+
+<h3>Step 4 — Sales Result Incentive</h3>
+<p>Calculated portfolio-by-portfolio, then summed. Each portfolio's contribution is weighted by its <code>share_weight_pct</code>.</p>
+<div class="formula-box">
+  Portfolio_Contribution_LC = Target_Incentive_Base_LC × Portfolio_Share_Weight × Payment_Multiplier
+
+  Sales_Result_Incentive_LC = Σ Portfolio_Contribution_LC (across all portfolios)
+
+  <span class="label">Example: Base = 500,000 LC. Portfolio 1 weight = 40%, multiplier = 1.00 → contribution = 200,000 LC.
+Portfolio 2 weight = 30%, multiplier = 0.80 → contribution = 120,000 LC.
+Portfolio 3 weight = 30%, multiplier = 1.20 → contribution = 180,000 LC.
+→ Sales Result Incentive = 500,000 LC</span>
+</div>
+
+<h3>Step 5 — TCFA Incentive</h3>
+<div class="formula-box">
+  TCFA_Incentive_LC = Target_Incentive_Base_LC × TCFA_Weight_Pct × TCFA_Multiplier
+  <span class="label">Assumption: TCFA carries a fixed weight (e.g. 20%) of the base. Exact weight must be confirmed from source data.</span>
+</div>
+
+<h3>Step 6 — Final Incentive Derivation</h3>
+<div class="formula-box">
+  Adjusted_Base = Target_Incentive_Base_LC × Reimbursable_Months_Pct
+
+  Total_Incentive_LC = (Sales_Result_Incentive_LC + TCFA_Incentive_LC) × Reimbursable_Months_Pct
+
+  Total_Incentive_USD = Total_Incentive_LC ÷ Quarter.Exchange_Rate_LC_USD
+  <span class="label">Reimbursable_Months_Pct = months_worked / 3. A rep on leave for 1 of 3 months → 66.67%</span>
+</div>
+
+<!-- ─── D. DATA MODELING DECISIONS ─── -->
+<h2>D. Data Modeling Decisions</h2>
+
+<table>
+  <thead><tr><th>Decision</th><th>Rationale</th></tr></thead>
+  <tbody>
+    <tr><td><code>payment_coefficient</code> as a table</td><td>Bands change between incentive periods. Storing them as rows (with an optional <code>effective_from</code> date) allows history without code changes.</td></tr>
+    <tr><td><code>portfolio_incentive_split</code> separate from <code>incentive_result</code></td><td>The result entity holds one row per rep/quarter. Splits hold one row per portfolio per result. This avoids wide, sparse columns for variable portfolio counts.</td></tr>
+    <tr><td>Variable products resolved via <code>portfolio_index</code></td><td>Promo-lines have different product sets. UI labels ("Product 1") are derived dynamically from <code>portfolio.portfolio_index + product.name</code> rather than hard-coded columns.</td></tr>
+    <tr><td>Exchange rate on <code>quarter</code>, not <code>incentive_result</code></td><td>All reps in a quarter use the same rate. Storing on the quarter row prevents duplication. Historical data is locked in LC; USD is always a derived display value.</td></tr>
+    <tr><td><code>call_plan</code> and <code>call_actual</code> separate from sales tables</td><td>TCFA is an independent KPI with its own calculation path. Mixing with sales rows would require NULLs or sparse columns.</td></tr>
+    <tr><td><code>rep_quarter_status.reimbursable_months_pct</code> pre-computed</td><td>Computed once at ETL time from <code>months_worked</code>. Avoids re-derivation in every incentive query.</td></tr>
+  </tbody>
+</table>
+
+<!-- ─── E. BACKEND ARCHITECTURE ─── -->
+<h2>E. Suggested Backend Architecture</h2>
+
+<h3>Tech stack</h3>
+<table>
+  <thead><tr><th>Layer</th><th>Technology</th><th>Notes</th></tr></thead>
+  <tbody>
+    <tr><td>Database</td><td>PostgreSQL 15+</td><td>UUID PKs, JSONB for audit trails, row-level security for rep access</td></tr>
+    <tr><td>ETL / Parser</td><td>Python 3.11 + openpyxl</td><td>Replaces PowerShell script; handles staggered headers via positional map</td></tr>
+    <tr><td>Calculation engine</td><td>Python service or PostgreSQL stored proc</td><td>Idempotent; re-running for a quarter replaces prior results</td></tr>
+    <tr><td>API</td><td>FastAPI (Python) or Node.js + Express</td><td>OpenAPI 3.0 spec generated automatically with FastAPI</td></tr>
+    <tr><td>Auth</td><td>JWT + role claims</td><td>Roles: admin, manager, rep</td></tr>
+    <tr><td>Frontend</td><td>Vanilla JS SPA or React</td><td>Current MVP HTML/CSS/JS is a valid foundation</td></tr>
+  </tbody>
+</table>
+
+<h3>Core API endpoints</h3>
+<div class="code-block">GET    /api/quarters                          → list all quarters
+GET    /api/quarters/{quarter_id}/reps       → reps active in quarter
+
+GET    /api/reps/{rep_id}/incentives         → all incentive results for rep
+GET    /api/reps/{rep_id}/incentives/{qid}   → single quarter result + splits
+GET    /api/reps/{rep_id}/sales/{qid}        → ACT vs PLAN per product
+
+POST   /api/upload/staff                     → ingest Staff Input sheet
+POST   /api/upload/products                  → ingest Promo Product Input
+POST   /api/upload/assumptions               → ingest Input Assumptions Calc
+POST   /api/calculate/{quarter_id}           → trigger incentive engine for quarter
+
+GET    /api/reports/leaderboard/{qid}        → ranked rep summary
+GET    /api/reports/export/{qid}             → CSV/XLSX download</div>
+
+<h3>Upload and import strategy</h3>
+<p>The recommended approach is a <strong>standardized import template</strong> rather than accepting the raw Excel layout. The ETL parses raw XLSX on the backend using a column position map; the user uploads the same file format they already produce. A validation report is returned before data is committed, surfacing missing columns, mismatched reps, and out-of-range values. This directly addresses the open question about unnamed columns in row 8.</p>
+
+</div>

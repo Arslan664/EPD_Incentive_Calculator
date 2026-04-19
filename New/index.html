@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comprehensive Incentive Report</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Segoe+UI:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="app-container">
+        
+        <header class="top-nav">
+            <div class="logo">
+                <div class="logo-icon"><i class="fa-solid fa-chart-line"></i></div>
+                <h2>EPD Comprehensive Report</h2>
+            </div>
+            <div class="nav-right">
+                <div class="search-box">
+                    <i class="fa-solid fa-search"></i>
+                    <input type="text" id="search-input" placeholder="Search Rep or Team...">
+                </div>
+                <div class="profile">
+                    <span>Medical Dept.</span>
+                    <i class="fa-solid fa-user-circle"></i>
+                </div>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <div class="header-section">
+                <h1>Medical Representatives Performance</h1>
+                <p>Detailed Actual vs Plan Achievement & Incentive Output</p>
+            </div>
+
+            <!-- Filters Bar -->
+            <div class="filters-bar" style="display: flex; gap: 16px; margin-bottom: 24px; padding: 16px; background: var(--panel-bg); border: 1px solid var(--border); border-radius: 8px;">
+                <div class="filter-item">
+                    <label style="display: block; font-size: 0.8rem; color: var(--text-muted); margin-bottom: 6px; font-weight: 600; text-transform: uppercase;">Country</label>
+                    <select id="filter-country" style="padding: 8px 12px; border: 1px solid var(--border); border-radius: 6px; outline: none; background: #fff; min-width: 140px;">
+                        <option value="all">All Countries</option>
+                    </select>
+                </div>
+                <div class="filter-item">
+                    <label style="display: block; font-size: 0.8rem; color: var(--text-muted); margin-bottom: 6px; font-weight: 600; text-transform: uppercase;">Year</label>
+                    <select id="filter-year" style="padding: 8px 12px; border: 1px solid var(--border); border-radius: 6px; outline: none; background: #fff; min-width: 120px;">
+                        <option value="all">All Years</option>
+                    </select>
+                </div>
+                <div class="filter-item">
+                    <label style="display: block; font-size: 0.8rem; color: var(--text-muted); margin-bottom: 6px; font-weight: 600; text-transform: uppercase;">Quarter</label>
+                    <select id="filter-quarter" style="padding: 8px 12px; border: 1px solid var(--border); border-radius: 6px; outline: none; background: #fff; min-width: 120px;">
+                        <option value="all">All Quarters</option>
+                    </select>
+                </div>
+                <div class="filter-item">
+                    <label style="display: block; font-size: 0.8rem; color: var(--text-muted); margin-bottom: 6px; font-weight: 600; text-transform: uppercase;">Promo Line</label>
+                    <select id="filter-team" style="padding: 8px 12px; border: 1px solid var(--border); border-radius: 6px; outline: none; background: #fff; min-width: 160px;">
+                        <option value="all">All Teams</option>
+                    </select>
+                </div>
+                <div class="filter-item">
+                    <label style="display: block; font-size: 0.8rem; color: var(--text-muted); margin-bottom: 6px; font-weight: 600; text-transform: uppercase;">Medical Representative</label>
+                    <select id="filter-rep" style="padding: 8px 12px; border: 1px solid var(--border); border-radius: 6px; outline: none; background: #fff; min-width: 180px;">
+                        <option value="all">All Reps</option>
+                    </select>
+                </div>
+                <div class="filter-item">
+                    <label style="display: block; font-size: 0.8rem; color: var(--text-muted); margin-bottom: 6px; font-weight: 600; text-transform: uppercase;">View Report Format</label>
+                    <select id="filter-view" style="padding: 8px 12px; border: 1px solid var(--primary); color: var(--primary); border-radius: 6px; outline: none; background: #e0f2fe; min-width: 220px; font-weight:600;">
+                        <option value="detailed">Actual vs Plan Performance</option>
+                        <option value="summary">Summary Calculation (Financials)</option>
+                    </select>
+                </div>
+                <div style="flex-grow: 1;"></div>
+                <div class="filter-item" style="display: flex; align-items: flex-end;">
+                    <button id="reset-btn" style="padding: 8px 16px; background: #f1f5f9; border: 1px solid var(--border); border-radius: 6px; color: var(--text-main); font-weight: 500; cursor: pointer; transition: background 0.2s;"><i class="fa-solid fa-rotate-right" style="margin-right: 6px;"></i> Reset</button>
+                </div>
+            </div>
+
+            <div class="table-container" style="overflow-x: auto; max-width: 100%;">
+                <table class="data-table" id="report-table" style="min-width: 1000px; font-size: 0.9rem;">
+                    <thead id="table-head">
+                        <!-- Dynamic Header Injected by JS based on View -->
+                    </thead>
+                    <tbody id="table-body">
+                        <!-- Rows injected via JS -->
+                    </tbody>
+                </table>
+                <div id="empty-state" class="empty-state hidden">
+                    <i class="fa-solid fa-folder-open"></i>
+                    <p>No matching representatives found.</p>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Scripts -->
+    <script src="comprehensive_data.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>

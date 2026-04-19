@@ -1,0 +1,4160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comprehensive Incentive Report</title>
+    <style>
+:root {
+    --bg-color: #f7f9fa;
+    --panel-bg: #ffffff;
+    --border: #e2e8f0;
+    --text-main: #1e293b;
+    --text-muted: #64748b;
+    --primary: #0369a1; /* Deep professional blue */
+    --hover-bg: #f1f5f9;
+    --success: #15803d;
+    --danger: #b91c1c;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-main);
+}
+
+.app-container {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* Navbar */
+.top-nav {
+    background-color: var(--panel-bg);
+    border-bottom: 1px solid var(--border);
+    padding: 16px 32px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.logo-icon {
+    background-color: var(--primary);
+    color: white;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    font-size: 1rem;
+}
+
+.logo h2 {
+    font-size: 1.25rem;
+    font-weight: 600;
+}
+
+.nav-right {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+}
+
+.search-box {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.search-box i {
+    position: absolute;
+    left: 12px;
+    color: var(--text-muted);
+}
+
+.search-box input {
+    padding: 8px 16px 8px 36px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    outline: none;
+    width: 250px;
+    transition: width 0.2s;
+}
+
+.search-box input:focus {
+    border-color: var(--primary);
+    width: 300px;
+}
+
+.profile {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--text-muted);
+    font-weight: 500;
+}
+
+.profile i {
+    font-size: 1.5rem;
+}
+
+/* Main content */
+.main-content {
+    padding: 32px;
+    max-width: 1400px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+.header-section {
+    margin-bottom: 24px;
+}
+
+.header-section h1 {
+    font-size: 1.8rem;
+    margin-bottom: 4px;
+    color: var(--text-main);
+}
+
+.header-section p {
+    color: var(--text-muted);
+    font-size: 0.95rem;
+}
+
+/* Table */
+.table-container {
+    background: var(--panel-bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    overflow: hidden;
+}
+
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+}
+
+.data-table th, .data-table td {
+    padding: 16px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+}
+
+.data-table th {
+    background-color: var(--hover-bg);
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    font-weight: 600;
+    color: var(--text-muted);
+    letter-spacing: 0.5px;
+}
+
+.data-table tbody tr:hover {
+    background-color: var(--hover-bg);
+}
+
+.data-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.rep-name {
+    font-weight: 600;
+    font-size: 1rem;
+    color: var(--primary);
+    display: block;
+    margin-bottom: 4px;
+}
+
+.team-badge {
+    display: inline-block;
+    padding: 4px 8px;
+    background: #e0f2fe;
+    color: #0284c7;
+    font-size: 0.75rem;
+    font-weight: 600;
+    border-radius: 4px;
+    margin-top: 4px;
+}
+
+.val-plan {
+    font-size: 0.95rem;
+    color: var(--text-muted);
+}
+
+.val-act {
+    font-size: 1.05rem;
+    font-weight: 600;
+    margin-bottom: 4px;
+}
+
+/* Product list */
+.prod-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.prod-item {
+    font-size: 0.85rem;
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px dashed var(--border);
+    padding-bottom: 4px;
+}
+
+.prod-item:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.prod-name {
+    font-weight: 500;
+    color: var(--text-muted);
+    width: 140px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.highlight-col {
+    background-color: #f8fafc;
+}
+
+.final-incentive {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--success);
+}
+
+/* utility */
+.percent-badge {
+    font-size: 0.75rem;
+    padding: 2px 4px;
+    border-radius: 4px;
+    margin-left: 6px;
+}
+.pct-good { background: #dcfce7; color: #166534; }
+.pct-bad { background: #fee2e2; color: #991b1b; }
+
+.empty-state {
+    padding: 64px;
+    text-align: center;
+    color: var(--text-muted);
+}
+.empty-state i {
+    font-size: 2.5rem;
+    margin-bottom: 12px;
+}
+.hidden { display: none !important; }
+
+/* ── Table container: viewport-bounded so scrollbar stays on screen ── */
+.table-container {
+    overflow-x: auto;
+    overflow-y: auto;
+    max-height: calc(100vh - 260px);
+    max-width: 100%;
+    position: relative;
+    border-radius: 0 0 8px 8px;
+    border: 1px solid var(--border);
+    border-top: none;
+    scrollbar-width: thin;
+    scrollbar-color: #94a3b8 #f1f5f9;
+}
+.table-container::-webkit-scrollbar { width: 8px; height: 8px; }
+.table-container::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 4px; }
+.table-container::-webkit-scrollbar-thumb { background: #94a3b8; border-radius: 4px; }
+.table-container::-webkit-scrollbar-thumb:hover { background: #64748b; }
+.table-container::-webkit-scrollbar-corner { background: #f1f5f9; }
+
+/* ── To-Sign / Statement of Bonuses ────── */
+.tosign-header {
+    background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%);
+    color: white;
+    padding: 28px 32px 20px;
+    margin: -16px -16px 20px;
+    border-radius: 8px 8px 0 0;
+}
+.tosign-header .company { font-size: 0.8rem; letter-spacing: 0.12em; text-transform: uppercase; opacity: 0.65; margin-bottom: 4px; }
+.tosign-header h2 { font-size: 1.3rem; font-weight: 700; margin-bottom: 12px; }
+.tosign-meta { display: flex; gap: 24px; flex-wrap: wrap; }
+.tosign-meta-item .lbl { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.08em; opacity: 0.6; }
+.tosign-meta-item .val { font-size: 0.95rem; font-weight: 600; color: #7dd3fc; }
+
+.pct-over  { background: #dcfce7; color: #15803d; }
+.pct-under { background: #fee2e2; color: #b91c1c; }
+.pct-exact { background: #e0f2fe; color: #0369a1; }
+
+.tosign-totals td { font-weight: 700 !important; background: #f8fafc; border-top: 2px solid #0369a1; }
+
+.signatures-box {
+    margin-top: 32px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 24px;
+    background: var(--panel-bg);
+    /* constrain to parent width — prevent blowing out page */
+    width: 100%;
+    box-sizing: border-box;
+    overflow-x: auto;
+}
+.signatures-box h3 {
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-muted);
+    font-weight: 600;
+    margin-bottom: 20px;
+}
+.signatures-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 20px;
+    min-width: 600px;   /* ensure it has a min so scroll works */
+}
+.sig-line {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+.sig-line .sig-role {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-muted);
+    font-weight: 600;
+    white-space: normal;
+    word-break: break-word;
+}
+.sig-line .sig-blank {
+    border-bottom: 1.5px solid #94a3b8;
+    height: 28px;
+    margin-top: 4px;
+}
+
+</style>
+    <link href="https://fonts.googleapis.com/css2?family=Segoe+UI:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="app-container">
+        
+        <header class="top-nav">
+            <div class="logo">
+                <div class="logo-icon"><i class="fa-solid fa-chart-line"></i></div>
+                <h2>EPD Comprehensive Report</h2>
+            </div>
+            <div class="nav-right">
+                <div class="search-box">
+                    <i class="fa-solid fa-search"></i>
+                    <input type="text" id="search-input" placeholder="Search Rep or Team...">
+                </div>
+                <div class="profile">
+                    <span>Medical Dept.</span>
+                    <i class="fa-solid fa-user-circle"></i>
+                </div>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <div class="header-section">
+                <h1>Medical Representatives Performance</h1>
+                <p>Detailed Actual vs Plan Achievement & Incentive Output</p>
+            </div>
+
+            <!-- Filters Bar -->
+            <div class="filters-bar" style="display: flex; gap: 16px; margin-bottom: 24px; padding: 16px; background: var(--panel-bg); border: 1px solid var(--border); border-radius: 8px;">
+                <div class="filter-item">
+                    <label style="display: block; font-size: 0.8rem; color: var(--text-muted); margin-bottom: 6px; font-weight: 600; text-transform: uppercase;">Country</label>
+                    <select id="filter-country" style="padding: 8px 12px; border: 1px solid var(--border); border-radius: 6px; outline: none; background: #fff; min-width: 140px;">
+                        <option value="all">All Countries</option>
+                    </select>
+                </div>
+                <div class="filter-item">
+                    <label style="display: block; font-size: 0.8rem; color: var(--text-muted); margin-bottom: 6px; font-weight: 600; text-transform: uppercase;">Year</label>
+                    <select id="filter-year" style="padding: 8px 12px; border: 1px solid var(--border); border-radius: 6px; outline: none; background: #fff; min-width: 120px;">
+                        <option value="all">All Years</option>
+                    </select>
+                </div>
+                <div class="filter-item">
+                    <label style="display: block; font-size: 0.8rem; color: var(--text-muted); margin-bottom: 6px; font-weight: 600; text-transform: uppercase;">Quarter</label>
+                    <select id="filter-quarter" style="padding: 8px 12px; border: 1px solid var(--border); border-radius: 6px; outline: none; background: #fff; min-width: 120px;">
+                        <option value="all">All Quarters</option>
+                    </select>
+                </div>
+                <div class="filter-item">
+                    <label style="display: block; font-size: 0.8rem; color: var(--text-muted); margin-bottom: 6px; font-weight: 600; text-transform: uppercase;">Promo Line</label>
+                    <select id="filter-team" style="padding: 8px 12px; border: 1px solid var(--border); border-radius: 6px; outline: none; background: #fff; min-width: 160px;">
+                        <option value="all">All Teams</option>
+                    </select>
+                </div>
+                <div class="filter-item">
+                    <label style="display: block; font-size: 0.8rem; color: var(--text-muted); margin-bottom: 6px; font-weight: 600; text-transform: uppercase;">Medical Representative</label>
+                    <select id="filter-rep" style="padding: 8px 12px; border: 1px solid var(--border); border-radius: 6px; outline: none; background: #fff; min-width: 180px;">
+                        <option value="all">All Reps</option>
+                    </select>
+                </div>
+                <div class="filter-item">
+                    <label style="display: block; font-size: 0.8rem; color: var(--text-muted); margin-bottom: 6px; font-weight: 600; text-transform: uppercase;">View Report Format</label>
+                    <select id="filter-view" style="padding: 8px 12px; border: 1px solid var(--primary); color: var(--primary); border-radius: 6px; outline: none; background: #e0f2fe; min-width: 220px; font-weight:600;">
+                        <option value="detailed">Actual vs Plan Performance</option>
+                        <option value="summary">Summary Calculation (Financials)</option>
+                        <option value="tosign">&#x1F4DC; Statement of Bonuses (To-Sign)</option>
+                    </select>
+                </div>
+                <div style="flex-grow: 1;"></div>
+                <div class="filter-item" style="display: flex; align-items: flex-end; gap: 10px;">
+                    <button id="reset-btn" style="padding: 8px 16px; background: #f1f5f9; border: 1px solid var(--border); border-radius: 6px; color: var(--text-main); font-weight: 500; cursor: pointer; transition: background 0.2s;"><i class="fa-solid fa-rotate-right" style="margin-right: 6px;"></i> Reset</button>
+                </div>
+            </div>
+
+            <!-- Toolbar: row count label only -->
+            <div class="table-toolbar" id="table-toolbar">
+                <div class="table-toolbar-left">
+                    <i class="fa-solid fa-table" style="color:var(--primary);"></i>
+                    <span id="toolbar-label">Loading data…</span>
+                </div>
+            </div>
+
+            <!-- Table container: bounded height so scrollbar stays on screen -->
+            <div class="table-container" id="table-container-el">
+                <table class="data-table" id="report-table" style="min-width: 1000px; font-size: 0.9rem;">
+                    <thead id="table-head" style="position: sticky; top: 0; z-index: 3; background: var(--panel-bg);">
+                        <!-- Dynamic Header Injected by JS based on View -->
+                    </thead>
+                    <tbody id="table-body">
+                        <!-- Rows injected via JS -->
+                    </tbody>
+                </table>
+                <div id="empty-state" class="empty-state hidden">
+                    <i class="fa-solid fa-folder-open"></i>
+                    <p>No matching representatives found.</p>
+                </div>
+            </div>
+
+            <!-- Dedicated container for Statement of Bonuses view.
+                 Shown instead of .table-container so the normal table
+                 is NEVER destroyed and cached JS refs remain valid. -->
+            <div id="tosign-container" style="display:none;"></div>
+        </main>
+    </div>
+
+    <!-- Scripts -->
+    <script>
+const comprehensiveData = [
+    {
+        "IncTCFA_Sum":  "39,553",
+        "FieldWork_Sum":  "39,553",
+        "TotalIncentive_Sum":  "704,035",
+        "Product4_Sum":  "132,896 ",
+        "IncCoaching_Sum":  "0",
+        "Position_Sum":  "Medical Representative",
+        "TotalAct":  "154890",
+        "P1Plan":  "50,436",
+        "ReimbursableMonths_Sum":  "100%",
+        "P1Name":  "DUPHASTON ",
+        "TargetForQuarter_Sum":  "395,525.00 ",
+        "P2Name":  "PHYSIOTENS",
+        "TotalPlan":  "150285",
+        "Name":  "Abasheva Anna",
+        "IncSalesResult_Sum":  "664,482",
+        "P3Name":  "HEPTRAL",
+        "Product3_Sum":  "166,121 ",
+        "P3Plan":  "17,385",
+        "P2Plan":  "30,748",
+        "Id_Sum":  "1",
+        "Product1_Sum":  "199,345 ",
+        "Team_Sum":  null,
+        "TargetTCFA_Sum":  "79,105",
+        "P3Act":  "15,552",
+        "TargetCoaching_Sum":  "0",
+        "TargetSalesResult_Sum":  "316,420.00",
+        "P2Act":  "43,286",
+        "Quarter":  "Q1 2017",
+        "TCFA_Act":  "90%",
+        "P1Act":  "43,700",
+        "TargetBase_Sum":  "395,525.00",
+        "Position":  "Medical Representative",
+        "Product2_Sum":  "166,121 ",
+        "PromoLine":  "Line 2"
+    },
+    {
+        "IncTCFA_Sum":  "0",
+        "FieldWork_Sum":  "0",
+        "TotalIncentive_Sum":  "0",
+        "Product4_Sum":  "0",
+        "IncCoaching_Sum":  "0",
+        "Position_Sum":  "",
+        "TotalAct":  "0",
+        "P1Plan":  "158,905",
+        "ReimbursableMonths_Sum":  "100%",
+        "P1Name":  "CREON",
+        "TargetForQuarter_Sum":  "0",
+        "P2Name":  "HEPTRAL",
+        "TotalPlan":  "429072",
+        "Name":  "Abdulanova Lyazzat",
+        "IncSalesResult_Sum":  "0",
+        "P3Name":  "IRS 19",
+        "Product3_Sum":  "0",
+        "P3Plan":  "15,708",
+        "P2Plan":  "109,098",
+        "Id_Sum":  "",
+        "Product1_Sum":  "0",
+        "Team_Sum":  "",
+        "TargetTCFA_Sum":  "0",
+        "P3Act":  "0",
+        "TargetCoaching_Sum":  "0",
+        "TargetSalesResult_Sum":  "0",
+        "P2Act":  "0",
+        "Quarter":  "Q1 2017",
+        "TCFA_Act":  "93%",
+        "P1Act":  "0",
+        "TargetBase_Sum":  "0",
+        "Position":  "Medical Representative",
+        "Product2_Sum":  "0",
+        "PromoLine":  "Line 1"
+    },
+    {
+        "IncTCFA_Sum":  "79,105",
+        "FieldWork_Sum":  "79,105",
+        "TotalIncentive_Sum":  "395,525",
+        "Product4_Sum":  "15,821 ",
+        "IncCoaching_Sum":  "0",
+        "Position_Sum":  "Medical Representative",
+        "TotalAct":  "1110000",
+        "P1Plan":  "340,539",
+        "ReimbursableMonths_Sum":  "100%",
+        "P1Name":  "CREON",
+        "TargetForQuarter_Sum":  "395,525.00 ",
+        "P2Name":  "HEPTRAL",
+        "TotalPlan":  "913358",
+        "Name":  "Aitbenbetova Dinara",
+        "IncSalesResult_Sum":  "316,420",
+        "P3Name":  "IRS 19",
+        "Product3_Sum":  "31,642 ",
+        "P3Plan":  "39,732",
+        "P2Plan":  "261,353",
+        "Id_Sum":  "2",
+        "Product1_Sum":  "158,210 ",
+        "Team_Sum":  null,
+        "TargetTCFA_Sum":  "79,105",
+        "P3Act":  "32,076",
+        "TargetCoaching_Sum":  "0",
+        "TargetSalesResult_Sum":  "316,420.00",
+        "P2Act":  "376,824",
+        "Quarter":  "Q1 2017",
+        "TCFA_Act":  "96%",
+        "P1Act":  "422,723",
+        "TargetBase_Sum":  "395,525.00",
+        "Position":  "Medical Representative",
+        "Product2_Sum":  "110,747 ",
+        "PromoLine":  "Line 1"
+    },
+    {
+        "IncTCFA_Sum":  "79,105",
+        "FieldWork_Sum":  "79,105",
+        "TotalIncentive_Sum":  "363,883",
+        "Product4_Sum":  "14,239 ",
+        "IncCoaching_Sum":  "0",
+        "Position_Sum":  "Medical Representative",
+        "TotalAct":  "204313",
+        "P1Plan":  "68,787",
+        "ReimbursableMonths_Sum":  "100%",
+        "P1Name":  "CREON",
+        "TargetForQuarter_Sum":  "395,525.00 ",
+        "P2Name":  "HEPTRAL",
+        "TotalPlan":  "188559",
+        "Name":  "Akhmadiyeva Gulzhan",
+        "IncSalesResult_Sum":  "284,778",
+        "P3Name":  "IRS 19",
+        "Product3_Sum":  "28,478 ",
+        "P3Plan":  "5,544",
+        "P2Plan":  "38,699",
+        "Id_Sum":  "3",
+        "Product1_Sum":  "142,389 ",
+        "Team_Sum":  null,
+        "TargetTCFA_Sum":  "79,105",
+        "P3Act":  "7,008",
+        "TargetCoaching_Sum":  "0",
+        "TargetSalesResult_Sum":  "316,420.00",
+        "P2Act":  "28,529",
+        "Quarter":  "Q1 2017",
+        "TCFA_Act":  "95%",
+        "P1Act":  "92,461",
+        "TargetBase_Sum":  "395,525.00",
+        "Position":  "Medical Representative",
+        "Product2_Sum":  "99,672 ",
+        "PromoLine":  "Line 1"
+    },
+    {
+        "IncTCFA_Sum":  "79,105",
+        "FieldWork_Sum":  "79,105",
+        "TotalIncentive_Sum":  "338,569",
+        "Product4_Sum":  "12,973 ",
+        "IncCoaching_Sum":  "0",
+        "Position_Sum":  "Medical Representative",
+        "TotalAct":  "191034",
+        "P1Plan":  "136,377",
+        "ReimbursableMonths_Sum":  "100%",
+        "P1Name":  "DUPHASTON ",
+        "TargetForQuarter_Sum":  "395,525.00 ",
+        "P2Name":  "FEMOSTON",
+        "TotalPlan":  "222913",
+        "Name":  "Akhmetova (Imanzhanova) Sholpan",
+        "IncSalesResult_Sum":  "259,464",
+        "P3Name":  "DUPHALAC ",
+        "Product3_Sum":  "64,866 ",
+        "P3Plan":  "9,258",
+        "P2Plan":  "66,433",
+        "Id_Sum":  "4",
+        "Product1_Sum":  "116,759 ",
+        "Team_Sum":  null,
+        "TargetTCFA_Sum":  "79,105",
+        "P3Act":  "7,873",
+        "TargetCoaching_Sum":  "0",
+        "TargetSalesResult_Sum":  "316,420.00",
+        "P2Act":  "71,108",
+        "Quarter":  "Q1 2017",
+        "TCFA_Act":  "97%",
+        "P1Act":  "103,289",
+        "TargetBase_Sum":  "395,525.00",
+        "Position":  "Medical Representative",
+        "Product2_Sum":  "64,866 ",
+        "PromoLine":  "Line 3 (big cities)"
+    },
+    {
+        "IncTCFA_Sum":  "79,105",
+        "FieldWork_Sum":  "79,105",
+        "TotalIncentive_Sum":  "870,155",
+        "Product4_Sum":  "39,553 ",
+        "IncCoaching_Sum":  "0",
+        "Position_Sum":  "Medical Representative",
+        "TotalAct":  "167141",
+        "P1Plan":  "55,353",
+        "ReimbursableMonths_Sum":  "100%",
+        "P1Name":  "CREON",
+        "TargetForQuarter_Sum":  "395,525.00 ",
+        "P2Name":  "HEPTRAL",
+        "TotalPlan":  "152372",
+        "Name":  "Aliyev Askar",
+        "IncSalesResult_Sum":  "791,050",
+        "P3Name":  "IRS 19",
+        "Product3_Sum":  "79,105 ",
+        "P3Plan":  "3,396",
+        "P2Plan":  "36,091",
+        "Id_Sum":  "5",
+        "Product1_Sum":  "395,525 ",
+        "Team_Sum":  null,
+        "TargetTCFA_Sum":  "79,105",
+        "P3Act":  "2,724",
+        "TargetCoaching_Sum":  "0",
+        "TargetSalesResult_Sum":  "316,420.00",
+        "P2Act":  "43,785",
+        "Quarter":  "Q1 2017",
+        "TCFA_Act":  "100%",
+        "P1Act":  "68,595",
+        "TargetBase_Sum":  "395,525.00",
+        "Position":  "Medical Representative",
+        "Product2_Sum":  "276,868 ",
+        "PromoLine":  "Line 1"
+    },
+    {
+        "IncTCFA_Sum":  "79,105",
+        "FieldWork_Sum":  "79,105",
+        "TotalIncentive_Sum":  "870,155",
+        "Product4_Sum":  "158,210 ",
+        "IncCoaching_Sum":  "0",
+        "Position_Sum":  "Medical Representative",
+        "TotalAct":  "36965",
+        "P1Plan":  "7,155",
+        "ReimbursableMonths_Sum":  "100%",
+        "P1Name":  "DUPHASTON ",
+        "TargetForQuarter_Sum":  "395,525.00 ",
+        "P2Name":  "PHYSIOTENS",
+        "TotalPlan":  "23394",
+        "Name":  "Altynbassova Shynar",
+        "IncSalesResult_Sum":  "791,050",
+        "P3Name":  "HEPTRAL",
+        "Product3_Sum":  "197,763 ",
+        "P3Plan":  "4,425",
+        "P2Plan":  "5,843",
+        "Id_Sum":  "6",
+        "Product1_Sum":  "237,315 ",
+        "Team_Sum":  null,
+        "TargetTCFA_Sum":  "79,105",
+        "P3Act":  "8,007",
+        "TargetCoaching_Sum":  "0",
+        "TargetSalesResult_Sum":  "316,420.00",
+        "P2Act":  "10,125",
+        "Quarter":  "Q1 2017",
+        "TCFA_Act":  "87%",
+        "P1Act":  "11,502",
+        "TargetBase_Sum":  "395,525.00",
+        "Position":  "Medical Representative",
+        "Product2_Sum":  "197,763 ",
+        "PromoLine":  "Line 2"
+    },
+    {
+        "IncTCFA_Sum":  "79,105",
+        "FieldWork_Sum":  "79,105",
+        "TotalIncentive_Sum":  "585,377",
+        "Product4_Sum":  "50,627 ",
+        "IncCoaching_Sum":  "0",
+        "Position_Sum":  "Pharm Representative",
+        "TotalAct":  "286114",
+        "P1Plan":  "158,905",
+        "ReimbursableMonths_Sum":  "100%",
+        "P1Name":  "CREON",
+        "TargetForQuarter_Sum":  "395,525.00 ",
+        "P2Name":  "DUPHALAC ",
+        "TotalPlan":  "293930",
+        "Name":  "Alzhanova Zhuldyz",
+        "IncSalesResult_Sum":  "506,272",
+        "P3Name":  "IRS 19",
+        "Product3_Sum":  "75,941 ",
+        "P3Plan":  "15,708",
+        "P2Plan":  "92,581",
+        "Id_Sum":  "7",
+        "Product1_Sum":  "227,822 ",
+        "Team_Sum":  null,
+        "TargetTCFA_Sum":  "79,105",
+        "P3Act":  "12,972",
+        "TargetCoaching_Sum":  "0",
+        "TargetSalesResult_Sum":  "316,420.00",
+        "P2Act":  "78,735",
+        "Quarter":  "Q1 2017",
+        "TCFA_Act":  "91%",
+        "P1Act":  "168,610",
+        "TargetBase_Sum":  "395,525.00",
+        "Position":  "Pharm Representative",
+        "Product2_Sum":  "151,882 ",
+        "PromoLine":  "Pharma line"
+    },
+    {
+        "IncTCFA_Sum":  "79,105",
+        "FieldWork_Sum":  "79,105",
+        "TotalIncentive_Sum":  "395,525",
+        "Product4_Sum":  "94,926 ",
+        "IncCoaching_Sum":  "0",
+        "Position_Sum":  "Medical Representative",
+        "TotalAct":  "795464",
+        "P1Plan":  "17,027",
+        "ReimbursableMonths_Sum":  "100%",
+        "P1Name":  "CREON",
+        "TargetForQuarter_Sum":  "395,525.00 ",
+        "P2Name":  "PHYSIOTENS",
+        "TotalPlan":  "528707",
+        "Name":  "Arestova Yelena",
+        "IncSalesResult_Sum":  "316,420",
+        "P3Name":  "HEPTRAL",
+        "Product3_Sum":  "94,926 ",
+        "P3Plan":  "261,353",
+        "P2Plan":  "148,193",
+        "Id_Sum":  "8",
+        "Product1_Sum":  "31,642 ",
+        "Team_Sum":  null,
+        "TargetTCFA_Sum":  "79,105",
+        "P3Act":  "376,824",
+        "TargetCoaching_Sum":  "0",
+        "TargetSalesResult_Sum":  "316,420.00",
+        "P2Act":  "282,510",
+        "Quarter":  "Q1 2017",
+        "TCFA_Act":  "94%",
+        "P1Act":  "21,136",
+        "TargetBase_Sum":  "395,525.00",
+        "Position":  "Medical Representative",
+        "Product2_Sum":  "94,926 ",
+        "PromoLine":  "Line 2 (big cities)"
+    },
+    {
+        "IncTCFA_Sum":  "39,553",
+        "FieldWork_Sum":  "39,553",
+        "TotalIncentive_Sum":  "830,603",
+        "Product4_Sum":  "158,210 ",
+        "IncCoaching_Sum":  "0",
+        "Position_Sum":  "Medical Representative",
+        "TotalAct":  "150505",
+        "P1Plan":  "43,200",
+        "ReimbursableMonths_Sum":  "100%",
+        "P1Name":  "DUPHASTON ",
+        "TargetForQuarter_Sum":  "395,525.00 ",
+        "P2Name":  "PHYSIOTENS",
+        "TotalPlan":  "147662",
+        "Name":  "Auyelbekova Syndykul",
+        "IncSalesResult_Sum":  "791,050",
+        "P3Name":  "HEPTRAL",
+        "Product3_Sum":  "197,763 ",
+        "P3Plan":  "17,055",
+        "P2Plan":  "58,160",
+        "Id_Sum":  "9",
+        "Product1_Sum":  "237,315 ",
+        "Team_Sum":  null,
+        "TargetTCFA_Sum":  "79,105",
+        "P3Act":  "21,215",
+        "TargetCoaching_Sum":  "0",
+        "TargetSalesResult_Sum":  "316,420.00",
+        "P2Act":  "71,780",
+        "Quarter":  "Q1 2017",
+        "TCFA_Act":  "92%",
+        "P1Act":  "25,650",
+        "TargetBase_Sum":  "395,525.00",
+        "Position":  "Medical Representative",
+        "Product2_Sum":  "197,763 ",
+        "PromoLine":  "Line 2"
+    },
+    {
+        "IncTCFA_Sum":  "79,105",
+        "FieldWork_Sum":  "79,105",
+        "TotalIncentive_Sum":  "458,809",
+        "Product4_Sum":  "113,911 ",
+        "IncCoaching_Sum":  "0",
+        "Position_Sum":  "Medical Representative",
+        "TotalAct":  "406216",
+        "P1Plan":  "12,113",
+        "ReimbursableMonths_Sum":  "100%",
+        "P1Name":  "CREON",
+        "TargetForQuarter_Sum":  "395,525.00 ",
+        "P2Name":  "PHYSIOTENS",
+        "TotalPlan":  "359764",
+        "Name":  "Aybolova Zhazira",
+        "IncSalesResult_Sum":  "379,704",
+        "P3Name":  "HEPTRAL",
+        "Product3_Sum":  "113,911 ",
+        "P3Plan":  "128,976",
+        "P2Plan":  "166,047",
+        "Id_Sum":  "10",
+        "Product1_Sum":  "37,970 ",
+        "Team_Sum":  null,
+        "TargetTCFA_Sum":  "79,105",
+        "P3Act":  "155,755",
+        "TargetCoaching_Sum":  "0",
+        "TargetSalesResult_Sum":  "316,420.00",
+        "P2Act":  "174,154",
+        "Quarter":  "Q1 2017",
+        "TCFA_Act":  "96%",
+        "P1Act":  "15,049",
+        "TargetBase_Sum":  "395,525.00",
+        "Position":  "Medical Representative",
+        "Product2_Sum":  "113,911 ",
+        "PromoLine":  "Line 2 (big cities)"
+    },
+    {
+        "IncTCFA_Sum":  "79,105",
+        "FieldWork_Sum":  "79,105",
+        "TotalIncentive_Sum":  "870,155",
+        "Product4_Sum":  "158,210 ",
+        "IncCoaching_Sum":  "0",
+        "Position_Sum":  "Medical Representative",
+        "TotalAct":  "77585",
+        "P1Plan":  "17,712",
+        "ReimbursableMonths_Sum":  "100%",
+        "P1Name":  "DUPHASTON ",
+        "TargetForQuarter_Sum":  "395,525.00 ",
+        "P2Name":  "PHYSIOTENS",
+        "TotalPlan":  "74619",
+        "Name":  "Baimysheva Mariya",
+        "IncSalesResult_Sum":  "791,050",
+        "P3Name":  "HEPTRAL",
+        "Product3_Sum":  "197,763 ",
+        "P3Plan":  "8,684",
+        "P2Plan":  "32,747",
+        "Id_Sum":  "11",
+        "Product1_Sum":  "237,315 ",
+        "Team_Sum":  null,
+        "TargetTCFA_Sum":  "79,105",
+        "P3Act":  "6,158",
+        "TargetCoaching_Sum":  "0",
+        "TargetSalesResult_Sum":  "316,420.00",
+        "P2Act":  "41,958",
+        "Quarter":  "Q1 2017",
+        "TCFA_Act":  "95%",
+        "P1Act":  "14,175",
+        "TargetBase_Sum":  "395,525.00",
+        "Position":  "Medical Representative",
+        "Product2_Sum":  "197,763 ",
+        "PromoLine":  "Line 2"
+    },
+    {
+        "IncTCFA_Sum":  "79,105",
+        "FieldWork_Sum":  "79,105",
+        "TotalIncentive_Sum":  "727,766",
+        "Product4_Sum":  "32,433 ",
+        "IncCoaching_Sum":  "0",
+        "Position_Sum":  "Medical Representative",
+        "TotalAct":  "374051",
+        "P1Plan":  "240,300",
+        "ReimbursableMonths_Sum":  "100%",
+        "P1Name":  "DUPHASTON ",
+        "TargetForQuarter_Sum":  "395,525.00 ",
+        "P2Name":  "FEMOSTON",
+        "TotalPlan":  "400487",
+        "Name":  "Bakisheva Aliya",
+        "IncSalesResult_Sum":  "648,661",
+        "P3Name":  "DUPHALAC ",
+        "Product3_Sum":  "162,165 ",
+        "P3Plan":  "18,515",
+        "P2Plan":  "120,246",
+        "Id_Sum":  "12",
+        "Product1_Sum":  "291,897 ",
+        "Team_Sum":  null,
+        "TargetTCFA_Sum":  "79,105",
+        "P3Act":  "19,941",
+        "TargetCoaching_Sum":  "0",
+        "TargetSalesResult_Sum":  "316,420.00",
+        "P2Act":  "116,371",
+        "Quarter":  "Q1 2017",
+        "TCFA_Act":  "97%",
+        "P1Act":  "216,203",
+        "TargetBase_Sum":  "395,525.00",
+        "Position":  "Medical Representative",
+        "Product2_Sum":  "162,165 ",
+        "PromoLine":  "Line 3 (big cities)"
+    },
+    {
+        "IncTCFA_Sum":  "79,105",
+        "FieldWork_Sum":  "79,105",
+        "TotalIncentive_Sum":  "382,868",
+        "Product4_Sum":  "91,129 ",
+        "IncCoaching_Sum":  "0",
+        "Position_Sum":  "Medical Representative",
+        "TotalAct":  "215127",
+        "P1Plan":  "5,398",
+        "ReimbursableMonths_Sum":  "100%",
+        "P1Name":  "CREON",
+        "TargetForQuarter_Sum":  "395,525.00 ",
+        "P2Name":  "PHYSIOTENS",
+        "TotalPlan":  "184333",
+        "Name":  "Balanesku Irina",
+        "IncSalesResult_Sum":  "303,763",
+        "P3Name":  "HEPTRAL",
+        "Product3_Sum":  "91,129 ",
+        "P3Plan":  "73,172",
+        "P2Plan":  "66,071",
+        "Id_Sum":  "13",
+        "Product1_Sum":  "30,376 ",
+        "Team_Sum":  null,
+        "TargetTCFA_Sum":  "79,105",
+        "P3Act":  "62,989",
+        "TargetCoaching_Sum":  "0",
+        "TargetSalesResult_Sum":  "316,420.00",
+        "P2Act":  "91,483",
+        "Quarter":  "Q1 2017",
+        "TCFA_Act":  "98%",
+        "P1Act":  "6,032",
+        "TargetBase_Sum":  "395,525.00",
+        "Position":  "Medical Representative",
+        "Product2_Sum":  "91,129 ",
+        "PromoLine":  "Line 2 (big cities)"
+    },
+    {
+        "IncTCFA_Sum":  "79,105",
+        "FieldWork_Sum":  "79,105",
+        "TotalIncentive_Sum":  "338,569",
+        "Product4_Sum":  "12,973 ",
+        "IncCoaching_Sum":  "0",
+        "Position_Sum":  "Medical Representative",
+        "TotalAct":  "191034",
+        "P1Plan":  "136,377",
+        "ReimbursableMonths_Sum":  "100%",
+        "P1Name":  "DUPHASTON ",
+        "TargetForQuarter_Sum":  "395,525.00 ",
+        "P2Name":  "FEMOSTON",
+        "TotalPlan":  "222913",
+        "Name":  "Balmagambetova Zamza",
+        "IncSalesResult_Sum":  "259,464",
+        "P3Name":  "DUPHALAC ",
+        "Product3_Sum":  "64,866 ",
+        "P3Plan":  "9,258",
+        "P2Plan":  "66,433",
+        "Id_Sum":  "14",
+        "Product1_Sum":  "116,759 ",
+        "Team_Sum":  null,
+        "TargetTCFA_Sum":  "79,105",
+        "P3Act":  "7,873",
+        "TargetCoaching_Sum":  "0",
+        "TargetSalesResult_Sum":  "316,420.00",
+        "P2Act":  "71,108",
+        "Quarter":  "Q1 2017",
+        "TCFA_Act":  "95%",
+        "P1Act":  "103,289",
+        "TargetBase_Sum":  "395,525.00",
+        "Position":  "Medical Representative",
+        "Product2_Sum":  "64,866 ",
+        "PromoLine":  "Line 3 (big cities)"
+    },
+    {
+        "IncTCFA_Sum":  "39,553",
+        "FieldWork_Sum":  "39,553",
+        "TotalIncentive_Sum":  "514,183",
+        "Product4_Sum":  "23,732 ",
+        "IncCoaching_Sum":  "0",
+        "Position_Sum":  "Medical Representative",
+        "TotalAct":  "409555",
+        "P1Plan":  "158,905",
+        "ReimbursableMonths_Sum":  "100%",
+        "P1Name":  "CREON",
+        "TargetForQuarter_Sum":  "395,525.00 ",
+        "P2Name":  "HEPTRAL",
+        "TotalPlan":  "429072",
+        "Name":  "Bayzakova Gulzhan",
+        "IncSalesResult_Sum":  "474,630",
+        "P3Name":  "IRS 19",
+        "Product3_Sum":  "47,463 ",
+        "P3Plan":  "15,708",
+        "P2Plan":  "109,098",
+        "Id_Sum":  "15",
+        "Product1_Sum":  "237,315 ",
+        "Team_Sum":  null,
+        "TargetTCFA_Sum":  "79,105",
+        "P3Act":  "12,972",
+        "TargetCoaching_Sum":  "0",
+        "TargetSalesResult_Sum":  "316,420.00",
+        "P2Act":  "98,730",
+        "Quarter":  "Q1 2017",
+        "TCFA_Act":  "82%",
+        "P1Act":  "168,610",
+        "TargetBase_Sum":  "395,525.00",
+        "Position":  "Medical Representative",
+        "Product2_Sum":  "166,121 ",
+        "PromoLine":  "Line 1"
+    },
+    {
+        "IncTCFA_Sum":  "79,105",
+        "FieldWork_Sum":  "79,105",
+        "TotalIncentive_Sum":  "617,019",
+        "Product4_Sum":  "26,896 ",
+        "IncCoaching_Sum":  "0",
+        "Position_Sum":  "Medical Representative",
+        "TotalAct":  "178007",
+        "P1Plan":  "69,380",
+        "ReimbursableMonths_Sum":  "100%",
+        "P1Name":  "CREON",
+        "TargetForQuarter_Sum":  "395,525.00 ",
+        "P2Name":  "HEPTRAL",
+        "TotalPlan":  "170396",
+        "Name":  "Bekbauova Saltanat",
+        "IncSalesResult_Sum":  "537,914",
+        "P3Name":  "IRS 19",
+        "Product3_Sum":  "53,791 ",
+        "P3Plan":  "9,180",
+        "P2Plan":  "29,883",
+        "Id_Sum":  "16",
+        "Product1_Sum":  "268,957 ",
+        "Team_Sum":  null,
+        "TargetTCFA_Sum":  "79,105",
+        "P3Act":  "6,948",
+        "TargetCoaching_Sum":  "0",
+        "TargetSalesResult_Sum":  "316,420.00",
+        "P2Act":  "33,945",
+        "Quarter":  "Q1 2017",
+        "TCFA_Act":  "87%",
+        "P1Act":  "74,774",
+        "TargetBase_Sum":  "395,525.00",
+        "Position":  "Medical Representative",
+        "Product2_Sum":  "188,270 ",
+        "PromoLine":  "Line 1"
+    },
+    {
+        "IncTCFA_Sum":  "0",
+        "FieldWork_Sum":  "0",
+        "TotalIncentive_Sum":  "0",
+        "Product4_Sum":  "0",
+        "IncCoaching_Sum":  "0",
+        "Position_Sum":  "",
+        "TotalAct":  "112456",
+        "P1Plan":  "33,352",
+        "ReimbursableMonths_Sum":  "100%",
+        "P1Name":  "CREON",
+        "TargetForQuarter_Sum":  "0",
+        "P2Name":  "HEPTRAL",
+        "TotalPlan":  "104416",
+        "Name":  "Bekesheva Zalina",
+        "IncSalesResult_Sum":  "0",
+        "P3Name":  "IRS 19",
+        "Product3_Sum":  "0",
+        "P3Plan":  "3,696",
+        "P2Plan":  "24,765",
+        "Id_Sum":  "",
+        "Product1_Sum":  "0",
+        "Team_Sum":  "",
+        "TargetTCFA_Sum":  "0",
+        "P3Act":  "3,780",
+        "TargetCoaching_Sum":  "0",
+        "TargetSalesResult_Sum":  "0",
+        "P2Act":  "30,015",
+        "Quarter":  "Q1 2017",
+        "TCFA_Act":  "0%",
+        "P1Act":  "40,131",
+        "TargetBase_Sum":  "0",
+        "Position":  "Medical Representative",
+        "Product2_Sum":  "0",
+        "PromoLine":  "Line 1"
+    },
+    {
+        "IncTCFA_Sum":  "0",
+        "FieldWork_Sum":  "0",
+        "TotalIncentive_Sum":  "0",
+        "Product4_Sum":  "0 ",
+        "IncCoaching_Sum":  "0",
+        "Position_Sum":  "Medical Representative",
+        "TotalAct":  "110001",
+        "P1Plan":  "27,122",
+        "ReimbursableMonths_Sum":  "100%",
+        "P1Name":  "DUPHASTON ",
+        "TargetForQuarter_Sum":  "395,525.00 ",
+        "P2Name":  "PHYSIOTENS",
+        "TotalPlan":  "125006",
+        "Name":  "Boyarova Alfiya",
+        "IncSalesResult_Sum":  "0",
+        "P3Name":  "HEPTRAL",
+        "Product3_Sum":  "0 ",
+        "P3Plan":  "13,059",
+        "P2Plan":  "56,517",
+        "Id_Sum":  "17",
+        "Product1_Sum":  "0 ",
+        "Team_Sum":  null,
+        "TargetTCFA_Sum":  "0",
+        "P3Act":  "10,104",
+        "TargetCoaching_Sum":  "0",
+        "TargetSalesResult_Sum":  "0.00",
+        "P2Act":  "48,418",
+        "Quarter":  "Q1 2017",
+        "TCFA_Act":  "81%",
+        "P1Act":  "27,311",
+        "TargetBase_Sum":  "395,525.00",
+        "Position":  "Medical Representative",
+        "Product2_Sum":  "0 ",
+        "PromoLine":  "Line 2"
+    },
+    {
+        "IncTCFA_Sum":  "0",
+        "FieldWork_Sum":  "0",
+        "TotalIncentive_Sum":  "0",
+        "Product4_Sum":  "0 ",
+        "IncCoaching_Sum":  "0",
+        "Position_Sum":  "Medical Representative",
+        "TotalAct":  "178834",
+        "P1Plan":  "51,543",
+        "ReimbursableMonths_Sum":  "100%",
+        "P1Name":  "CREON",
+        "TargetForQuarter_Sum":  "395,525.00 ",
+        "P2Name":  "HEPTRAL",
+        "TotalPlan":  "161182",
+        "Name":  "Brialinova Inkar",
+        "IncSalesResult_Sum":  "0",
+        "P3Name":  "IRS 19",
+        "Product3_Sum":  "0 ",
+        "P3Plan":  "5,208",
+        "P2Plan":  "38,699",
+        "Id_Sum":  "18",
+        "Product1_Sum":  "0 ",
+        "Team_Sum":  null,
+        "TargetTCFA_Sum":  "0",
+        "P3Act":  "6,708",
+        "TargetCoaching_Sum":  "0",
+        "TargetSalesResult_Sum":  "0.00",
+        "P2Act":  "39,195",
+        "Quarter":  "Q1 2017",
+        "TCFA_Act":  "99%",
+        "P1Act":  "65,556",
+        "TargetBase_Sum":  "395,525.00",
+        "Position":  "Medical Representative",
+        "Product2_Sum":  "0 ",
+        "PromoLine":  "Line 1"
+    },
+    {
+        "IncTCFA_Sum":  "79,105",
+        "FieldWork_Sum":  "79,105",
+        "TotalIncentive_Sum":  "395,525",
+        "Product4_Sum":  "15,821 ",
+        "IncCoaching_Sum":  "0",
+        "Position_Sum":  "Medical Representative",
+        "TotalAct":  "1110000",
+        "P1Plan":  "340,539",
+        "ReimbursableMonths_Sum":  "100%",
+        "P1Name":  "CREON",
+        "TargetForQuarter_Sum":  "395,525.00 ",
+        "P2Name":  "HEPTRAL",
+        "TotalPlan":  "913358",
+        "Name":  "Donayeva Nazira",
+        "IncSalesResult_Sum":  "316,420",
+        "P3Name":  "IRS 19",
+        "Product3_Sum":  "31,642 ",
+        "P3Plan":  "39,732",
+        "P2Plan":  "261,353",
+        "Id_Sum":  "19",
+        "Product1_Sum":  "158,210 ",
+        "Team_Sum":  null,
+        "TargetTCFA_Sum":  "79,105",
+        "P3Act":  "32,076",
+        "TargetCoaching_Sum":  "0",
+        "TargetSalesResult_Sum":  "316,420.00",
+        "P2Act":  "376,824",
+        "Quarter":  "Q1 2017",
+        "TCFA_Act":  "93%",
+        "P1Act":  "422,723",
+        "TargetBase_Sum":  "395,525.00",
+        "Position":  "Medical Representative",
+        "Product2_Sum":  "110,747 ",
+        "PromoLine":  "Line 1"
+    },
+    {
+        "IncTCFA_Sum":  "79,105",
+        "FieldWork_Sum":  "79,105",
+        "TotalIncentive_Sum":  "585,377",
+        "Product4_Sum":  "50,627 ",
+        "IncCoaching_Sum":  "0",
+        "Position_Sum":  "Pharm Representative",
+        "TotalAct":  "689103",
+        "P1Plan":  "340,539",
+        "ReimbursableMonths_Sum":  "100%",
+        "P1Name":  "CREON",
+        "TargetForQuarter_Sum":  "395,525.00 ",
+        "P2Name":  "DUPHALAC ",
+        "TotalPlan":  "602491",
+        "Name":  "Dratkov Grigoriy",
+        "IncSalesResult_Sum":  "506,272",
+        "P3Name":  "IRS 19",
+        "Product3_Sum":  "75,941 ",
+        "P3Plan":  "39,732",
+        "P2Plan":  "185,153",
+        "Id_Sum":  "20",
+        "Product1_Sum":  "227,822 ",
+        "Team_Sum":  null,
+        "TargetTCFA_Sum":  "79,105",
+        "P3Act":  "32,076",
+        "TargetCoaching_Sum":  "0",
+        "TargetSalesResult_Sum":  "316,420.00",
+        "P2Act":  "199,408",
+        "Quarter":  "Q1 2017",
+        "TCFA_Act":  "100%",
+        "P1Act":  "422,723",
+        "TargetBase_Sum":  "395,525.00",
+        "Position":  "Pharm Representative",
+        "Product2_Sum":  "151,882 ",
+        "PromoLine":  "Pharma line"
+    },
+    {
+        "IncTCFA_Sum":  "79,105",
+        "FieldWork_Sum":  "79,105",
+        "TotalIncentive_Sum":  "553,735",
+        "Product4_Sum":  "23,732 ",
+        "IncCoaching_Sum":  "0",
+        "Position_Sum":  "Medical Representative",
+        "TotalAct":  "156496",
+        "P1Plan":  "55,254",
+        "ReimbursableMonths_Sum":  "100%",
+        "P1Name":  "CREON",
+        "TargetForQuarter_Sum":  "395,525.00 ",
+        "P2Name":  "HEPTRAL",
+        "TotalPlan":  "153053",
+        "Name":  "Feist Yekaterina",
+        "IncSalesResult_Sum":  "474,630",
+        "P3Name":  "IRS 19",
+        "Product3_Sum":  "47,463 ",
+        "P3Plan":  "4,560",
+        "P2Plan":  "34,770",
+        "Id_Sum":  "21",
+        "Product1_Sum":  "237,315 ",
+        "Team_Sum":  null,
+        "TargetTCFA_Sum":  "79,105",
+        "P3Act":  "5,112",
+        "TargetCoaching_Sum":  "0",
+        "TargetSalesResult_Sum":  "316,420.00",
+        "P2Act":  "31,105",
+        "Quarter":  "Q1 2017",
+        "TCFA_Act":  "84%",
+        "P1Act":  "67,079",
+        "TargetBase_Sum":  "395,525.00",
+        "Position":  "Medical Representative",
+        "Product2_Sum":  "166,121 ",
+        "PromoLine":  "Line 1"
+    },
+    {
+        "IncTCFA_Sum":  "72,600",
+        "FieldWork_Sum":  "145,200",
+        "TotalIncentive_Sum":  "1,016,400",
+        "Product4_Sum":  "43,560 ",
+        "IncCoaching_Sum":  "72,600",
+        "Position_Sum":  "Regional Manager",
+        "TotalAct":  "847234",
+        "P1Plan":  "453,232",
+        "ReimbursableMonths_Sum":  "100%",
+        "P1Name":  "GASTRO",
+        "TargetForQuarter_Sum":  "726,000.00 ",
+        "P2Name":  "GYNECOLOGY",
+        "TotalPlan":  "901151",
+        "Name":  "Galiyeva Saule",
+        "IncSalesResult_Sum":  "871,200",
+        "P3Name":  "CARDIO-NEURO",
+        "Product3_Sum":  "174,240 ",
+        "P3Plan":  "164,576",
+        "P2Plan":  "235,943",
+        "Id_Sum":  "22",
+        "Product1_Sum":  "435,600 ",
+        "Team_Sum":  null,
+        "TargetTCFA_Sum":  "72,600",
+        "P3Act":  "170,767",
+        "TargetCoaching_Sum":  "72,600",
+        "TargetSalesResult_Sum":  "580,800.00",
+        "P2Act":  "198,792",
+        "Quarter":  "Q1 2017",
+        "TCFA_Act":  "93%",
+        "P1Act":  "434,045",
+        "TargetBase_Sum":  "726,000.00",
+        "Position":  "Regional Manager",
+        "Product2_Sum":  "217,800 ",
+        "PromoLine":  "Regional Manager-1"
+    },
+    {
+        "IncTCFA_Sum":  "39,553",
+        "FieldWork_Sum":  "39,553",
+        "TotalIncentive_Sum":  "387,615",
+        "Product4_Sum":  "17,403 ",
+        "IncCoaching_Sum":  "0",
+        "Position_Sum":  "Medical Representative",
+        "TotalAct":  "272288",
+        "P1Plan":  "99,030",
+        "ReimbursableMonths_Sum":  "100%",
+        "P1Name":  "CREON",
+        "TargetForQuarter_Sum":  "395,525.00 ",
+        "P2Name":  "HEPTRAL",
+        "TotalPlan":  "264514",
+        "Name":  "Gulyakova Olga",
+        "IncSalesResult_Sum":  "348,062",
+        "P3Name":  "IRS 19",
+        "Product3_Sum":  "34,806 ",
+        "P3Plan":  "6,372",
+        "P2Plan":  "68,417",
+        "Id_Sum":  "23",
+        "Product1_Sum":  "174,031 ",
+        "Team_Sum":  null,
+        "TargetTCFA_Sum":  "79,105",
+        "P3Act":  "6,744",
+        "TargetCoaching_Sum":  "0",
+        "TargetSalesResult_Sum":  "316,420.00",
+        "P2Act":  "58,432",
+        "Quarter":  "Q1 2017",
+        "TCFA_Act":  "95%",
+        "P1Act":  "110,484",
+        "TargetBase_Sum":  "395,525.00",
+        "Position":  "Medical Representative",
+        "Product2_Sum":  "121,822 ",
+        "PromoLine":  "Line 1"
+    },
+    {
+        "IncTCFA_Sum":  "79,105",
+        "FieldWork_Sum":  "79,105",
+        "TotalIncentive_Sum":  "395,525",
+        "Product4_Sum":  "15,821 ",
+        "IncCoaching_Sum":  "0",
+        "Position_Sum":  "Medical Representative",
+        "TotalAct":  "1110000",
+        "P1Plan":  "340,539",
+        "ReimbursableMonths_Sum":  "100%",
+        "P1Name":  "CREON",
+        "TargetForQuarter_Sum":  "395,525.00 ",
+        "P2Name":  "HEPTRAL",
+        "TotalPlan":  "913358",
+        "Name":  "Inkarbekova Nurbibi",
+        "IncSalesResult_Sum":  "316,420",
+        "P3Name":  "IRS 19",
+        "Product3_Sum":  "31,642 ",
+        "P3Plan":  "39,732",
+        "P2Plan":  "261,353",
+        "Id_Sum":  "24",
+        "Product1_Sum":  "158,210 ",
+        "Team_Sum":  null,
+        "TargetTCFA_Sum":  "79,105",
+        "P3Act":  "32,076",
+        "TargetCoaching_Sum":  "0",
+        "TargetSalesResult_Sum":  "316,420.00",
+        "P2Act":  "376,824",
+        "Quarter":  "Q1 2017",
+        "TCFA_Act":  "98%",
+        "P1Act":  "422,723",
+        "TargetBase_Sum":  "395,525.00",
+        "Position":  "Medical Representative",
+        "Product2_Sum":  "110,747 ",
+        "PromoLine":  "Line 1"
+    },
+    {
+        "IncTCFA_Sum":  "39,553",
+        "FieldWork_Sum":  "39,553",
+        "TotalIncentive_Sum":  "387,615",
+        "Product4_Sum":  "69,612 ",
+        "IncCoaching_Sum":  "0",
+        "Position_Sum":  "Medical Representative",
+        "TotalAct":  "151483",
+        "P1Plan":  "34,425",
+        "ReimbursableMonths_Sum":  "100%",
+        "P1Name":  "DUPHASTON ",
+        "TargetForQuarter_Sum":  "395,525.00 ",
+        "P2Name":  "PHYSIOTENS",
+        "TotalPlan":  "140889",
+        "Name":  "Issakhanova Assem",
+        "IncSalesResult_Sum":  "348,062",
+        "P3Name":  "HEPTRAL",
+        "Product3_Sum":  "87,016 ",
+        "P3Plan":  "11,078",
+        "P2Plan":  "63,477",
+        "Id_Sum":  "25",
+        "Product1_Sum":  "104,419 ",
+        "Team_Sum":  null,
+        "TargetTCFA_Sum":  "79,105",
+        "P3Act":  "11,359",
+        "TargetCoaching_Sum":  "0",
+        "TargetSalesResult_Sum":  "316,420.00",
+        "P2Act":  "77,212",
+        "Quarter":  "Q1 2017",
+        "TCFA_Act":  "95%",
+        "P1Act":  "28,836",
+        "TargetBase_Sum":  "395,525.00",
+        "Position":  "Medical Representative",
+        "Product2_Sum":  "87,016 ",
+        "PromoLine":  "Line 2"
+    },
+    {
+        "IncTCFA_Sum":  "79,105",
+        "FieldWork_Sum":  "79,105",
+        "TotalIncentive_Sum":  "395,525",
+        "Product4_Sum":  "15,821 ",
+        "IncCoaching_Sum":  "0",
+        "Position_Sum":  "Medical Representative",
+        "TotalAct":  "64104",
+        "P1Plan":  "28,350",
+        "ReimbursableMonths_Sum":  "100%",
+        "P1Name":  "DUPHASTON ",
+        "TargetForQuarter_Sum":  "395,525.00 ",
+        "P2Name":  "PHYSIOTENS",
+        "TotalPlan":  "96141",
+        "Name":  "Issakova Dina",
+        "IncSalesResult_Sum":  "316,420",
+        "P3Name":  "HEPTRAL",
+        "Product3_Sum":  "31,642 ",
+        "P3Plan":  "12,383",
+        "P2Plan":  "36,315",
+        "Id_Sum":  "26",
+        "Product1_Sum":  "158,210 ",
+        "Team_Sum":  null,
+        "TargetTCFA_Sum":  "79,105",
+        "P3Act":  "11,755",
+        "TargetCoaching_Sum":  "0",
+        "TargetSalesResult_Sum":  "316,420.00",
+        "P2Act":  "16,912",
+        "Quarter":  "Q1 2017",
+        "TCFA_Act":  "79%",
+        "P1Act":  "17,307",
+        "TargetBase_Sum":  "395,525.00",
+        "Position":  "Medical Representative",
+        "Product2_Sum":  "110,747 ",
+        "PromoLine":  "Line 2"
+    },
+    {
+        "IncTCFA_Sum":  "79,105",
+        "FieldWork_Sum":  "79,105",
+        "TotalIncentive_Sum":  "395,525",
+        "Product4_Sum":  "15,821 ",
+        "IncCoaching_Sum":  "0",
+        "Position_Sum":  "Medical Representative",
+        "TotalAct":  "447963",
+        "P1Plan":  "121,175",
+        "ReimbursableMonths_Sum":  "100%",
+        "P1Name":  "CREON",
+        "TargetForQuarter_Sum":  "395,525.00 ",
+        "P2Name":  "HEPTRAL",
+        "TotalPlan":  "318324",
+        "Name":  "Issakova Dina",
+        "IncSalesResult_Sum":  "316,420",
+        "P3Name":  "IRS 19",
+        "Product3_Sum":  "31,642 ",
+        "P3Plan":  "13,200",
+        "P2Plan":  "89,649",
+        "Id_Sum":  "26",
+        "Product1_Sum":  "158,210 ",
+        "Team_Sum":  null,
+        "TargetTCFA_Sum":  "79,105",
+        "P3Act":  "7,476",
+        "TargetCoaching_Sum":  "0",
+        "TargetSalesResult_Sum":  "316,420.00",
+        "P2Act":  "128,481",
+        "Quarter":  "Q1 2017",
+        "TCFA_Act":  "79%",
+        "P1Act":  "213,923",
+        "TargetBase_Sum":  "395,525.00",
+        "Position":  "Medical Representative",
+        "Product2_Sum":  "110,747 ",
+        "PromoLine":  "Line 1"
+    },
+    {
+        "IncTCFA_Sum":  "79,105",
+        "FieldWork_Sum":  "79,105",
+        "TotalIncentive_Sum":  "585,377",
+        "Product4_Sum":  "50,627 ",
+        "IncCoaching_Sum":  "0",
+        "Position_Sum":  "Pharm Representative",
+        "TotalAct":  "689103",
+        "P1Plan":  "340,539",
+        "ReimbursableMonths_Sum":  "100%",
+        "P1Name":  "CREON",
+        "TargetForQuarter_Sum":  "395,525.00 ",
+        "P2Name":  "DUPHALAC ",
+        "TotalPlan":  "602491",
+        "Name":  "Itakhunov Rassul",
+        "IncSalesResult_Sum":  "506,272",
+        "P3Name":  "IRS 19",
+        "Product3_Sum":  "75,941 ",
+        "P3Plan":  "39,732",
+        "P2Plan":  "185,153",
+        "Id_Sum":  "27",
+        "Product1_Sum":  "227,822 ",
+        "Team_Sum":  null,
+        "TargetTCFA_Sum":  "79,105",
+        "P3Act":  "32,076",
+        "TargetCoaching_Sum":  "0",
+        "TargetSalesResult_Sum":  "316,420.00",
+        "P2Act":  "199,408",
+        "Quarter":  "Q1 2017",
+        "TCFA_Act":  "91%",
+        "P1Act":  "422,723",
+        "TargetBase_Sum":  "395,525.00",
+        "Position":  "Pharm Representative",
+        "Product2_Sum":  "151,882 ",
+        "PromoLine":  "Pharma line"
+    },
+    {
+        "IncTCFA_Sum":  "39,553",
+        "FieldWork_Sum":  "39,553",
+        "TotalIncentive_Sum":  "419,257",
+        "Product4_Sum":  "113,911 ",
+        "IncCoaching_Sum":  "0",
+        "Position_Sum":  "Medical Representative",
+        "TotalAct":  "406216",
+        "P1Plan":  "12,113",
+        "ReimbursableMonths_Sum":  "100%",
+        "P1Name":  "CREON",
+        "TargetForQuarter_Sum":  "395,525.00 ",
+        "P2Name":  "PHYSIOTENS",
+        "TotalPlan":  "359764",
+        "Name":  "Kadyrova Azaliya",
+        "IncSalesResult_Sum":  "379,704",
+        "P3Name":  "HEPTRAL",
+        "Product3_Sum":  "113,911 ",
+        "P3Plan":  "128,976",
+        "P2Plan":  "166,047",
+        "Id_Sum":  "28",
+        "Product1_Sum":  "37,970 ",
+        "Team_Sum":  null,
+        "TargetTCFA_Sum":  "79,105",
+        "P3Act":  "155,755",
+        "TargetCoaching_Sum":  "0",
+        "TargetSalesResult_Sum":  "316,420.00",
+        "P2Act":  "174,154",
+        "Quarter":  "Q1 2017",
+        "TCFA_Act":  "87%",
+        "P1Act":  "15,049",
+        "TargetBase_Sum":  "395,525.00",
+        "Position":  "Medical Representative",
+        "Product2_Sum":  "113,911 ",
+        "PromoLine":  "Line 2 (big cities)"
+    },
+    {
+        "IncTCFA_Sum":  "79,105",
+        "FieldWork_Sum":  "79,105",
+        "TotalIncentive_Sum":  "427,167",
+        "Product4_Sum":  "69,612 ",
+        "IncCoaching_Sum":  "0",
+        "Position_Sum":  "Medical Representative",
+        "TotalAct":  "151483",
+        "P1Plan":  "34,425",
+        "ReimbursableMonths_Sum":  "100%",
+        "P1Name":  "DUPHASTON ",
+        "TargetForQuarter_Sum":  "395,525.00 ",
+        "P2Name":  "PHYSIOTENS",
+        "TotalPlan":  "140889",
+        "Name":  "Kalistratova Alexandra",
+        "IncSalesResult_Sum":  "348,062",
+        "P3Name":  "HEPTRAL",
+        "Product3_Sum":  "87,016 ",
+        "P3Plan":  "11,078",
+        "P2Plan":  "63,477",
+        "Id_Sum":  "29",
+        "Product1_Sum":  "104,419 ",
+        "Team_Sum":  null,
+        "TargetTCFA_Sum":  "79,105",
+        "P3Act":  "11,359",
+        "TargetCoaching_Sum":  "0",
+        "TargetSalesResult_Sum":  "316,420.00",
+        "P2Act":  "77,212",
+        "Quarter":  "Q1 2017",
+        "TCFA_Act":  "100%",
+        "P1Act":  "28,836",
+        "TargetBase_Sum":  "395,525.00",
+        "Position":  "Medical Representative",
+        "Product2_Sum":  "87,016 ",
+        "PromoLine":  "Line 2"
+    },
+    {
+        "IncTCFA_Sum":  "39,553",
+        "FieldWork_Sum":  "39,553",
+        "TotalIncentive_Sum":  "577,467",
+        "Product4_Sum":  "26,896 ",
+        "IncCoaching_Sum":  "0",
+        "Position_Sum":  "Medical Representative",
+        "TotalAct":  "178007",
+        "P1Plan":  "69,380",
+        "ReimbursableMonths_Sum":  "100%",
+        "P1Name":  "CREON",
+        "TargetForQuarter_Sum":  "395,525.00 ",
+        "P2Name":  "HEPTRAL",
+        "TotalPlan":  "170396",
+        "Name":  "Kassenova Gulshat",
+        "IncSalesResult_Sum":  "537,914",
+        "P3Name":  "IRS 19",
+        "Product3_Sum":  "53,791 ",
+        "P3Plan":  "9,180",
+        "P2Plan":  "29,883",
+        "Id_Sum":  "30",
+        "Product1_Sum":  "268,957 ",
+        "Team_Sum":  null,
+        "TargetTCFA_Sum":  "79,105",
+        "P3Act":  "6,948",
+        "TargetCoaching_Sum":  "0",
+        "TargetSalesResult_Sum":  "316,420.00",
+        "P2Act":  "33,945",
+        "Quarter":  "Q1 2017",
+        "TCFA_Act":  "96%",
+        "P1Act":  "74,774",
+        "TargetBase_Sum":  "395,525.00",
+        "Position":  "Medical Representative",
+        "Product2_Sum":  "188,270 ",
+        "PromoLine":  "Line 1"
+    },
+    {
+        "IncTCFA_Sum":  "79,105",
+        "FieldWork_Sum":  "79,105",
+        "TotalIncentive_Sum":  "870,155",
+        "Product4_Sum":  "39,553 ",
+        "IncCoaching_Sum":  "0",
+        "Position_Sum":  "Medical Representative",
+        "TotalAct":  "106283",
+        "P1Plan":  "26,851",
+        "ReimbursableMonths_Sum":  "100%",
+        "P1Name":  "CREON",
+        "TargetForQuarter_Sum":  "395,525.00 ",
+        "P2Name":  "HEPTRAL",
+        "TotalPlan":  "86245",
+        "Name":  "Khalikova Nuriya",
+        "IncSalesResult_Sum":  "791,050",
+        "P3Name":  "IRS 19",
+        "Product3_Sum":  "79,105 ",
+        "P3Plan":  "3,144",
+        "P2Plan":  "17,666",
+        "Id_Sum":  "31",
+        "Product1_Sum":  "395,525 ",
+        "Team_Sum":  null,
+        "TargetTCFA_Sum":  "79,105",
+        "P3Act":  "4,692",
+        "TargetCoaching_Sum":  "0",
+        "TargetSalesResult_Sum":  "316,420.00",
+        "P2Act":  "24,369",
+        "Quarter":  "Q1 2017",
+        "TCFA_Act":  "92%",
+        "P1Act":  "37,294",
+        "TargetBase_Sum":  "395,525.00",
+        "Position":  "Medical Representative",
+        "Product2_Sum":  "276,868 ",
+        "PromoLine":  "Line 1"
+    },
+    {
+        "IncTCFA_Sum":  "79,105",
+        "FieldWork_Sum":  "79,105",
+        "TotalIncentive_Sum":  "395,525",
+        "Product4_Sum":  "94,926 ",
+        "IncCoaching_Sum":  "0",
+        "Position_Sum":  "Medical Representative",
+        "TotalAct":  "795464",
+        "P1Plan":  "17,027",
+        "ReimbursableMonths_Sum":  "100%",
+        "P1Name":  "CREON",
+        "TargetForQuarter_Sum":  "395,525.00 ",
+        "P2Name":  "PHYSIOTENS",
+        "TotalPlan":  "528707",
+        "Name":  "Kuchshanova Akmaral",
+        "IncSalesResult_Sum":  "316,420",
+        "P3Name":  "HEPTRAL",
+        "Product3_Sum":  "94,926 ",
+        "P3Plan":  "261,353",
+        "P2Plan":  "148,193",
+        "Id_Sum":  "32",
+        "Product1_Sum":  "31,642 ",
+        "Team_Sum":  null,
+        "TargetTCFA_Sum":  "79,105",
+        "P3Act":  "376,824",
+        "TargetCoaching_Sum":  "0",
+        "TargetSalesResult_Sum":  "316,420.00",
+        "P2Act":  "282,510",
+        "Quarter":  "Q1 2017",
+        "TCFA_Act":  "100%",
+        "P1Act":  "21,136",
+        "TargetBase_Sum":  "395,525.00",
+        "Position":  "Medical Representative",
+        "Product2_Sum":  "94,926 ",
+        "PromoLine":  "Line 2 (big cities)"
+    },
+    {
+        "IncTCFA_Sum":  "79,105",
+        "FieldWork_Sum":  "79,105",
+        "TotalIncentive_Sum":  "522,093",
+        "Product4_Sum":  "132,896 ",
+        "IncCoaching_Sum":  "0",
+        "Position_Sum":  "Medical Representative",
+        "TotalAct":  "224975",
+        "P1Plan":  "7,945",
+        "ReimbursableMonths_Sum":  "100%",
+        "P1Name":  "CREON",
+        "TargetForQuarter_Sum":  "395,525.00 ",
+        "P2Name":  "PHYSIOTENS",
+        "TotalPlan":  "240126",
+        "Name":  "Kussainova Dilara",
+        "IncSalesResult_Sum":  "442,988",
+        "P3Name":  "HEPTRAL",
+        "Product3_Sum":  "132,896 ",
+        "P3Plan":  "109,098",
+        "P2Plan":  "78,135",
+        "Id_Sum":  "33",
+        "Product1_Sum":  "44,299 ",
+        "Team_Sum":  null,
+        "TargetTCFA_Sum":  "79,105",
+        "P3Act":  "98,730",
+        "TargetCoaching_Sum":  "0",
+        "TargetSalesResult_Sum":  "316,420.00",
+        "P2Act":  "78,477",
+        "Quarter":  "Q1 2017",
+        "TCFA_Act":  "99%",
+        "P1Act":  "8,431",
+        "TargetBase_Sum":  "395,525.00",
+        "Position":  "Medical Representative",
+        "Product2_Sum":  "132,896 ",
+        "PromoLine":  "Line 2 (big cities)"
+    },
+    {
+        "IncTCFA_Sum":  "0",
+        "FieldWork_Sum":  "0",
+        "TotalIncentive_Sum":  "0",
+        "Product4_Sum":  "0 ",
+        "IncCoaching_Sum":  "0",
+        "Position_Sum":  "Medical Representative",
+        "TotalAct":  "89892",
+        "P1Plan":  "2,577",
+        "ReimbursableMonths_Sum":  "100%",
+        "P1Name":  "CREON",
+        "TargetForQuarter_Sum":  "395,525.00 ",
+        "P2Name":  "PHYSIOTENS",
+        "TotalPlan":  "86766",
+        "Name":  "Kutdussova Liliya",
+        "IncSalesResult_Sum":  "0",
+        "P3Name":  "HEPTRAL",
+        "Product3_Sum":  "0 ",
+        "P3Plan":  "38,699",
+        "P2Plan":  "21,605",
+        "Id_Sum":  "34",
+        "Product1_Sum":  "0 ",
+        "Team_Sum":  null,
+        "TargetTCFA_Sum":  "0",
+        "P3Act":  "39,195",
+        "TargetCoaching_Sum":  "0",
+        "TargetSalesResult_Sum":  "0.00",
+        "P2Act":  "25,549",
+        "Quarter":  "Q1 2017",
+        "TCFA_Act":  "99%",
+        "P1Act":  "3,278",
+        "TargetBase_Sum":  "395,525.00",
+        "Position":  "Medical Representative",
+        "Product2_Sum":  "0 ",
+        "PromoLine":  "Line 2 (big cities)"
+    },
+    {
+        "IncTCFA_Sum":  "39,553",
+        "FieldWork_Sum":  "39,553",
+        "TotalIncentive_Sum":  "355,973",
+        "Product4_Sum":  "94,926 ",
+        "IncCoaching_Sum":  "0",
+        "Position_Sum":  "Medical Representative",
+        "TotalAct":  "795464",
+        "P1Plan":  "17,027",
+        "ReimbursableMonths_Sum":  "100%",
+        "P1Name":  "CREON",
+        "TargetForQuarter_Sum":  "395,525.00 ",
+        "P2Name":  "PHYSIOTENS",
+        "TotalPlan":  "528707",
+        "Name":  "Kutlymuratov Assylatdin",
+        "IncSalesResult_Sum":  "316,420",
+        "P3Name":  "HEPTRAL",
+        "Product3_Sum":  "94,926 ",
+        "P3Plan":  "261,353",
+        "P2Plan":  "148,193",
+        "Id_Sum":  "35",
+        "Product1_Sum":  "31,642 ",
+        "Team_Sum":  null,
+        "TargetTCFA_Sum":  "79,105",
+        "P3Act":  "376,824",
+        "TargetCoaching_Sum":  "0",
+        "TargetSalesResult_Sum":  "316,420.00",
+        "P2Act":  "282,510",
+        "Quarter":  "Q1 2017",
+        "TCFA_Act":  "94%",
+        "P1Act":  "21,136",
+        "TargetBase_Sum":  "395,525.00",
+        "Position":  "Medical Representative",
+        "Product2_Sum":  "94,926 ",
+        "PromoLine":  "Line 2 (big cities)"
+    },
+    {
+        "IncTCFA_Sum":  "36,300",
+        "FieldWork_Sum":  "108,900",
+        "TotalIncentive_Sum":  "747,780",
+        "Product4_Sum":  "31,944 ",
+        "IncCoaching_Sum":  "72,600",
+        "Position_Sum":  "Regional Manager",
+        "TotalAct":  "2015693",
+        "P1Plan":  "933,191",
+        "ReimbursableMonths_Sum":  "100%",
+        "P1Name":  "GASTRO",
+        "TargetForQuarter_Sum":  "726,000.00 ",
+        "P2Name":  "GYNECOLOGY",
+        "TotalPlan":  "1730345",
+        "Name":  "Kuxa Anna",
+        "IncSalesResult_Sum":  "638,880",
+        "P3Name":  "CARDIO-NEURO",
+        "Product3_Sum":  "127,776 ",
+        "P3Plan":  "311,587",
+        "P2Plan":  "401,915",
+        "Id_Sum":  "36",
+        "Product1_Sum":  "319,440 ",
+        "Team_Sum":  null,
+        "TargetTCFA_Sum":  "72,600",
+        "P3Act":  "448,686",
+        "TargetCoaching_Sum":  "72,600",
+        "TargetSalesResult_Sum":  "580,800.00",
+        "P2Act":  "367,614",
+        "Quarter":  "Q1 2017",
+        "TCFA_Act":  "92%",
+        "P1Act":  "1,128,449",
+        "TargetBase_Sum":  "726,000.00",
+        "Position":  "Regional Manager",
+        "Product2_Sum":  "159,720 ",
+        "PromoLine":  "Regional Manager-1"
+    },
+    {
+        "IncTCFA_Sum":  "72,600",
+        "FieldWork_Sum":  "145,200",
+        "TotalIncentive_Sum":  "1,597,200",
+        "Product4_Sum":  "72,600 ",
+        "IncCoaching_Sum":  "72,600",
+        "Position_Sum":  "Regional Manager",
+        "TotalAct":  "613067",
+        "P1Plan":  "265,095",
+        "ReimbursableMonths_Sum":  "100%",
+        "P1Name":  "GASTRO",
+        "TargetForQuarter_Sum":  "726,000.00 ",
+        "P2Name":  "GYNECOLOGY",
+        "TotalPlan":  "572331",
+        "Name":  "Kuzikeyeva Dinara",
+        "IncSalesResult_Sum":  "1,452,000",
+        "P3Name":  "CARDIO-NEURO",
+        "Product3_Sum":  "290,400 ",
+        "P3Plan":  "169,373",
+        "P2Plan":  "114,679",
+        "Id_Sum":  "37",
+        "Product1_Sum":  "726,000 ",
+        "Team_Sum":  null,
+        "TargetTCFA_Sum":  "72,600",
+        "P3Act":  "194,568",
+        "TargetCoaching_Sum":  "72,600",
+        "TargetSalesResult_Sum":  "580,800.00",
+        "P2Act":  "97,935",
+        "Quarter":  "Q1 2017",
+        "TCFA_Act":  "94%",
+        "P1Act":  "300,812",
+        "TargetBase_Sum":  "726,000.00",
+        "Position":  "Regional Manager",
+        "Product2_Sum":  "363,000 ",
+        "PromoLine":  "Regional Manager-1"
+    },
+    {
+        "IncTCFA_Sum":  "79,105",
+        "FieldWork_Sum":  "79,105",
+        "TotalIncentive_Sum":  "382,868",
+        "Product4_Sum":  "91,129 ",
+        "IncCoaching_Sum":  "0",
+        "Position_Sum":  "Medical Representative",
+        "TotalAct":  "215127",
+        "P1Plan":  "5,398",
+        "ReimbursableMonths_Sum":  "100%",
+        "P1Name":  "CREON",
+        "TargetForQuarter_Sum":  "395,525.00 ",
+        "P2Name":  "PHYSIOTENS",
+        "TotalPlan":  "184333",
+        "Name":  "Kuznetsova Natalya",
+        "IncSalesResult_Sum":  "303,763",
+        "P3Name":  "HEPTRAL",
+        "Product3_Sum":  "91,129 ",
+        "P3Plan":  "73,172",
+        "P2Plan":  "66,071",
+        "Id_Sum":  "38",
+        "Product1_Sum":  "30,376 ",
+        "Team_Sum":  null,
+        "TargetTCFA_Sum":  "79,105",
+        "P3Act":  "62,989",
+        "TargetCoaching_Sum":  "0",
+        "TargetSalesResult_Sum":  "316,420.00",
+        "P2Act":  "91,483",
+        "Quarter":  "Q1 2017",
+        "TCFA_Act":  "99%",
+        "P1Act":  "6,032",
+        "TargetBase_Sum":  "395,525.00",
+        "Position":  "Medical Representative",
+        "Product2_Sum":  "91,129 ",
+        "PromoLine":  "Line 2 (big cities)"
+    },
+    {
+        "IncTCFA_Sum":  "79,105",
+        "FieldWork_Sum":  "79,105",
+        "TotalIncentive_Sum":  "617,019",
+        "Product4_Sum":  "53,791 ",
+        "IncCoaching_Sum":  "0",
+        "Position_Sum":  "Pharm Representative",
+        "TotalAct":  "126594",
+        "P1Plan":  "69,380",
+        "ReimbursableMonths_Sum":  "100%",
+        "P1Name":  "CREON",
+        "TargetForQuarter_Sum":  "395,525.00 ",
+        "P2Name":  "DUPHALAC ",
+        "TotalPlan":  "125021",
+        "Name":  "Litvinenko Tatyana",
+        "IncSalesResult_Sum":  "537,914",
+        "P3Name":  "IRS 19",
+        "Product3_Sum":  "80,687 ",
+        "P3Plan":  "9,180",
+        "P2Plan":  "38,181",
+        "Id_Sum":  "39",
+        "Product1_Sum":  "242,061 ",
+        "Team_Sum":  null,
+        "TargetTCFA_Sum":  "79,105",
+        "P3Act":  "6,948",
+        "TargetCoaching_Sum":  "0",
+        "TargetSalesResult_Sum":  "316,420.00",
+        "P2Act":  "35,752",
+        "Quarter":  "Q1 2017",
+        "TCFA_Act":  "87%",
+        "P1Act":  "74,774",
+        "TargetBase_Sum":  "395,525.00",
+        "Position":  "Pharm Representative",
+        "Product2_Sum":  "161,374 ",
+        "PromoLine":  "Pharma line"
+    },
+    {
+        "IncTCFA_Sum":  "72,600",
+        "FieldWork_Sum":  "145,200",
+        "TotalIncentive_Sum":  "726,000",
+        "Product4_Sum":  "29,040 ",
+        "IncCoaching_Sum":  "72,600",
+        "Position_Sum":  "Regional Manager",
+        "TotalAct":  "793386",
+        "P1Plan":  "391,721",
+        "ReimbursableMonths_Sum":  "100%",
+        "P1Name":  "GASTRO",
+        "TargetForQuarter_Sum":  "726,000.00 ",
+        "P2Name":  "GYNECOLOGY",
+        "TotalPlan":  "738092",
+        "Name":  "Maisutova Almagul",
+        "IncSalesResult_Sum":  "580,800",
+        "P3Name":  "CARDIO-NEURO",
+        "Product3_Sum":  "116,160 ",
+        "P3Plan":  "134,725",
+        "P2Plan":  "175,706",
+        "Id_Sum":  "40",
+        "Product1_Sum":  "290,400 ",
+        "Team_Sum":  null,
+        "TargetTCFA_Sum":  "72,600",
+        "P3Act":  "146,073",
+        "TargetCoaching_Sum":  "72,600",
+        "TargetSalesResult_Sum":  "580,800.00",
+        "P2Act":  "182,624",
+        "Quarter":  "Q1 2017",
+        "TCFA_Act":  "98%",
+        "P1Act":  "424,021",
+        "TargetBase_Sum":  "726,000.00",
+        "Position":  "Regional Manager",
+        "Product2_Sum":  "145,200 ",
+        "PromoLine":  "Regional Manager-1"
+    },
+    {
+        "IncTCFA_Sum":  "0",
+        "FieldWork_Sum":  "0",
+        "TotalIncentive_Sum":  "0",
+        "Product4_Sum":  "0 ",
+        "IncCoaching_Sum":  "0",
+        "Position_Sum":  "Medical Representative",
+        "TotalAct":  "177238",
+        "P1Plan":  "180,900",
+        "ReimbursableMonths_Sum":  "100%",
+        "P1Name":  "DUPHASTON ",
+        "TargetForQuarter_Sum":  "395,525.00 ",
+        "P2Name":  "FEMOSTON",
+        "TotalPlan":  "235632",
+        "Name":  "Mamedova Zarina",
+        "IncSalesResult_Sum":  "0",
+        "P3Name":  "DUPHALAC ",
+        "Product3_Sum":  "0 ",
+        "P3Plan":  "14,002",
+        "P2Plan":  "25,717",
+        "Id_Sum":  "41",
+        "Product1_Sum":  "0 ",
+        "Team_Sum":  null,
+        "TargetTCFA_Sum":  "0",
+        "P3Act":  "15,489",
+        "TargetCoaching_Sum":  "0",
+        "TargetSalesResult_Sum":  "0.00",
+        "P2Act":  "22,017",
+        "Quarter":  "Q1 2017",
+        "TCFA_Act":  "97%",
+        "P1Act":  "124,484",
+        "TargetBase_Sum":  "395,525.00",
+        "Position":  "Medical Representative",
+        "Product2_Sum":  "0 ",
+        "PromoLine":  "Line 3 (big cities)"
+    },
+    {
+        "IncTCFA_Sum":  "79,105",
+        "FieldWork_Sum":  "79,105",
+        "TotalIncentive_Sum":  "838,513",
+        "Product4_Sum":  "37,970 ",
+        "IncCoaching_Sum":  "0",
+        "Position_Sum":  "Medical Representative",
+        "TotalAct":  "128977",
+        "P1Plan":  "31,609",
+        "ReimbursableMonths_Sum":  "100%",
+        "P1Name":  "CREON",
+        "TargetForQuarter_Sum":  "395,525.00 ",
+        "P2Name":  "HEPTRAL",
+        "TotalPlan":  "90164",
+        "Name":  "Mamutova Aliya",
+        "IncSalesResult_Sum":  "759,408",
+        "P3Name":  "IRS 19",
+        "Product3_Sum":  "75,941 ",
+        "P3Plan":  "1,320",
+        "P2Plan":  "25,128",
+        "Id_Sum":  "42",
+        "Product1_Sum":  "379,704 ",
+        "Team_Sum":  null,
+        "TargetTCFA_Sum":  "79,105",
+        "P3Act":  "1,200",
+        "TargetCoaching_Sum":  "0",
+        "TargetSalesResult_Sum":  "316,420.00",
+        "P2Act":  "46,789",
+        "Quarter":  "Q1 2017",
+        "TCFA_Act":  "96%",
+        "P1Act":  "40,999",
+        "TargetBase_Sum":  "395,525.00",
+        "Position":  "Medical Representative",
+        "Product2_Sum":  "265,793 ",
+        "PromoLine":  "Line 1"
+    },
+    {
+        "IncTCFA_Sum":  "79,105",
+        "FieldWork_Sum":  "79,105",
+        "TotalIncentive_Sum":  "395,525",
+        "Product4_Sum":  "94,926 ",
+        "IncCoaching_Sum":  "0",
+        "Position_Sum":  "Medical Representative",
+        "TotalAct":  "795464",
+        "P1Plan":  "17,027",
+        "ReimbursableMonths_Sum":  "100%",
+        "P1Name":  "CREON",
+        "TargetForQuarter_Sum":  "395,525.00 ",
+        "P2Name":  "PHYSIOTENS",
+        "TotalPlan":  "528707",
+        "Name":  "Manapbayeva Assel",
+        "IncSalesResult_Sum":  "316,420",
+        "P3Name":  "HEPTRAL",
+        "Product3_Sum":  "94,926 ",
+        "P3Plan":  "261,353",
+        "P2Plan":  "148,193",
+        "Id_Sum":  "43",
+        "Product1_Sum":  "31,642 ",
+        "Team_Sum":  null,
+        "TargetTCFA_Sum":  "79,105",
+        "P3Act":  "376,824",
+        "TargetCoaching_Sum":  "0",
+        "TargetSalesResult_Sum":  "316,420.00",
+        "P2Act":  "282,510",
+        "Quarter":  "Q1 2017",
+        "TCFA_Act":  "94%",
+        "P1Act":  "21,136",
+        "TargetBase_Sum":  "395,525.00",
+        "Position":  "Medical Representative",
+        "Product2_Sum":  "94,926 ",
+        "PromoLine":  "Line 2 (big cities)"
+    },
+    {
+        "IncTCFA_Sum":  "79,105",
+        "FieldWork_Sum":  "79,105",
+        "TotalIncentive_Sum":  "522,093",
+        "Product4_Sum":  "44,299 ",
+        "IncCoaching_Sum":  "0",
+        "Position_Sum":  "Pharm Representative",
+        "TotalAct":  "156044",
+        "P1Plan":  "68,787",
+        "ReimbursableMonths_Sum":  "100%",
+        "P1Name":  "CREON",
+        "TargetForQuarter_Sum":  "395,525.00 ",
+        "P2Name":  "DUPHALAC ",
+        "TotalPlan":  "130624",
+        "Name":  "Maximenko Alexandr",
+        "IncSalesResult_Sum":  "442,988",
+        "P3Name":  "IRS 19",
+        "Product3_Sum":  "66,448 ",
+        "P3Plan":  "5,544",
+        "P2Plan":  "41,617",
+        "Id_Sum":  "44",
+        "Product1_Sum":  "199,345 ",
+        "Team_Sum":  null,
+        "TargetTCFA_Sum":  "79,105",
+        "P3Act":  "7,008",
+        "TargetCoaching_Sum":  "0",
+        "TargetSalesResult_Sum":  "316,420.00",
+        "P2Act":  "39,523",
+        "Quarter":  "Q1 2017",
+        "TCFA_Act":  "91%",
+        "P1Act":  "92,461",
+        "TargetBase_Sum":  "395,525.00",
+        "Position":  "Pharm Representative",
+        "Product2_Sum":  "132,896 ",
+        "PromoLine":  "Pharma line"
+    },
+    {
+        "IncTCFA_Sum":  "79,105",
+        "FieldWork_Sum":  "79,105",
+        "TotalIncentive_Sum":  "338,569",
+        "Product4_Sum":  "12,973 ",
+        "IncCoaching_Sum":  "0",
+        "Position_Sum":  "Medical Representative",
+        "TotalAct":  "664597",
+        "P1Plan":  "242,261",
+        "ReimbursableMonths_Sum":  "100%",
+        "P1Name":  "CREON",
+        "TargetForQuarter_Sum":  "395,525.00 ",
+        "P2Name":  "HEPTRAL",
+        "TotalPlan":  "570699",
+        "Name":  "Meirbek Ainur",
+        "IncSalesResult_Sum":  "259,464",
+        "P3Name":  "IRS 19",
+        "Product3_Sum":  "25,946 ",
+        "P3Plan":  "10,692",
+        "P2Plan":  "128,976",
+        "Id_Sum":  "45",
+        "Product1_Sum":  "129,732 ",
+        "Team_Sum":  null,
+        "TargetTCFA_Sum":  "79,105",
+        "P3Act":  "10,164",
+        "TargetCoaching_Sum":  "0",
+        "TargetSalesResult_Sum":  "316,420.00",
+        "P2Act":  "155,755",
+        "Quarter":  "Q1 2017",
+        "TCFA_Act":  "91%",
+        "P1Act":  "300,987",
+        "TargetBase_Sum":  "395,525.00",
+        "Position":  "Medical Representative",
+        "Product2_Sum":  "90,813 ",
+        "PromoLine":  "Line 1"
+    },
+    {
+        "IncTCFA_Sum":  "0",
+        "FieldWork_Sum":  "0",
+        "TotalIncentive_Sum":  "0",
+        "Product4_Sum":  "0",
+        "IncCoaching_Sum":  "0",
+        "Position_Sum":  "",
+        "TotalAct":  "168685",
+        "P1Plan":  "64,560",
+        "ReimbursableMonths_Sum":  "100%",
+        "P1Name":  "CREON",
+        "TargetForQuarter_Sum":  "0",
+        "P2Name":  "HEPTRAL",
+        "TotalPlan":  "172378",
+        "Name":  "Morshneva (Burda) Irina",
+        "IncSalesResult_Sum":  "0",
+        "P3Name":  "IRS 19",
+        "Product3_Sum":  "0",
+        "P3Plan":  "4,092",
+        "P2Plan":  "44,412",
+        "Id_Sum":  "",
+        "Product1_Sum":  "0",
+        "Team_Sum":  "",
+        "TargetTCFA_Sum":  "0",
+        "P3Act":  "4,884",
+        "TargetCoaching_Sum":  "0",
+        "TargetSalesResult_Sum":  "0",
+        "P2Act":  "34,473",
+        "Quarter":  "Q1 2017",
+        "TCFA_Act":  "66%",
+        "P1Act":  "62,019",
+        "TargetBase_Sum":  "0",
+        "Position":  "Medical Representative",
+        "Product2_Sum":  "0",
+        "PromoLine":  "Line 1"
+    },
+    {
+        "IncTCFA_Sum":  "39,553",
+        "FieldWork_Sum":  "39,553",
+        "TotalIncentive_Sum":  "299,017",
+        "Product4_Sum":  "12,973 ",
+        "IncCoaching_Sum":  "0",
+        "Position_Sum":  "Medical Representative",
+        "TotalAct":  "664597",
+        "P1Plan":  "242,261",
+        "ReimbursableMonths_Sum":  "100%",
+        "P1Name":  "CREON",
+        "TargetForQuarter_Sum":  "395,525.00 ",
+        "P2Name":  "HEPTRAL",
+        "TotalPlan":  "570699",
+        "Name":  "Nakipbekova Gulzhan",
+        "IncSalesResult_Sum":  "259,464",
+        "P3Name":  "IRS 19",
+        "Product3_Sum":  "25,946 ",
+        "P3Plan":  "10,692",
+        "P2Plan":  "128,976",
+        "Id_Sum":  "46",
+        "Product1_Sum":  "129,732 ",
+        "Team_Sum":  null,
+        "TargetTCFA_Sum":  "79,105",
+        "P3Act":  "10,164",
+        "TargetCoaching_Sum":  "0",
+        "TargetSalesResult_Sum":  "316,420.00",
+        "P2Act":  "155,755",
+        "Quarter":  "Q1 2017",
+        "TCFA_Act":  "95%",
+        "P1Act":  "300,987",
+        "TargetBase_Sum":  "395,525.00",
+        "Position":  "Medical Representative",
+        "Product2_Sum":  "90,813 ",
+        "PromoLine":  "Line 1"
+    },
+    {
+        "IncTCFA_Sum":  "0",
+        "FieldWork_Sum":  "0",
+        "TotalIncentive_Sum":  "0",
+        "Product4_Sum":  "0",
+        "IncCoaching_Sum":  "0",
+        "Position_Sum":  "",
+        "TotalAct":  "224975",
+        "P1Plan":  "7,945",
+        "ReimbursableMonths_Sum":  "100%",
+        "P1Name":  "CREON",
+        "TargetForQuarter_Sum":  "0",
+        "P2Name":  "PHYSIOTENS",
+        "TotalPlan":  "240126",
+        "Name":  "Nauryzbayeva Shynar",
+        "IncSalesResult_Sum":  "0",
+        "P3Name":  "HEPTRAL",
+        "Product3_Sum":  "0",
+        "P3Plan":  "109,098",
+        "P2Plan":  "78,135",
+        "Id_Sum":  "",
+        "Product1_Sum":  "0",
+        "Team_Sum":  "",
+        "TargetTCFA_Sum":  "0",
+        "P3Act":  "98,730",
+        "TargetCoaching_Sum":  "0",
+        "TargetSalesResult_Sum":  "0",
+        "P2Act":  "78,477",
+        "Quarter":  "Q1 2017",
+        "TCFA_Act":  "100%",
+        "P1Act":  "8,431",
+        "TargetBase_Sum":  "0",
+        "Position":  "Medical Representative",
+        "Product2_Sum":  "0",
+        "PromoLine":  "Line 2 (big cities)"
+    },
+    {
+        "IncTCFA_Sum":  "39,553",
+        "FieldWork_Sum":  "39,553",
+        "TotalIncentive_Sum":  "688,214",
+        "Product4_Sum":  "32,433 ",
+        "IncCoaching_Sum":  "0",
+        "Position_Sum":  "Medical Representative",
+        "TotalAct":  "374051",
+        "P1Plan":  "240,300",
+        "ReimbursableMonths_Sum":  "100%",
+        "P1Name":  "DUPHASTON ",
+        "TargetForQuarter_Sum":  "395,525.00 ",
+        "P2Name":  "FEMOSTON",
+        "TotalPlan":  "400487",
+        "Name":  "Novokhatnyaya Anastasiya",
+        "IncSalesResult_Sum":  "648,661",
+        "P3Name":  "DUPHALAC ",
+        "Product3_Sum":  "162,165 ",
+        "P3Plan":  "18,515",
+        "P2Plan":  "120,246",
+        "Id_Sum":  "47",
+        "Product1_Sum":  "291,897 ",
+        "Team_Sum":  null,
+        "TargetTCFA_Sum":  "79,105",
+        "P3Act":  "19,941",
+        "TargetCoaching_Sum":  "0",
+        "TargetSalesResult_Sum":  "316,420.00",
+        "P2Act":  "116,371",
+        "Quarter":  "Q1 2017",
+        "TCFA_Act":  "88%",
+        "P1Act":  "216,203",
+        "TargetBase_Sum":  "395,525.00",
+        "Position":  "Medical Representative",
+        "Product2_Sum":  "162,165 ",
+        "PromoLine":  "Line 3 (big cities)"
+    },
+    {
+        "IncTCFA_Sum":  "72,600",
+        "FieldWork_Sum":  "72,600",
+        "TotalIncentive_Sum":  "566,280",
+        "Product4_Sum":  "24,684 ",
+        "IncCoaching_Sum":  "0",
+        "Position_Sum":  "Regional Manager",
+        "TotalAct":  "307106",
+        "P1Plan":  "44,550",
+        "ReimbursableMonths_Sum":  "100%",
+        "P1Name":  "DUPHASTON ",
+        "TargetForQuarter_Sum":  "726,000.00 ",
+        "P2Name":  "PHYSIOTENS",
+        "TotalPlan":  "270956",
+        "Name":  "Nurikhanova Alissa",
+        "IncSalesResult_Sum":  "493,680",
+        "P3Name":  "HEPTRAL",
+        "Product3_Sum":  "98,736 ",
+        "P3Plan":  "19,350",
+        "P2Plan":  "149,142",
+        "Id_Sum":  "77",
+        "Product1_Sum":  "246,840 ",
+        "Team_Sum":  null,
+        "TargetTCFA_Sum":  "72,600",
+        "P3Act":  "14,265",
+        "TargetCoaching_Sum":  "72,600",
+        "TargetSalesResult_Sum":  "580,800.00",
+        "P2Act":  "176,007",
+        "Quarter":  "Q1 2017",
+        "TCFA_Act":  "97%",
+        "P1Act":  "51,206",
+        "TargetBase_Sum":  "726,000.00",
+        "Position":  "Medical Representative",
+        "Product2_Sum":  "123,420 ",
+        "PromoLine":  "Line 2"
+    },
+    {
+        "IncTCFA_Sum":  "39,553",
+        "FieldWork_Sum":  "39,553",
+        "TotalIncentive_Sum":  "830,603",
+        "Product4_Sum":  "39,553 ",
+        "IncCoaching_Sum":  "0",
+        "Position_Sum":  "Medical Representative",
+        "TotalAct":  "142557",
+        "P1Plan":  "39,838",
+        "ReimbursableMonths_Sum":  "100%",
+        "P1Name":  "CREON",
+        "TargetForQuarter_Sum":  "395,525.00 ",
+        "P2Name":  "HEPTRAL",
+        "TotalPlan":  "117883",
+        "Name":  "Omarova Aizhan",
+        "IncSalesResult_Sum":  "791,050",
+        "P3Name":  "IRS 19",
+        "Product3_Sum":  "79,105 ",
+        "P3Plan":  "3,768",
+        "P2Plan":  "34,110",
+        "Id_Sum":  "48",
+        "Product1_Sum":  "395,525 ",
+        "Team_Sum":  null,
+        "TargetTCFA_Sum":  "79,105",
+        "P3Act":  "1,644",
+        "TargetCoaching_Sum":  "0",
+        "TargetSalesResult_Sum":  "316,420.00",
+        "P2Act":  "42,431",
+        "Quarter":  "Q1 2017",
+        "TCFA_Act":  "97%",
+        "P1Act":  "51,286",
+        "TargetBase_Sum":  "395,525.00",
+        "Position":  "Medical Representative",
+        "Product2_Sum":  "276,868 ",
+        "PromoLine":  "Line 1"
+    },
+    {
+        "IncTCFA_Sum":  "79,105",
+        "FieldWork_Sum":  "79,105",
+        "TotalIncentive_Sum":  "743,587",
+        "Product4_Sum":  "132,896 ",
+        "IncCoaching_Sum":  "0",
+        "Position_Sum":  "Medical Representative",
+        "TotalAct":  "80589",
+        "P1Plan":  "14,715",
+        "ReimbursableMonths_Sum":  "100%",
+        "P1Name":  "DUPHASTON ",
+        "TargetForQuarter_Sum":  "395,525.00 ",
+        "P2Name":  "PHYSIOTENS",
+        "TotalPlan":  "63809",
+        "Name":  "Ospanova Anar",
+        "IncSalesResult_Sum":  "664,482",
+        "P3Name":  "HEPTRAL",
+        "Product3_Sum":  "166,121 ",
+        "P3Plan":  "4,656",
+        "P2Plan":  "29,618",
+        "Id_Sum":  "49",
+        "Product1_Sum":  "199,345 ",
+        "Team_Sum":  null,
+        "TargetTCFA_Sum":  "79,105",
+        "P3Act":  "5,927",
+        "TargetCoaching_Sum":  "0",
+        "TargetSalesResult_Sum":  "316,420.00",
+        "P2Act":  "43,685",
+        "Quarter":  "Q1 2017",
+        "TCFA_Act":  "98%",
+        "P1Act":  "13,082",
+        "TargetBase_Sum":  "395,525.00",
+        "Position":  "Medical Representative",
+        "Product2_Sum":  "166,121 ",
+        "PromoLine":  "Line 2"
+    },
+    {
+        "IncTCFA_Sum":  "39,553",
+        "FieldWork_Sum":  "39,553",
+        "TotalIncentive_Sum":  "783,140",
+        "Product4_Sum":  "74,359 ",
+        "IncCoaching_Sum":  "0",
+        "Position_Sum":  "Pharm Representative",
+        "TotalAct":  "195844",
+        "P1Plan":  "99,030",
+        "ReimbursableMonths_Sum":  "100%",
+        "P1Name":  "CREON",
+        "TargetForQuarter_Sum":  "395,525.00 ",
+        "P2Name":  "DUPHALAC ",
+        "TotalPlan":  "176149",
+        "Name":  "Ossipova Anna",
+        "IncSalesResult_Sum":  "743,587",
+        "P3Name":  "IRS 19",
+        "Product3_Sum":  "111,538 ",
+        "P3Plan":  "6,372",
+        "P2Plan":  "61,435",
+        "Id_Sum":  "50",
+        "Product1_Sum":  "334,614 ",
+        "Team_Sum":  null,
+        "TargetTCFA_Sum":  "79,105",
+        "P3Act":  "6,744",
+        "TargetCoaching_Sum":  "0",
+        "TargetSalesResult_Sum":  "316,420.00",
+        "P2Act":  "68,752",
+        "Quarter":  "Q1 2017",
+        "TCFA_Act":  "93%",
+        "P1Act":  "110,484",
+        "TargetBase_Sum":  "395,525.00",
+        "Position":  "Pharm Representative",
+        "Product2_Sum":  "223,076 ",
+        "PromoLine":  "Pharma line"
+    },
+    {
+        "IncTCFA_Sum":  "39,553",
+        "FieldWork_Sum":  "39,553",
+        "TotalIncentive_Sum":  "545,825",
+        "Product4_Sum":  "25,314 ",
+        "IncCoaching_Sum":  "0",
+        "Position_Sum":  "Medical Representative",
+        "TotalAct":  "105413",
+        "P1Plan":  "33,774",
+        "ReimbursableMonths_Sum":  "100%",
+        "P1Name":  "CREON",
+        "TargetForQuarter_Sum":  "395,525.00 ",
+        "P2Name":  "HEPTRAL",
+        "TotalPlan":  "103504",
+        "Name":  "Pavlutskikh Yelena",
+        "IncSalesResult_Sum":  "506,272",
+        "P3Name":  "IRS 19",
+        "Product3_Sum":  "50,627 ",
+        "P3Plan":  "2,832",
+        "P2Plan":  "24,633",
+        "Id_Sum":  "51",
+        "Product1_Sum":  "253,136 ",
+        "Team_Sum":  null,
+        "TargetTCFA_Sum":  "79,105",
+        "P3Act":  "2,820",
+        "TargetCoaching_Sum":  "0",
+        "TargetSalesResult_Sum":  "316,420.00",
+        "P2Act":  "17,203",
+        "Quarter":  "Q1 2017",
+        "TCFA_Act":  "95%",
+        "P1Act":  "44,752",
+        "TargetBase_Sum":  "395,525.00",
+        "Position":  "Medical Representative",
+        "Product2_Sum":  "177,195 ",
+        "PromoLine":  "Line 1"
+    },
+    {
+        "IncTCFA_Sum":  "79,105",
+        "FieldWork_Sum":  "79,105",
+        "TotalIncentive_Sum":  "553,735",
+        "Product4_Sum":  "23,732 ",
+        "IncCoaching_Sum":  "0",
+        "Position_Sum":  "Medical Representative",
+        "TotalAct":  "156496",
+        "P1Plan":  "55,254",
+        "ReimbursableMonths_Sum":  "100%",
+        "P1Name":  "CREON",
+        "TargetForQuarter_Sum":  "395,525.00 ",
+        "P2Name":  "HEPTRAL",
+        "TotalPlan":  "153053",
+        "Name":  "Rakhimzhanova Gulnar",
+        "IncSalesResult_Sum":  "474,630",
+        "P3Name":  "IRS 19",
+        "Product3_Sum":  "47,463 ",
+        "P3Plan":  "4,560",
+        "P2Plan":  "34,770",
+        "Id_Sum":  "52",
+        "Product1_Sum":  "237,315 ",
+        "Team_Sum":  null,
+        "TargetTCFA_Sum":  "79,105",
+        "P3Act":  "5,112",
+        "TargetCoaching_Sum":  "0",
+        "TargetSalesResult_Sum":  "316,420.00",
+        "P2Act":  "31,105",
+        "Quarter":  "Q1 2017",
+        "TCFA_Act":  "99%",
+        "P1Act":  "67,079",
+        "TargetBase_Sum":  "395,525.00",
+        "Position":  "Medical Representative",
+        "Product2_Sum":  "166,121 ",
+        "PromoLine":  "Line 1"
+    },
+    {
+        "IncTCFA_Sum":  "79,105",
+        "FieldWork_Sum":  "79,105",
+        "TotalIncentive_Sum":  "585,377",
+        "Product4_Sum":  "50,627 ",
+        "IncCoaching_Sum":  "0",
+        "Position_Sum":  "Pharm Representative",
+        "TotalAct":  "286114",
+        "P1Plan":  "158,905",
+        "ReimbursableMonths_Sum":  "100%",
+        "P1Name":  "CREON",
+        "TargetForQuarter_Sum":  "395,525.00 ",
+        "P2Name":  "DUPHALAC ",
+        "TotalPlan":  "293930",
+        "Name":  "Sadvakassova Zhanat",
+        "IncSalesResult_Sum":  "506,272",
+        "P3Name":  "IRS 19",
+        "Product3_Sum":  "75,941 ",
+        "P3Plan":  "15,708",
+        "P2Plan":  "92,581",
+        "Id_Sum":  "53",
+        "Product1_Sum":  "227,822 ",
+        "Team_Sum":  null,
+        "TargetTCFA_Sum":  "79,105",
+        "P3Act":  "12,972",
+        "TargetCoaching_Sum":  "0",
+        "TargetSalesResult_Sum":  "316,420.00",
+        "P2Act":  "78,735",
+        "Quarter":  "Q1 2017",
+        "TCFA_Act":  "99%",
+        "P1Act":  "168,610",
+        "TargetBase_Sum":  "395,525.00",
+        "Position":  "Pharm Representative",
+        "Product2_Sum":  "151,882 ",
+        "PromoLine":  "Pharma line"
+    },
+    {
+        "IncTCFA_Sum":  "0",
+        "FieldWork_Sum":  "0",
+        "TotalIncentive_Sum":  "0",
+        "Product4_Sum":  "0 ",
+        "IncCoaching_Sum":  "0",
+        "Position_Sum":  "Pharm Representative",
+        "TotalAct":  "128241",
+        "P1Plan":  "51,543",
+        "ReimbursableMonths_Sum":  "100%",
+        "P1Name":  "CREON",
+        "TargetForQuarter_Sum":  "395,525.00 ",
+        "P2Name":  "DUPHALAC ",
+        "TotalPlan":  "109605",
+        "Name":  "Sagimbayeva Lyazat",
+        "IncSalesResult_Sum":  "0",
+        "P3Name":  "IRS 19",
+        "Product3_Sum":  "0 ",
+        "P3Plan":  "5,208",
+        "P2Plan":  "40,806",
+        "Id_Sum":  "54",
+        "Product1_Sum":  "0 ",
+        "Team_Sum":  null,
+        "TargetTCFA_Sum":  "0",
+        "P3Act":  "6,708",
+        "TargetCoaching_Sum":  "0",
+        "TargetSalesResult_Sum":  "0.00",
+        "P2Act":  "43,090",
+        "Quarter":  "Q1 2017",
+        "TCFA_Act":  "99%",
+        "P1Act":  "65,556",
+        "TargetBase_Sum":  "395,525.00",
+        "Position":  "Pharm Representative",
+        "Product2_Sum":  "0 ",
+        "PromoLine":  "Pharma line"
+    },
+    {
+        "IncTCFA_Sum":  "39,553",
+        "FieldWork_Sum":  "39,553",
+        "TotalIncentive_Sum":  "261,047",
+        "Product4_Sum":  "44,299 ",
+        "IncCoaching_Sum":  "0",
+        "Position_Sum":  "Medical Representative",
+        "TotalAct":  "307106",
+        "P1Plan":  "44,550",
+        "ReimbursableMonths_Sum":  "100%",
+        "P1Name":  "DUPHASTON ",
+        "TargetForQuarter_Sum":  "395,525.00 ",
+        "P2Name":  "PHYSIOTENS",
+        "TotalPlan":  "270956",
+        "Name":  "Sakalbayeva Aliya",
+        "IncSalesResult_Sum":  "221,494",
+        "P3Name":  "HEPTRAL",
+        "Product3_Sum":  "55,374 ",
+        "P3Plan":  "19,350",
+        "P2Plan":  "149,142",
+        "Id_Sum":  "55",
+        "Product1_Sum":  "66,448 ",
+        "Team_Sum":  null,
+        "TargetTCFA_Sum":  "79,105",
+        "P3Act":  "14,265",
+        "TargetCoaching_Sum":  "0",
+        "TargetSalesResult_Sum":  "316,420.00",
+        "P2Act":  "176,007",
+        "Quarter":  "Q1 2017",
+        "TCFA_Act":  "97%",
+        "P1Act":  "51,206",
+        "TargetBase_Sum":  "395,525.00",
+        "Position":  "Medical Representative",
+        "Product2_Sum":  "55,374 ",
+        "PromoLine":  "Line 2"
+    },
+    {
+        "IncTCFA_Sum":  "0",
+        "FieldWork_Sum":  "0",
+        "TotalIncentive_Sum":  "0",
+        "Product4_Sum":  "0 ",
+        "IncCoaching_Sum":  "0",
+        "Position_Sum":  "Pharm Representative",
+        "TotalAct":  "343265",
+        "P1Plan":  "164,567",
+        "ReimbursableMonths_Sum":  "67%",
+        "P1Name":  "CREON",
+        "TargetForQuarter_Sum":  "395,525.00 ",
+        "P2Name":  "DUPHALAC ",
+        "TotalPlan":  "280931",
+        "Name":  "Sarbassova Dina (Shymkent)",
+        "IncSalesResult_Sum":  "0",
+        "P3Name":  "IRS 19",
+        "Product3_Sum":  "0 ",
+        "P3Plan":  "6,840",
+        "P2Plan":  "98,724",
+        "Id_Sum":  "56",
+        "Product1_Sum":  "0 ",
+        "Team_Sum":  null,
+        "TargetTCFA_Sum":  "0",
+        "P3Act":  "5,604",
+        "TargetCoaching_Sum":  "0",
+        "TargetSalesResult_Sum":  "0.00",
+        "P2Act":  "121,598",
+        "Quarter":  "Q1 2017",
+        "TCFA_Act":  "0%",
+        "P1Act":  "209,415",
+        "TargetBase_Sum":  "263,683.33",
+        "Position":  "Pharm Representative",
+        "Product2_Sum":  "0 ",
+        "PromoLine":  "Pharma line"
+    },
+    {
+        "IncTCFA_Sum":  "79,105",
+        "FieldWork_Sum":  "79,105",
+        "TotalIncentive_Sum":  "300,599",
+        "Product4_Sum":  "22,149 ",
+        "IncCoaching_Sum":  "0",
+        "Position_Sum":  "Pharm Representative",
+        "TotalAct":  "477317",
+        "P1Plan":  "242,261",
+        "ReimbursableMonths_Sum":  "100%",
+        "P1Name":  "CREON",
+        "TargetForQuarter_Sum":  "395,525.00 ",
+        "P2Name":  "DUPHALAC ",
+        "TotalPlan":  "409315",
+        "Name":  "Sariyeva Ainur",
+        "IncSalesResult_Sum":  "221,494",
+        "P3Name":  "IRS 19",
+        "Product3_Sum":  "33,224 ",
+        "P3Plan":  "10,692",
+        "P2Plan":  "140,018",
+        "Id_Sum":  "57",
+        "Product1_Sum":  "99,672 ",
+        "Team_Sum":  null,
+        "TargetTCFA_Sum":  "79,105",
+        "P3Act":  "10,164",
+        "TargetCoaching_Sum":  "0",
+        "TargetSalesResult_Sum":  "316,420.00",
+        "P2Act":  "154,887",
+        "Quarter":  "Q1 2017",
+        "TCFA_Act":  "89%",
+        "P1Act":  "300,987",
+        "TargetBase_Sum":  "395,525.00",
+        "Position":  "Pharm Representative",
+        "Product2_Sum":  "66,448 ",
+        "PromoLine":  "Pharma line"
+    },
+    {
+        "IncTCFA_Sum":  "79,105",
+        "FieldWork_Sum":  "79,105",
+        "TotalIncentive_Sum":  "553,735",
+        "Product4_Sum":  "23,732 ",
+        "IncCoaching_Sum":  "0",
+        "Position_Sum":  "Medical Representative",
+        "TotalAct":  "409555",
+        "P1Plan":  "158,905",
+        "ReimbursableMonths_Sum":  "100%",
+        "P1Name":  "CREON",
+        "TargetForQuarter_Sum":  "395,525.00 ",
+        "P2Name":  "HEPTRAL",
+        "TotalPlan":  "429072",
+        "Name":  "Sarsenbayeva Saniya",
+        "IncSalesResult_Sum":  "474,630",
+        "P3Name":  "IRS 19",
+        "Product3_Sum":  "47,463 ",
+        "P3Plan":  "15,708",
+        "P2Plan":  "109,098",
+        "Id_Sum":  "58",
+        "Product1_Sum":  "237,315 ",
+        "Team_Sum":  null,
+        "TargetTCFA_Sum":  "79,105",
+        "P3Act":  "12,972",
+        "TargetCoaching_Sum":  "0",
+        "TargetSalesResult_Sum":  "316,420.00",
+        "P2Act":  "98,730",
+        "Quarter":  "Q1 2017",
+        "TCFA_Act":  "83%",
+        "P1Act":  "168,610",
+        "TargetBase_Sum":  "395,525.00",
+        "Position":  "Medical Representative",
+        "Product2_Sum":  "166,121 ",
+        "PromoLine":  "Line 1"
+    },
+    {
+        "IncTCFA_Sum":  "0",
+        "FieldWork_Sum":  "0",
+        "TotalIncentive_Sum":  "0",
+        "Product4_Sum":  "0",
+        "IncCoaching_Sum":  "0",
+        "Position_Sum":  "",
+        "TotalAct":  "204313",
+        "P1Plan":  "68,787",
+        "ReimbursableMonths_Sum":  "100%",
+        "P1Name":  "CREON",
+        "TargetForQuarter_Sum":  "0",
+        "P2Name":  "HEPTRAL",
+        "TotalPlan":  "188559",
+        "Name":  "Sidorenko Yevgeniya",
+        "IncSalesResult_Sum":  "0",
+        "P3Name":  "IRS 19",
+        "Product3_Sum":  "0",
+        "P3Plan":  "5,544",
+        "P2Plan":  "38,699",
+        "Id_Sum":  "",
+        "Product1_Sum":  "0",
+        "Team_Sum":  "",
+        "TargetTCFA_Sum":  "0",
+        "P3Act":  "7,008",
+        "TargetCoaching_Sum":  "0",
+        "TargetSalesResult_Sum":  "0",
+        "P2Act":  "28,529",
+        "Quarter":  "Q1 2017",
+        "TCFA_Act":  "98%",
+        "P1Act":  "92,461",
+        "TargetBase_Sum":  "0",
+        "Position":  "Medical Representative",
+        "Product2_Sum":  "0",
+        "PromoLine":  "Line 1"
+    },
+    {
+        "IncTCFA_Sum":  "0",
+        "FieldWork_Sum":  "0",
+        "TotalIncentive_Sum":  "168,757",
+        "Product4_Sum":  "16,876 ",
+        "IncCoaching_Sum":  "0",
+        "Position_Sum":  "Pharm Representative",
+        "TotalAct":  "105207",
+        "P1Plan":  "55,254",
+        "ReimbursableMonths_Sum":  "33%",
+        "P1Name":  "CREON",
+        "TargetForQuarter_Sum":  "395,525.00 ",
+        "P2Name":  "DUPHALAC ",
+        "TotalPlan":  "99689",
+        "Name":  "Simachkova Yelena",
+        "IncSalesResult_Sum":  "168,757",
+        "P3Name":  "IRS 19",
+        "Product3_Sum":  "25,314 ",
+        "P3Plan":  "4,560",
+        "P2Plan":  "33,683",
+        "Id_Sum":  "59",
+        "Product1_Sum":  "75,941 ",
+        "Team_Sum":  null,
+        "TargetTCFA_Sum":  "26,368",
+        "P3Act":  "5,112",
+        "TargetCoaching_Sum":  "0",
+        "TargetSalesResult_Sum":  "105,473.33",
+        "P2Act":  "28,337",
+        "Quarter":  "Q1 2017",
+        "TCFA_Act":  "90%",
+        "P1Act":  "67,079",
+        "TargetBase_Sum":  "131,841.67",
+        "Position":  "Pharm Representative",
+        "Product2_Sum":  "50,627 ",
+        "PromoLine":  "Pharma line"
+    },
+    {
+        "IncTCFA_Sum":  "79,105",
+        "FieldWork_Sum":  "79,105",
+        "TotalIncentive_Sum":  "395,525",
+        "Product4_Sum":  "94,926 ",
+        "IncCoaching_Sum":  "0",
+        "Position_Sum":  "Medical Representative",
+        "TotalAct":  "795464",
+        "P1Plan":  "17,027",
+        "ReimbursableMonths_Sum":  "100%",
+        "P1Name":  "CREON",
+        "TargetForQuarter_Sum":  "395,525.00 ",
+        "P2Name":  "PHYSIOTENS",
+        "TotalPlan":  "528707",
+        "Name":  "Soni Laura",
+        "IncSalesResult_Sum":  "316,420",
+        "P3Name":  "HEPTRAL",
+        "Product3_Sum":  "94,926 ",
+        "P3Plan":  "261,353",
+        "P2Plan":  "148,193",
+        "Id_Sum":  "60",
+        "Product1_Sum":  "31,642 ",
+        "Team_Sum":  null,
+        "TargetTCFA_Sum":  "79,105",
+        "P3Act":  "376,824",
+        "TargetCoaching_Sum":  "0",
+        "TargetSalesResult_Sum":  "316,420.00",
+        "P2Act":  "282,510",
+        "Quarter":  "Q1 2017",
+        "TCFA_Act":  "99%",
+        "P1Act":  "21,136",
+        "TargetBase_Sum":  "395,525.00",
+        "Position":  "Medical Representative",
+        "Product2_Sum":  "94,926 ",
+        "PromoLine":  "Line 2 (big cities)"
+    },
+    {
+        "IncTCFA_Sum":  "72,600",
+        "FieldWork_Sum":  "145,200",
+        "TotalIncentive_Sum":  "1,568,160",
+        "Product4_Sum":  "71,148 ",
+        "IncCoaching_Sum":  "72,600",
+        "Position_Sum":  "Regional Manager",
+        "TotalAct":  "669945",
+        "P1Plan":  "319,079",
+        "ReimbursableMonths_Sum":  "100%",
+        "P1Name":  "GASTRO",
+        "TargetForQuarter_Sum":  "726,000.00 ",
+        "P2Name":  "GYNECOLOGY",
+        "TotalPlan":  "625874",
+        "Name":  "Suttubayeva Gulnar",
+        "IncSalesResult_Sum":  "1,422,960",
+        "P3Name":  "CARDIO-NEURO",
+        "Product3_Sum":  "284,592 ",
+        "P3Plan":  "141,881",
+        "P2Plan":  "141,191",
+        "Id_Sum":  "61",
+        "Product1_Sum":  "711,480 ",
+        "Team_Sum":  null,
+        "TargetTCFA_Sum":  "72,600",
+        "P3Act":  "172,131",
+        "TargetCoaching_Sum":  "72,600",
+        "TargetSalesResult_Sum":  "580,800.00",
+        "P2Act":  "129,622",
+        "Quarter":  "Q1 2017",
+        "TCFA_Act":  "92%",
+        "P1Act":  "342,320",
+        "TargetBase_Sum":  "726,000.00",
+        "Position":  "Regional Manager",
+        "Product2_Sum":  "355,740 ",
+        "PromoLine":  "Regional Manager-1"
+    },
+    {
+        "IncTCFA_Sum":  "79,105",
+        "FieldWork_Sum":  "79,105",
+        "TotalIncentive_Sum":  "870,155",
+        "Product4_Sum":  "158,210 ",
+        "IncCoaching_Sum":  "0",
+        "Position_Sum":  "Medical Representative",
+        "TotalAct":  "101124",
+        "P1Plan":  "25,542",
+        "ReimbursableMonths_Sum":  "100%",
+        "P1Name":  "DUPHASTON ",
+        "TargetForQuarter_Sum":  "395,525.00 ",
+        "P2Name":  "PHYSIOTENS",
+        "TotalPlan":  "105809",
+        "Name":  "Tasbulatova Saule",
+        "IncSalesResult_Sum":  "791,050",
+        "P3Name":  "HEPTRAL",
+        "Product3_Sum":  "197,763 ",
+        "P3Plan":  "12,316",
+        "P2Plan":  "45,856",
+        "Id_Sum":  "62",
+        "Product1_Sum":  "237,315 ",
+        "Team_Sum":  null,
+        "TargetTCFA_Sum":  "79,105",
+        "P3Act":  "8,602",
+        "TargetCoaching_Sum":  "0",
+        "TargetSalesResult_Sum":  "316,420.00",
+        "P2Act":  "46,827",
+        "Quarter":  "Q1 2017",
+        "TCFA_Act":  "100%",
+        "P1Act":  "23,720",
+        "TargetBase_Sum":  "395,525.00",
+        "Position":  "Medical Representative",
+        "Product2_Sum":  "197,763 ",
+        "PromoLine":  "Line 2"
+    },
+    {
+        "IncTCFA_Sum":  "39,553",
+        "FieldWork_Sum":  "39,553",
+        "TotalIncentive_Sum":  "299,017",
+        "Product4_Sum":  "12,973 ",
+        "IncCoaching_Sum":  "0",
+        "Position_Sum":  "Medical Representative",
+        "TotalAct":  "664597",
+        "P1Plan":  "242,261",
+        "ReimbursableMonths_Sum":  "100%",
+        "P1Name":  "CREON",
+        "TargetForQuarter_Sum":  "395,525.00 ",
+        "P2Name":  "HEPTRAL",
+        "TotalPlan":  "570699",
+        "Name":  "Temirbayeva Akzhunis",
+        "IncSalesResult_Sum":  "259,464",
+        "P3Name":  "IRS 19",
+        "Product3_Sum":  "25,946 ",
+        "P3Plan":  "10,692",
+        "P2Plan":  "128,976",
+        "Id_Sum":  "63",
+        "Product1_Sum":  "129,732 ",
+        "Team_Sum":  null,
+        "TargetTCFA_Sum":  "79,105",
+        "P3Act":  "10,164",
+        "TargetCoaching_Sum":  "0",
+        "TargetSalesResult_Sum":  "316,420.00",
+        "P2Act":  "155,755",
+        "Quarter":  "Q1 2017",
+        "TCFA_Act":  "97%",
+        "P1Act":  "300,987",
+        "TargetBase_Sum":  "395,525.00",
+        "Position":  "Medical Representative",
+        "Product2_Sum":  "90,813 ",
+        "PromoLine":  "Line 1"
+    },
+    {
+        "IncTCFA_Sum":  "79,105",
+        "FieldWork_Sum":  "79,105",
+        "TotalIncentive_Sum":  "338,569",
+        "Product4_Sum":  "12,973 ",
+        "IncCoaching_Sum":  "0",
+        "Position_Sum":  "Medical Representative",
+        "TotalAct":  "664597",
+        "P1Plan":  "242,261",
+        "ReimbursableMonths_Sum":  "100%",
+        "P1Name":  "CREON",
+        "TargetForQuarter_Sum":  "395,525.00 ",
+        "P2Name":  "HEPTRAL",
+        "TotalPlan":  "570699",
+        "Name":  "Tilessova Altynay",
+        "IncSalesResult_Sum":  "259,464",
+        "P3Name":  "IRS 19",
+        "Product3_Sum":  "25,946 ",
+        "P3Plan":  "10,692",
+        "P2Plan":  "128,976",
+        "Id_Sum":  "64",
+        "Product1_Sum":  "129,732 ",
+        "Team_Sum":  null,
+        "TargetTCFA_Sum":  "79,105",
+        "P3Act":  "10,164",
+        "TargetCoaching_Sum":  "0",
+        "TargetSalesResult_Sum":  "316,420.00",
+        "P2Act":  "155,755",
+        "Quarter":  "Q1 2017",
+        "TCFA_Act":  "99%",
+        "P1Act":  "300,987",
+        "TargetBase_Sum":  "395,525.00",
+        "Position":  "Medical Representative",
+        "Product2_Sum":  "90,813 ",
+        "PromoLine":  "Line 1"
+    },
+    {
+        "IncTCFA_Sum":  "39,553",
+        "FieldWork_Sum":  "39,553",
+        "TotalIncentive_Sum":  "704,035",
+        "Product4_Sum":  "132,896 ",
+        "IncCoaching_Sum":  "0",
+        "Position_Sum":  "Medical Representative",
+        "TotalAct":  "194075",
+        "P1Plan":  "41,040",
+        "ReimbursableMonths_Sum":  "100%",
+        "P1Name":  "DUPHASTON ",
+        "TargetForQuarter_Sum":  "395,525.00 ",
+        "P2Name":  "PHYSIOTENS",
+        "TotalPlan":  "180803",
+        "Name":  "Tipalov Sergey",
+        "IncSalesResult_Sum":  "664,482",
+        "P3Name":  "HEPTRAL",
+        "Product3_Sum":  "166,121 ",
+        "P3Plan":  "14,942",
+        "P2Plan":  "81,562",
+        "Id_Sum":  "65",
+        "Product1_Sum":  "199,345 ",
+        "Team_Sum":  null,
+        "TargetTCFA_Sum":  "79,105",
+        "P3Act":  "16,972",
+        "TargetCoaching_Sum":  "0",
+        "TargetSalesResult_Sum":  "316,420.00",
+        "P2Act":  "91,116",
+        "Quarter":  "Q1 2017",
+        "TCFA_Act":  "98%",
+        "P1Act":  "38,205",
+        "TargetBase_Sum":  "395,525.00",
+        "Position":  "Medical Representative",
+        "Product2_Sum":  "166,121 ",
+        "PromoLine":  "Line 2"
+    },
+    {
+        "IncTCFA_Sum":  "0",
+        "FieldWork_Sum":  "0",
+        "TotalIncentive_Sum":  "0",
+        "Product4_Sum":  "0",
+        "IncCoaching_Sum":  "0",
+        "Position_Sum":  "",
+        "TotalAct":  "32473",
+        "P1Plan":  "13,068",
+        "ReimbursableMonths_Sum":  "100%",
+        "P1Name":  "DUPHASTON ",
+        "TargetForQuarter_Sum":  "0",
+        "P2Name":  "PHYSIOTENS",
+        "TotalPlan":  "38516",
+        "Name":  "Tulebayeva Karylgash",
+        "IncSalesResult_Sum":  "0",
+        "P3Name":  "HEPTRAL",
+        "Product3_Sum":  "0",
+        "P3Plan":  "4,986",
+        "P2Plan":  "10,552",
+        "Id_Sum":  "",
+        "Product1_Sum":  "0",
+        "Team_Sum":  "",
+        "TargetTCFA_Sum":  "0",
+        "P3Act":  "7,677",
+        "TargetCoaching_Sum":  "0",
+        "TargetSalesResult_Sum":  "0",
+        "P2Act":  "3,589",
+        "Quarter":  "Q1 2017",
+        "TCFA_Act":  "0%",
+        "P1Act":  "10,733",
+        "TargetBase_Sum":  "0",
+        "Position":  "Medical Representative",
+        "Product2_Sum":  "0",
+        "PromoLine":  "Line 2"
+    },
+    {
+        "IncTCFA_Sum":  "79,105",
+        "FieldWork_Sum":  "79,105",
+        "TotalIncentive_Sum":  "300,599",
+        "Product4_Sum":  "11,075 ",
+        "IncCoaching_Sum":  "0",
+        "Position_Sum":  "Medical Representative",
+        "TotalAct":  "81224",
+        "P1Plan":  "65,624",
+        "ReimbursableMonths_Sum":  "100%",
+        "P1Name":  "DUPHASTON ",
+        "TargetForQuarter_Sum":  "395,525.00 ",
+        "P2Name":  "FEMOSTON",
+        "TotalPlan":  "90890",
+        "Name":  "Ungarbayeva Zhanna",
+        "IncSalesResult_Sum":  "221,494",
+        "P3Name":  "DUPHALAC ",
+        "Product3_Sum":  "55,374 ",
+        "P3Plan":  "4,081",
+        "P2Plan":  "17,342",
+        "Id_Sum":  "66",
+        "Product1_Sum":  "99,672 ",
+        "Team_Sum":  null,
+        "TargetTCFA_Sum":  "79,105",
+        "P3Act":  "4,309",
+        "TargetCoaching_Sum":  "0",
+        "TargetSalesResult_Sum":  "316,420.00",
+        "P2Act":  "15,695",
+        "Quarter":  "Q1 2017",
+        "TCFA_Act":  "92%",
+        "P1Act":  "57,942",
+        "TargetBase_Sum":  "395,525.00",
+        "Position":  "Medical Representative",
+        "Product2_Sum":  "55,374 ",
+        "PromoLine":  "Line 3 (big cities)"
+    },
+    {
+        "IncTCFA_Sum":  "0",
+        "FieldWork_Sum":  "0",
+        "TotalIncentive_Sum":  "0",
+        "Product4_Sum":  "0",
+        "IncCoaching_Sum":  "0",
+        "Position_Sum":  "",
+        "TotalAct":  "406216",
+        "P1Plan":  "12,113",
+        "ReimbursableMonths_Sum":  "100%",
+        "P1Name":  "CREON",
+        "TargetForQuarter_Sum":  "0",
+        "P2Name":  "PHYSIOTENS",
+        "TotalPlan":  "359764",
+        "Name":  "Yerkebayeva Gulmira",
+        "IncSalesResult_Sum":  "0",
+        "P3Name":  "HEPTRAL",
+        "Product3_Sum":  "0",
+        "P3Plan":  "128,976",
+        "P2Plan":  "166,047",
+        "Id_Sum":  "",
+        "Product1_Sum":  "0",
+        "Team_Sum":  "",
+        "TargetTCFA_Sum":  "0",
+        "P3Act":  "155,755",
+        "TargetCoaching_Sum":  "0",
+        "TargetSalesResult_Sum":  "0",
+        "P2Act":  "174,154",
+        "Quarter":  "Q1 2017",
+        "TCFA_Act":  "97%",
+        "P1Act":  "15,049",
+        "TargetBase_Sum":  "0",
+        "Position":  "Medical Representative",
+        "Product2_Sum":  "0",
+        "PromoLine":  "Line 2 (big cities)"
+    },
+    {
+        "IncTCFA_Sum":  "79,105",
+        "FieldWork_Sum":  "79,105",
+        "TotalIncentive_Sum":  "395,525",
+        "Product4_Sum":  "15,821 ",
+        "IncCoaching_Sum":  "0",
+        "Position_Sum":  "Medical Representative",
+        "TotalAct":  "1110000",
+        "P1Plan":  "340,539",
+        "ReimbursableMonths_Sum":  "100%",
+        "P1Name":  "CREON",
+        "TargetForQuarter_Sum":  "395,525.00 ",
+        "P2Name":  "HEPTRAL",
+        "TotalPlan":  "913358",
+        "Name":  "Yerkin Nadiyam",
+        "IncSalesResult_Sum":  "316,420",
+        "P3Name":  "IRS 19",
+        "Product3_Sum":  "31,642 ",
+        "P3Plan":  "39,732",
+        "P2Plan":  "261,353",
+        "Id_Sum":  "67",
+        "Product1_Sum":  "158,210 ",
+        "Team_Sum":  null,
+        "TargetTCFA_Sum":  "79,105",
+        "P3Act":  "32,076",
+        "TargetCoaching_Sum":  "0",
+        "TargetSalesResult_Sum":  "316,420.00",
+        "P2Act":  "376,824",
+        "Quarter":  "Q1 2017",
+        "TCFA_Act":  "98%",
+        "P1Act":  "422,723",
+        "TargetBase_Sum":  "395,525.00",
+        "Position":  "Medical Representative",
+        "Product2_Sum":  "110,747 ",
+        "PromoLine":  "Line 1"
+    },
+    {
+        "IncTCFA_Sum":  "79,105",
+        "FieldWork_Sum":  "79,105",
+        "TotalIncentive_Sum":  "395,525",
+        "Product4_Sum":  "15,821 ",
+        "IncCoaching_Sum":  "0",
+        "Position_Sum":  "Medical Representative",
+        "TotalAct":  "1110000",
+        "P1Plan":  "340,539",
+        "ReimbursableMonths_Sum":  "100%",
+        "P1Name":  "CREON",
+        "TargetForQuarter_Sum":  "395,525.00 ",
+        "P2Name":  "HEPTRAL",
+        "TotalPlan":  "913358",
+        "Name":  "Yesbolova Gulnur",
+        "IncSalesResult_Sum":  "316,420",
+        "P3Name":  "IRS 19",
+        "Product3_Sum":  "31,642 ",
+        "P3Plan":  "39,732",
+        "P2Plan":  "261,353",
+        "Id_Sum":  "68",
+        "Product1_Sum":  "158,210 ",
+        "Team_Sum":  null,
+        "TargetTCFA_Sum":  "79,105",
+        "P3Act":  "32,076",
+        "TargetCoaching_Sum":  "0",
+        "TargetSalesResult_Sum":  "316,420.00",
+        "P2Act":  "376,824",
+        "Quarter":  "Q1 2017",
+        "TCFA_Act":  "99%",
+        "P1Act":  "422,723",
+        "TargetBase_Sum":  "395,525.00",
+        "Position":  "Medical Representative",
+        "Product2_Sum":  "110,747 ",
+        "PromoLine":  "Line 1"
+    },
+    {
+        "IncTCFA_Sum":  "72,600",
+        "FieldWork_Sum":  "145,200",
+        "TotalIncentive_Sum":  "1,248,720",
+        "Product4_Sum":  "55,176 ",
+        "IncCoaching_Sum":  "72,600",
+        "Position_Sum":  "Regional Manager",
+        "TotalAct":  "722716",
+        "P1Plan":  "356,830",
+        "ReimbursableMonths_Sum":  "100%",
+        "P1Name":  "GASTRO",
+        "TargetForQuarter_Sum":  "726,000.00 ",
+        "P2Name":  "GYNECOLOGY",
+        "TotalPlan":  "622652",
+        "Name":  "Yevseyenko Larissa",
+        "IncSalesResult_Sum":  "1,103,520",
+        "P3Name":  "CARDIO-NEURO",
+        "Product3_Sum":  "220,704 ",
+        "P3Plan":  "127,657",
+        "P2Plan":  "117,141",
+        "Id_Sum":  "69",
+        "Product1_Sum":  "551,760 ",
+        "Team_Sum":  null,
+        "TargetTCFA_Sum":  "72,600",
+        "P3Act":  "176,969",
+        "TargetCoaching_Sum":  "72,600",
+        "TargetSalesResult_Sum":  "580,800.00",
+        "P2Act":  "120,541",
+        "Quarter":  "Q1 2017",
+        "TCFA_Act":  "91%",
+        "P1Act":  "404,146",
+        "TargetBase_Sum":  "726,000.00",
+        "Position":  "Regional Manager",
+        "Product2_Sum":  "275,880 ",
+        "PromoLine":  "Regional Manager-1"
+    },
+    {
+        "IncTCFA_Sum":  "79,105",
+        "FieldWork_Sum":  "79,105",
+        "TotalIncentive_Sum":  "395,525",
+        "Product4_Sum":  "94,926 ",
+        "IncCoaching_Sum":  "0",
+        "Position_Sum":  "Medical Representative",
+        "TotalAct":  "795464",
+        "P1Plan":  "17,027",
+        "ReimbursableMonths_Sum":  "100%",
+        "P1Name":  "CREON",
+        "TargetForQuarter_Sum":  "395,525.00 ",
+        "P2Name":  "PHYSIOTENS",
+        "TotalPlan":  "528707",
+        "Name":  "Yu Vitaliya",
+        "IncSalesResult_Sum":  "316,420",
+        "P3Name":  "HEPTRAL",
+        "Product3_Sum":  "94,926 ",
+        "P3Plan":  "261,353",
+        "P2Plan":  "148,193",
+        "Id_Sum":  "70",
+        "Product1_Sum":  "31,642 ",
+        "Team_Sum":  null,
+        "TargetTCFA_Sum":  "79,105",
+        "P3Act":  "376,824",
+        "TargetCoaching_Sum":  "0",
+        "TargetSalesResult_Sum":  "316,420.00",
+        "P2Act":  "282,510",
+        "Quarter":  "Q1 2017",
+        "TCFA_Act":  "96%",
+        "P1Act":  "21,136",
+        "TargetBase_Sum":  "395,525.00",
+        "Position":  "Medical Representative",
+        "Product2_Sum":  "94,926 ",
+        "PromoLine":  "Line 2 (big cities)"
+    },
+    {
+        "IncTCFA_Sum":  "79,105",
+        "FieldWork_Sum":  "79,105",
+        "TotalIncentive_Sum":  "522,093",
+        "Product4_Sum":  "22,149 ",
+        "IncCoaching_Sum":  "0",
+        "Position_Sum":  "Medical Representative",
+        "TotalAct":  "123249",
+        "P1Plan":  "50,786",
+        "ReimbursableMonths_Sum":  "100%",
+        "P1Name":  "CREON",
+        "TargetForQuarter_Sum":  "395,525.00 ",
+        "P2Name":  "HEPTRAL",
+        "TotalPlan":  "119494",
+        "Name":  "Zhanabekova Kamshat",
+        "IncSalesResult_Sum":  "442,988",
+        "P3Name":  "IRS 19",
+        "Product3_Sum":  "44,299 ",
+        "P3Plan":  "3,564",
+        "P2Plan":  "22,156",
+        "Id_Sum":  "71",
+        "Product1_Sum":  "221,494 ",
+        "Team_Sum":  null,
+        "TargetTCFA_Sum":  "79,105",
+        "P3Act":  "4,668",
+        "TargetCoaching_Sum":  "0",
+        "TargetSalesResult_Sum":  "316,420.00",
+        "P2Act":  "22,718",
+        "Quarter":  "Q1 2017",
+        "TCFA_Act":  "99%",
+        "P1Act":  "54,997",
+        "TargetBase_Sum":  "395,525.00",
+        "Position":  "Medical Representative",
+        "Product2_Sum":  "155,046 ",
+        "PromoLine":  "Line 1"
+    },
+    {
+        "IncTCFA_Sum":  "79,105",
+        "FieldWork_Sum":  "79,105",
+        "TotalIncentive_Sum":  "727,766",
+        "Product4_Sum":  "32,433 ",
+        "IncCoaching_Sum":  "0",
+        "Position_Sum":  "Medical Representative",
+        "TotalAct":  "374051",
+        "P1Plan":  "240,300",
+        "ReimbursableMonths_Sum":  "100%",
+        "P1Name":  "DUPHASTON ",
+        "TargetForQuarter_Sum":  "395,525.00 ",
+        "P2Name":  "FEMOSTON",
+        "TotalPlan":  "400487",
+        "Name":  "Zhazylbekova Aitolkyn",
+        "IncSalesResult_Sum":  "648,661",
+        "P3Name":  "DUPHALAC ",
+        "Product3_Sum":  "162,165 ",
+        "P3Plan":  "18,515",
+        "P2Plan":  "120,246",
+        "Id_Sum":  "72",
+        "Product1_Sum":  "291,897 ",
+        "Team_Sum":  null,
+        "TargetTCFA_Sum":  "79,105",
+        "P3Act":  "19,941",
+        "TargetCoaching_Sum":  "0",
+        "TargetSalesResult_Sum":  "316,420.00",
+        "P2Act":  "116,371",
+        "Quarter":  "Q1 2017",
+        "TCFA_Act":  "97%",
+        "P1Act":  "216,203",
+        "TargetBase_Sum":  "395,525.00",
+        "Position":  "Medical Representative",
+        "Product2_Sum":  "162,165 ",
+        "PromoLine":  "Line 3 (big cities)"
+    },
+    {
+        "IncTCFA_Sum":  "72,600",
+        "FieldWork_Sum":  "145,200",
+        "TotalIncentive_Sum":  "638,880",
+        "Product4_Sum":  "24,684 ",
+        "IncCoaching_Sum":  "72,600",
+        "Position_Sum":  "Regional Manager",
+        "TotalAct":  "747021",
+        "P1Plan":  "280,488",
+        "ReimbursableMonths_Sum":  "100%",
+        "P1Name":  "GASTRO",
+        "TargetForQuarter_Sum":  "726,000.00 ",
+        "P2Name":  "GYNECOLOGY",
+        "TotalPlan":  "676601",
+        "Name":  "Zhmailova Yelena",
+        "IncSalesResult_Sum":  "493,680",
+        "P3Name":  "CARDIO-NEURO",
+        "Product3_Sum":  "98,736 ",
+        "P3Plan":  "252,802",
+        "P2Plan":  "115,747",
+        "Id_Sum":  "73",
+        "Product1_Sum":  "246,840 ",
+        "Team_Sum":  null,
+        "TargetTCFA_Sum":  "72,600",
+        "P3Act":  "304,464",
+        "TargetCoaching_Sum":  "72,600",
+        "TargetSalesResult_Sum":  "580,800.00",
+        "P2Act":  "114,995",
+        "Quarter":  "Q1 2017",
+        "TCFA_Act":  "97%",
+        "P1Act":  "294,058",
+        "TargetBase_Sum":  "726,000.00",
+        "Position":  "Regional Manager",
+        "Product2_Sum":  "123,420 ",
+        "PromoLine":  "Regional Manager-1"
+    },
+    {
+        "IncTCFA_Sum":  "0",
+        "FieldWork_Sum":  "0",
+        "TotalIncentive_Sum":  "0",
+        "Product4_Sum":  "0",
+        "IncCoaching_Sum":  "0",
+        "Position_Sum":  "",
+        "TotalAct":  "530618",
+        "P1Plan":  "280,974",
+        "ReimbursableMonths_Sum":  "100%",
+        "P1Name":  "GASTRO",
+        "TargetForQuarter_Sum":  "0",
+        "P2Name":  "GYNECOLOGY",
+        "TotalPlan":  "513913",
+        "Name":  "Orazbayeva Saya",
+        "IncSalesResult_Sum":  "0",
+        "P3Name":  "CARDIO-NEURO",
+        "Product3_Sum":  "0",
+        "P3Plan":  "79,240",
+        "P2Plan":  "127,995",
+        "Id_Sum":  "",
+        "Product1_Sum":  "0",
+        "Team_Sum":  "",
+        "TargetTCFA_Sum":  "0",
+        "P3Act":  "90,171",
+        "TargetCoaching_Sum":  "0",
+        "TargetSalesResult_Sum":  "0",
+        "P2Act":  "101,767",
+        "Quarter":  "Q1 2017",
+        "TCFA_Act":  "0%",
+        "P1Act":  "304,828",
+        "TargetBase_Sum":  "0",
+        "Position":  "Regional Manager",
+        "Product2_Sum":  "0",
+        "PromoLine":  "Regional Manager-1"
+    },
+    {
+        "IncTCFA_Sum":  "79,105",
+        "FieldWork_Sum":  "79,105",
+        "TotalIncentive_Sum":  "870,155",
+        "Product4_Sum":  "158,210 ",
+        "IncCoaching_Sum":  "0",
+        "Position_Sum":  "Medical Representative",
+        "TotalAct":  "54267",
+        "P1Plan":  "8,100",
+        "ReimbursableMonths_Sum":  "100%",
+        "P1Name":  "DUPHASTON ",
+        "TargetForQuarter_Sum":  "395,525.00 ",
+        "P2Name":  "PHYSIOTENS",
+        "TotalPlan":  "28219",
+        "Name":  "Kaderov Nursultan",
+        "IncSalesResult_Sum":  "791,050",
+        "P3Name":  "HEPTRAL",
+        "Product3_Sum":  "197,763 ",
+        "P3Plan":  "3,071",
+        "P2Plan":  "10,336",
+        "Id_Sum":  "74",
+        "Product1_Sum":  "237,315 ",
+        "Team_Sum":  null,
+        "TargetTCFA_Sum":  "79,105",
+        "P3Act":  "5,003",
+        "TargetCoaching_Sum":  "0",
+        "TargetSalesResult_Sum":  "316,420.00",
+        "P2Act":  "29,872",
+        "Quarter":  "Q1 2017",
+        "TCFA_Act":  "92%",
+        "P1Act":  "11,259",
+        "TargetBase_Sum":  "395,525.00",
+        "Position":  "Medical Representative",
+        "Product2_Sum":  "197,763 ",
+        "PromoLine":  "Line 2"
+    },
+    {
+        "IncTCFA_Sum":  "79,105",
+        "FieldWork_Sum":  "79,105",
+        "TotalIncentive_Sum":  "743,587",
+        "Product4_Sum":  "132,896 ",
+        "IncCoaching_Sum":  "0",
+        "Position_Sum":  "Medical Representative",
+        "TotalAct":  "60301",
+        "P1Plan":  "16,349",
+        "ReimbursableMonths_Sum":  "100%",
+        "P1Name":  "DUPHASTON ",
+        "TargetForQuarter_Sum":  "395,525.00 ",
+        "P2Name":  "PHYSIOTENS",
+        "TotalPlan":  "51536",
+        "Name":  "Ospanova Zhumagul",
+        "IncSalesResult_Sum":  "664,482",
+        "P3Name":  "HEPTRAL",
+        "Product3_Sum":  "166,121 ",
+        "P3Plan":  "5,977",
+        "P2Plan":  "11,207",
+        "Id_Sum":  "75",
+        "Product1_Sum":  "199,345 ",
+        "Team_Sum":  null,
+        "TargetTCFA_Sum":  "79,105",
+        "P3Act":  "5,845",
+        "TargetCoaching_Sum":  "0",
+        "TargetSalesResult_Sum":  "316,420.00",
+        "P2Act":  "19,991",
+        "Quarter":  "Q1 2017",
+        "TCFA_Act":  "82%",
+        "P1Act":  "14,324",
+        "TargetBase_Sum":  "395,525.00",
+        "Position":  "Medical Representative",
+        "Product2_Sum":  "166,121 ",
+        "PromoLine":  "Line 2"
+    },
+    {
+        "IncTCFA_Sum":  "0",
+        "FieldWork_Sum":  "0",
+        "TotalIncentive_Sum":  "0",
+        "Product4_Sum":  "0",
+        "IncCoaching_Sum":  "0",
+        "Position_Sum":  "",
+        "TotalAct":  "62327",
+        "P1Plan":  "33,187",
+        "ReimbursableMonths_Sum":  "100%",
+        "P1Name":  "CREON",
+        "TargetForQuarter_Sum":  "0",
+        "P2Name":  "DUPHALAC ",
+        "TotalPlan":  "60212",
+        "Name":  "Yakim Ilya",
+        "IncSalesResult_Sum":  "0",
+        "P3Name":  "IRS 19",
+        "Product3_Sum":  "0",
+        "P3Plan":  "2,040",
+        "P2Plan":  "21,673",
+        "Id_Sum":  "",
+        "Product1_Sum":  "0",
+        "Team_Sum":  "",
+        "TargetTCFA_Sum":  "0",
+        "P3Act":  "3,012",
+        "TargetCoaching_Sum":  "0",
+        "TargetSalesResult_Sum":  "0",
+        "P2Act":  "22,165",
+        "Quarter":  "Q1 2017",
+        "TCFA_Act":  "0%",
+        "P1Act":  "33,238",
+        "TargetBase_Sum":  "0",
+        "Position":  "Pharm Representative",
+        "Product2_Sum":  "0",
+        "PromoLine":  "Pharma line"
+    },
+    {
+        "IncTCFA_Sum":  "13,184",
+        "FieldWork_Sum":  "13,184",
+        "TotalIncentive_Sum":  "224,131",
+        "Product4_Sum":  "10,547 ",
+        "IncCoaching_Sum":  "0",
+        "Position_Sum":  "Medical Representative",
+        "TotalAct":  "91011",
+        "P1Plan":  "55,431",
+        "ReimbursableMonths_Sum":  "33%",
+        "P1Name":  "DUPHASTON ",
+        "TargetForQuarter_Sum":  "395,525.00 ",
+        "P2Name":  "FEMOSTON",
+        "TotalPlan":  "91613",
+        "Name":  "Makenova Yuliya",
+        "IncSalesResult_Sum":  "210,947",
+        "P3Name":  "DUPHALAC ",
+        "Product3_Sum":  "52,737 ",
+        "P3Plan":  "6,144",
+        "P2Plan":  "23,687",
+        "Id_Sum":  "83",
+        "Product1_Sum":  "94,926 ",
+        "Team_Sum":  null,
+        "TargetTCFA_Sum":  "26,368",
+        "P3Act":  "6,875",
+        "TargetCoaching_Sum":  "0",
+        "TargetSalesResult_Sum":  "105,473.33",
+        "P2Act":  "24,882",
+        "Quarter":  "Q1 2017",
+        "TCFA_Act":  "0%",
+        "P1Act":  "53,663",
+        "TargetBase_Sum":  "131,841.67",
+        "Position":  "Medical Representative",
+        "Product2_Sum":  "52,737 ",
+        "PromoLine":  "Line 3 (big cities)"
+    }
+];
+
+</script>
+    <script>
+// Depends on comprehensiveData from comprehensive_data.js
+
+document.addEventListener('DOMContentLoaded', () => {
+    
+    if (!typeof comprehensiveData !== "undefined" && !comprehensiveData || comprehensiveData.length === 0) {
+        console.error("No data found");
+        return;
+    }
+
+    // Augment data with Mock Country/Year for the filter's sake
+    const augmentedData = comprehensiveData.map((d, index) => {
+        return {
+            ...d,
+            Country: index % 3 === 0 ? "Kazakhstan" : "Georgia",
+            Year: index < 50 ? "2017" : "2018",
+            Quarter: index % 2 === 0 ? "Q1" : "Q2"
+        };
+    });
+
+    const tableHead = document.getElementById('table-head');
+    const tableBody = document.getElementById('table-body');
+    const searchInput = document.getElementById('search-input');
+    const emptyState = document.getElementById('empty-state');
+    
+    // Filter selectors
+    const filterCountry = document.getElementById('filter-country');
+    const filterYear = document.getElementById('filter-year');
+    const filterQuarter = document.getElementById('filter-quarter');
+    const filterTeam = document.getElementById('filter-team');
+    const filterRep = document.getElementById('filter-rep');
+    const filterView = document.getElementById('filter-view');
+    const resetBtn = document.getElementById('reset-btn');
+
+    // Populate dropdowns function
+    const populateDropdown = (element, key) => {
+        const uniqueValues = [...new Set(augmentedData.map(d => d[key]).filter(v => v))].sort();
+        uniqueValues.forEach(val => {
+            const opt = document.createElement('option');
+            opt.value = val;
+            opt.textContent = val;
+            element.appendChild(opt);
+        });
+    };
+
+    populateDropdown(filterCountry, 'Country');
+    populateDropdown(filterYear, 'Year');
+    populateDropdown(filterQuarter, 'Quarter');
+    populateDropdown(filterTeam, 'PromoLine');
+    populateDropdown(filterRep, 'Name');
+
+    const cleanNum = (str) => {
+        if(!str) return 0;
+        return parseFloat(str.toString().replace(/,/g, '').replace(/\s/g, '')) || 0;
+    };
+
+    const formatNum = (num) => {
+        return new Intl.NumberFormat('en-US', {
+            maximumFractionDigits: 0
+        }).format(num);
+    };
+
+    const getPctHelper = (act, plan) => {
+        if (!plan || plan === 0) return "";
+        const pct = Math.round((act / plan) * 100);
+        const className = pct >= 100 ? 'pct-good' : 'pct-bad';
+        return `<span class="percent-badge ${className}">${pct}%</span>`;
+    };
+
+    // RENDER DETAILED PERFORMANCE VIEW
+    const renderDetailedView = (data) => {
+        tableHead.innerHTML = `
+            <tr>
+                <th>Rep Name</th>
+                <th>Position & Team</th>
+                <th>Total Plan (LC)</th>
+                <th>Total Actual (LC)</th>
+                <th>Product Breakdown (Act vs Plan)</th>
+                <th>TCFA (Actual)</th>
+                <th>Target Base (LC)</th>
+                <th class="highlight-col">Final Incentive (LC)</th>
+            </tr>
+        `;
+
+        data.forEach(d => {
+            const tr = document.createElement('tr');
+            
+            const tdName = document.createElement('td');
+            tdName.innerHTML = `<span class="rep-name">${d.Name}</span><span style="font-size: 0.85rem; color: #64748b;">${d.Position || 'Rep'} | ${d.Country}</span>`;
+            
+            const tdTeam = document.createElement('td');
+            tdTeam.innerHTML = `<span class="team-badge">${d.PromoLine || 'Unknown'}</span><br><span style="font-size: 0.75rem; color: #94a3b8; margin-top:4px; display:inline-block;">${d.Quarter} ${d.Year}</span>`;
+
+            const tAct = cleanNum(d.TotalAct);
+            const tPlan = cleanNum(d.TotalPlan);
+            
+            const tdPlan = document.createElement('td');
+            tdPlan.innerHTML = `<div class="val-plan">${formatNum(tPlan)}</div>`;
+            const tdAct = document.createElement('td');
+            tdAct.innerHTML = `<div class="val-act">${formatNum(tAct)}</div>${getPctHelper(tAct, tPlan)}`;
+
+            const tdProd = document.createElement('td');
+            let prodHtml = '<div class="prod-list">';
+            const prods = [
+                { name: d.P1Name, act: d.P1Act, plan: d.P1Plan },
+                { name: d.P2Name, act: d.P2Act, plan: d.P2Plan },
+                { name: d.P3Name, act: d.P3Act, plan: d.P3Plan }
+            ];
+            prods.forEach(p => {
+                if (cleanNum(p.plan) > 0 || cleanNum(p.act) > 0) {
+                    const pact = cleanNum(p.act);
+                    const pplan = cleanNum(p.plan);
+                    prodHtml += `<div class="prod-item"><span class="prod-name" title="${p.name}">${p.name || 'Product'}</span><span>${formatNum(pact)} / ${formatNum(pplan)} ${getPctHelper(pact, pplan)}</span></div>`;
+                }
+            });
+            prodHtml += '</div>';
+            tdProd.innerHTML = prodHtml;
+
+            const tdTCFA = document.createElement('td');
+            const tcfaVal = (d.TCFA_Act || "0%");
+            const tcfaNum = parseFloat(tcfaVal.replace('%', ''));
+            const tcfaClass = tcfaNum >= 95 ? 'pct-good' : 'pct-bad'; // Assuming 95% is a standard target for green
+            tdTCFA.innerHTML = `<span class="percent-badge ${tcfaClass}" style="font-size:0.9rem; padding:6px 10px;">${tcfaVal}</span>`;
+
+            const tarBase = cleanNum(d.TargetBase_Sum || d.TotalTarget);
+            const tdBase = document.createElement('td');
+            tdBase.innerHTML = `<div class="val-plan">${formatNum(tarBase)}</div>`;
+
+            const tarInc = cleanNum(d.TotalIncentive_Sum || d.TotalIncentive);
+            const tdInc = document.createElement('td');
+            tdInc.className = 'highlight-col';
+            tdInc.innerHTML = `<div class="final-incentive">${formatNum(tarInc)}</div>`;
+
+            tr.append(tdName, tdTeam, tdPlan, tdAct, tdProd, tdTCFA, tdBase, tdInc);
+            tableBody.appendChild(tr);
+        });
+    };
+
+    // RENDER SUMMARY CALCULATION (FINANCIALS) VIEW
+    const renderSummaryView = (data) => {
+        tableHead.innerHTML = `
+            <tr>
+                <th>No</th>
+                <th>Name</th>
+                <th>Position</th>
+                <th>Target Incentive for Quarter, LC</th>
+                <th>Reimbursable months, %</th>
+                <th>Target Base, LC</th>
+                <th>Target Inc (Sales Result)</th>
+                <th>Product 1</th>
+                <th>Product 2</th>
+                <th>Product 3</th>
+                <th>Product 4</th>
+                <th>Inc Amount (Sales Result)</th>
+                <th>Target Inc (TCFA)</th>
+                <th>Target Inc (Coaching)</th>
+                <th>Inc Amount (TCFA)</th>
+                <th>Inc Amount (Coaching)</th>
+                <th>Amount Field Work</th>
+                <th class="highlight-col">Total Incentive, LC</th>
+            </tr>
+        `;
+
+        data.forEach((d, i) => {
+            const tr = document.createElement('tr');
+            
+            // Replicate exactly the Excel logic shown in the screenshot
+            const html = `
+                <td>${d.Id_Sum || (i+1)}</td>
+                <td style="white-space:nowrap; font-weight:600; color:var(--primary);">${d.Name}</td>
+                <td style="white-space:nowrap;">${d.Position || ''}</td>
+                <td>${formatNum(cleanNum(d.TargetForQuarter_Sum))}</td>
+                <td>${d.ReimbursableMonths_Sum}</td>
+                <td>${formatNum(cleanNum(d.TargetBase_Sum))}</td>
+                <td>${formatNum(cleanNum(d.TargetSalesResult_Sum))}</td>
+                <td>${formatNum(cleanNum(d.Product1_Sum))}</td>
+                <td>${formatNum(cleanNum(d.Product2_Sum))}</td>
+                <td>${formatNum(cleanNum(d.Product3_Sum))}</td>
+                <td>${formatNum(cleanNum(d.Product4_Sum))}</td>
+                <td style="background-color:#f1f5f9; font-weight:600;">${formatNum(cleanNum(d.IncSalesResult_Sum))}</td>
+                <td>${formatNum(cleanNum(d.TargetTCFA_Sum))}</td>
+                <td>${formatNum(cleanNum(d.TargetCoaching_Sum))}</td>
+                <td>${formatNum(cleanNum(d.IncTCFA_Sum))}</td>
+                <td>${formatNum(cleanNum(d.IncCoaching_Sum))}</td>
+                <td style="background-color:#f1f5f9; font-weight:600;">${formatNum(cleanNum(d.FieldWork_Sum))}</td>
+                <td class="highlight-col" style="font-weight:700;">${formatNum(cleanNum(d.TotalIncentive_Sum))}</td>
+            `;
+            tr.innerHTML = html;
+            tableBody.appendChild(tr);
+        });
+    };
+
+    const toolbarLabel = document.getElementById('toolbar-label');
+    const tableContainerEl = document.getElementById('table-container-el');
+    const tosignContainerEl = document.getElementById('tosign-container');
+
+    // ── Show/hide helpers ─────────────────────────────────────
+    const showTable = () => {
+        tableContainerEl.style.display = '';
+        tosignContainerEl.style.display = 'none';
+        tosignContainerEl.innerHTML = '';  // clean up canvas/old content
+    };
+    const showToSign = () => {
+        tableContainerEl.style.display = 'none';
+        tosignContainerEl.style.display = 'block';
+    };
+
+    const renderTable = (data) => {
+        if (data.length === 0) {
+            showTable();
+            tableBody.innerHTML = '';
+            tableHead.innerHTML = '';
+            emptyState.classList.remove('hidden');
+            toolbarLabel.textContent = 'No records match current filters';
+            return;
+        }
+        emptyState.classList.add('hidden');
+
+        if (filterView.value === 'detailed') {
+            showTable();
+            toolbarLabel.textContent = `Actual vs Plan — ${data.length} representative${data.length !== 1 ? 's' : ''}`;
+            renderDetailedView(data);
+        } else if (filterView.value === 'summary') {
+            showTable();
+            toolbarLabel.textContent = `Summary Calculation — ${data.length} representative${data.length !== 1 ? 's' : ''}`;
+            renderSummaryView(data);
+        } else if (filterView.value === 'tosign') {
+            showToSign();
+            toolbarLabel.textContent = `Statement of Bonuses — Q2 2017 · Kazakhstan`;
+            renderToSignView(data);
+        }
+    };
+
+    // Filter Logic
+    const applySearchAndFilter = () => {
+        let filtered = augmentedData;
+        const sVal = searchInput.value.toLowerCase();
+        
+        if (sVal) {
+            filtered = filtered.filter(d => 
+                (d.Name && d.Name.toLowerCase().includes(sVal)) || 
+                (d.PromoLine && d.PromoLine.toLowerCase().includes(sVal))
+            );
+        }
+
+        if (filterCountry.value !== 'all') filtered = filtered.filter(d => d.Country === filterCountry.value);
+        if (filterYear.value !== 'all') filtered = filtered.filter(d => d.Year === filterYear.value);
+        if (filterQuarter.value !== 'all') filtered = filtered.filter(d => d.Quarter === filterQuarter.value);
+        if (filterTeam.value !== 'all') filtered = filtered.filter(d => d.PromoLine === filterTeam.value);
+        if (filterRep.value !== 'all') filtered = filtered.filter(d => d.Name === filterRep.value);
+
+        renderTable(filtered);
+    };
+
+    // ── RENDER TO-SIGN / STATEMENT OF BONUSES ────────────────────────────
+    // Data matched from To_sign.csv (Q2 2017 · Kazakhstan)
+    const toSignData = [
+      { no:1,  name:"Abasheva Anna",                             pos:"Medical Representative", targetLC:"395,525",  targetUSD:"1,189",  salesLC:"664,482",  fieldLC:"39,553",  totalLC:"704,035",  totalUSD:"2,116",  pct:"178%" },
+      { no:2,  name:"Aitbenbetova Dinara",                       pos:"Medical Representative", targetLC:"395,525",  targetUSD:"1,189",  salesLC:"316,420",  fieldLC:"79,105",  totalLC:"395,525",  totalUSD:"1,189",  pct:"100%" },
+      { no:3,  name:"Akhmadiyeva Gulzhan",                       pos:"Medical Representative", targetLC:"395,525",  targetUSD:"1,189",  salesLC:"284,778",  fieldLC:"79,105",  totalLC:"363,883",  totalUSD:"1,094",  pct:"92%"  },
+      { no:4,  name:"Akhmetova (Imanzhanova) Sholpan",           pos:"Medical Representative", targetLC:"395,525",  targetUSD:"1,189",  salesLC:"259,464",  fieldLC:"79,105",  totalLC:"338,569",  totalUSD:"1,018",  pct:"86%"  },
+      { no:5,  name:"Aliyev Askar",                              pos:"Medical Representative", targetLC:"395,525",  targetUSD:"1,189",  salesLC:"791,050",  fieldLC:"79,105",  totalLC:"870,155",  totalUSD:"2,615",  pct:"220%" },
+      { no:6,  name:"Altynbassova Shynar",                       pos:"Medical Representative", targetLC:"395,525",  targetUSD:"1,189",  salesLC:"791,050",  fieldLC:"79,105",  totalLC:"870,155",  totalUSD:"2,615",  pct:"220%" },
+      { no:7,  name:"Alzhanova Zhuldyz",                         pos:"Pharm Representative",   targetLC:"395,525",  targetUSD:"1,189",  salesLC:"506,272",  fieldLC:"79,105",  totalLC:"585,377",  totalUSD:"1,759",  pct:"148%" },
+      { no:8,  name:"Arestova Yelena",                           pos:"Medical Representative", targetLC:"395,525",  targetUSD:"1,189",  salesLC:"316,420",  fieldLC:"79,105",  totalLC:"395,525",  totalUSD:"1,189",  pct:"100%" },
+      { no:9,  name:"Auyelbekova Syndykul",                      pos:"Medical Representative", targetLC:"395,525",  targetUSD:"1,189",  salesLC:"791,050",  fieldLC:"39,553",  totalLC:"830,603",  totalUSD:"2,497",  pct:"210%" },
+      { no:10, name:"Aybolova Zhazira",                          pos:"Medical Representative", targetLC:"395,525",  targetUSD:"1,189",  salesLC:"379,704",  fieldLC:"79,105",  totalLC:"458,809",  totalUSD:"1,379",  pct:"116%" },
+      { no:11, name:"Baimysheva Mariya",                         pos:"Medical Representative", targetLC:"395,525",  targetUSD:"1,189",  salesLC:"791,050",  fieldLC:"79,105",  totalLC:"870,155",  totalUSD:"2,615",  pct:"220%" },
+      { no:12, name:"Bakisheva Aliya",                           pos:"Medical Representative", targetLC:"395,525",  targetUSD:"1,189",  salesLC:"648,661",  fieldLC:"79,105",  totalLC:"727,766",  totalUSD:"2,187",  pct:"184%" },
+      { no:13, name:"Balanesku Irina",                           pos:"Medical Representative", targetLC:"395,525",  targetUSD:"1,189",  salesLC:"303,763",  fieldLC:"79,105",  totalLC:"382,868",  totalUSD:"1,151",  pct:"97%"  },
+      { no:14, name:"Balmagambetova Zamza",                      pos:"Medical Representative", targetLC:"395,525",  targetUSD:"1,189",  salesLC:"259,464",  fieldLC:"79,105",  totalLC:"338,569",  totalUSD:"1,018",  pct:"86%"  },
+      { no:15, name:"Bayzakova Gulzhan",                         pos:"Medical Representative", targetLC:"395,525",  targetUSD:"1,189",  salesLC:"474,630",  fieldLC:"39,553",  totalLC:"514,183",  totalUSD:"1,545",  pct:"130%" },
+      { no:16, name:"Bekbauova Saltanat",                        pos:"Medical Representative", targetLC:"395,525",  targetUSD:"1,189",  salesLC:"537,914",  fieldLC:"79,105",  totalLC:"617,019",  totalUSD:"1,855",  pct:"156%" },
+      { no:17, name:"Boyarova Alfiya",                           pos:"Medical Representative", targetLC:"395,525",  targetUSD:"1,189",  salesLC:"0",        fieldLC:"0",       totalLC:"0",        totalUSD:"0",      pct:"0%"   },
+      { no:18, name:"Brialinova Inkar",                          pos:"Medical Representative", targetLC:"395,525",  targetUSD:"1,189",  salesLC:"0",        fieldLC:"0",       totalLC:"0",        totalUSD:"0",      pct:"0%"   },
+      { no:19, name:"Donayeva Nazira",                           pos:"Medical Representative", targetLC:"395,525",  targetUSD:"1,189",  salesLC:"316,420",  fieldLC:"79,105",  totalLC:"395,525",  totalUSD:"1,189",  pct:"100%" },
+      { no:20, name:"Dratkov Grigoriy",                          pos:"Pharm Representative",   targetLC:"395,525",  targetUSD:"1,189",  salesLC:"506,272",  fieldLC:"79,105",  totalLC:"585,377",  totalUSD:"1,759",  pct:"148%" },
+      { no:21, name:"Feist Yekaterina",                          pos:"Medical Representative", targetLC:"395,525",  targetUSD:"1,189",  salesLC:"474,630",  fieldLC:"79,105",  totalLC:"553,735",  totalUSD:"1,664",  pct:"140%" },
+      { no:22, name:"Galiyeva Saule",                            pos:"Regional Manager",       targetLC:"726,000",  targetUSD:"2,182",  salesLC:"871,200",  fieldLC:"145,200", totalLC:"1,016,400",totalUSD:"3,055",  pct:"140%" },
+      { no:23, name:"Gulyakova Olga",                            pos:"Medical Representative", targetLC:"395,525",  targetUSD:"1,189",  salesLC:"348,062",  fieldLC:"39,553",  totalLC:"387,615",  totalUSD:"1,165",  pct:"98%"  },
+      { no:24, name:"Inkarbekova Nurbibi",                       pos:"Medical Representative", targetLC:"395,525",  targetUSD:"1,189",  salesLC:"316,420",  fieldLC:"79,105",  totalLC:"395,525",  totalUSD:"1,189",  pct:"100%" },
+      { no:25, name:"Issakhanova Assem",                         pos:"Medical Representative", targetLC:"395,525",  targetUSD:"1,189",  salesLC:"348,062",  fieldLC:"39,553",  totalLC:"387,615",  totalUSD:"1,165",  pct:"98%"  },
+      { no:26, name:"Issakova Dina",                             pos:"Medical Representative", targetLC:"395,525",  targetUSD:"1,189",  salesLC:"316,420",  fieldLC:"79,105",  totalLC:"395,525",  totalUSD:"1,189",  pct:"100%" },
+      { no:27, name:"Itakhunov Rassul",                          pos:"Pharm Representative",   targetLC:"395,525",  targetUSD:"1,189",  salesLC:"506,272",  fieldLC:"79,105",  totalLC:"585,377",  totalUSD:"1,759",  pct:"148%" },
+      { no:28, name:"Kadyrova Azaliya",                          pos:"Medical Representative", targetLC:"395,525",  targetUSD:"1,189",  salesLC:"379,704",  fieldLC:"39,553",  totalLC:"419,257",  totalUSD:"1,260",  pct:"106%" },
+      { no:29, name:"Kalistratova Alexandra",                    pos:"Medical Representative", targetLC:"395,525",  targetUSD:"1,189",  salesLC:"348,062",  fieldLC:"79,105",  totalLC:"427,167",  totalUSD:"1,284",  pct:"108%" },
+      { no:30, name:"Kassenova Gulshat",                         pos:"Medical Representative", targetLC:"395,525",  targetUSD:"1,189",  salesLC:"537,914",  fieldLC:"39,553",  totalLC:"577,467",  totalUSD:"1,736",  pct:"146%" },
+      { no:31, name:"Khalikova Nuriya",                          pos:"Medical Representative", targetLC:"395,525",  targetUSD:"1,189",  salesLC:"791,050",  fieldLC:"79,105",  totalLC:"870,155",  totalUSD:"2,615",  pct:"220%" },
+      { no:32, name:"Kuchshanova Akmaral",                       pos:"Medical Representative", targetLC:"395,525",  targetUSD:"1,189",  salesLC:"316,420",  fieldLC:"79,105",  totalLC:"395,525",  totalUSD:"1,189",  pct:"100%" },
+      { no:33, name:"Kussainova Dilara",                         pos:"Medical Representative", targetLC:"395,525",  targetUSD:"1,189",  salesLC:"442,988",  fieldLC:"79,105",  totalLC:"522,093",  totalUSD:"1,569",  pct:"132%" },
+      { no:34, name:"Kutdussova Liliya",                         pos:"Medical Representative", targetLC:"395,525",  targetUSD:"1,189",  salesLC:"0",        fieldLC:"0",       totalLC:"0",        totalUSD:"0",      pct:"0%"   },
+      { no:35, name:"Kutlymuratov Assylatdin",                   pos:"Medical Representative", targetLC:"395,525",  targetUSD:"1,189",  salesLC:"316,420",  fieldLC:"39,553",  totalLC:"355,973",  totalUSD:"1,070",  pct:"90%"  },
+      { no:36, name:"Kuxa Anna",                                 pos:"Regional Manager",       targetLC:"726,000",  targetUSD:"2,182",  salesLC:"638,880",  fieldLC:"108,900", totalLC:"747,780",  totalUSD:"2,248",  pct:"103%" },
+      { no:37, name:"Kuzikeyeva Dinara",                         pos:"Regional Manager",       targetLC:"726,000",  targetUSD:"2,182",  salesLC:"1,452,000",fieldLC:"145,200", totalLC:"1,597,200",totalUSD:"4,801",  pct:"220%" },
+      { no:38, name:"Kuznetsova Natalya",                        pos:"Medical Representative", targetLC:"395,525",  targetUSD:"1,189",  salesLC:"303,763",  fieldLC:"79,105",  totalLC:"382,868",  totalUSD:"1,151",  pct:"97%"  },
+      { no:39, name:"Litvinenko Tatyana",                        pos:"Pharm Representative",   targetLC:"395,525",  targetUSD:"1,189",  salesLC:"537,914",  fieldLC:"79,105",  totalLC:"617,019",  totalUSD:"1,855",  pct:"156%" },
+      { no:40, name:"Maisutova Almagul",                         pos:"Regional Manager",       targetLC:"726,000",  targetUSD:"2,182",  salesLC:"580,800",  fieldLC:"145,200", totalLC:"726,000",  totalUSD:"2,182",  pct:"100%" },
+      { no:41, name:"Mamedova Zarina",                           pos:"Medical Representative", targetLC:"395,525",  targetUSD:"1,189",  salesLC:"0",        fieldLC:"0",       totalLC:"0",        totalUSD:"0",      pct:"0%"   },
+      { no:42, name:"Mamutova Aliya",                            pos:"Medical Representative", targetLC:"395,525",  targetUSD:"1,189",  salesLC:"759,408",  fieldLC:"79,105",  totalLC:"838,513",  totalUSD:"2,520",  pct:"212%" },
+      { no:43, name:"Manapbayeva Assel",                         pos:"Medical Representative", targetLC:"395,525",  targetUSD:"1,189",  salesLC:"316,420",  fieldLC:"79,105",  totalLC:"395,525",  totalUSD:"1,189",  pct:"100%" },
+      { no:44, name:"Maximenko Alexandr",                        pos:"Pharm Representative",   targetLC:"395,525",  targetUSD:"1,189",  salesLC:"442,988",  fieldLC:"79,105",  totalLC:"522,093",  totalUSD:"1,569",  pct:"132%" },
+      { no:45, name:"Meirbek Ainur",                             pos:"Medical Representative", targetLC:"395,525",  targetUSD:"1,189",  salesLC:"259,464",  fieldLC:"79,105",  totalLC:"338,569",  totalUSD:"1,018",  pct:"86%"  },
+      { no:46, name:"Nakipbekova Gulzhan",                       pos:"Medical Representative", targetLC:"395,525",  targetUSD:"1,189",  salesLC:"259,464",  fieldLC:"39,553",  totalLC:"299,017",  totalUSD:"899",    pct:"76%"  },
+      { no:47, name:"Novokhatnyaya Anastasiya",                  pos:"Medical Representative", targetLC:"395,525",  targetUSD:"1,189",  salesLC:"648,661",  fieldLC:"39,553",  totalLC:"688,214",  totalUSD:"2,069",  pct:"174%" },
+      { no:48, name:"Omarova Aizhan",                            pos:"Medical Representative", targetLC:"395,525",  targetUSD:"1,189",  salesLC:"791,050",  fieldLC:"39,553",  totalLC:"830,603",  totalUSD:"2,497",  pct:"210%" },
+      { no:49, name:"Ospanova Anar",                             pos:"Medical Representative", targetLC:"395,525",  targetUSD:"1,189",  salesLC:"664,482",  fieldLC:"79,105",  totalLC:"743,587",  totalUSD:"2,235",  pct:"188%" },
+      { no:50, name:"Ossipova Anna",                             pos:"Pharm Representative",   targetLC:"395,525",  targetUSD:"1,189",  salesLC:"743,587",  fieldLC:"39,553",  totalLC:"783,140",  totalUSD:"2,354",  pct:"198%" },
+      { no:51, name:"Pavlutskikh Yelena",                        pos:"Medical Representative", targetLC:"395,525",  targetUSD:"1,189",  salesLC:"506,272",  fieldLC:"39,553",  totalLC:"545,825",  totalUSD:"1,641",  pct:"138%" },
+      { no:52, name:"Rakhimzhanova Gulnar",                      pos:"Medical Representative", targetLC:"395,525",  targetUSD:"1,189",  salesLC:"474,630",  fieldLC:"79,105",  totalLC:"553,735",  totalUSD:"1,664",  pct:"140%" },
+      { no:53, name:"Sadvakassova Zhanat",                       pos:"Pharm Representative",   targetLC:"395,525",  targetUSD:"1,189",  salesLC:"506,272",  fieldLC:"79,105",  totalLC:"585,377",  totalUSD:"1,759",  pct:"148%" },
+      { no:54, name:"Sagimbayeva Lyazat",                        pos:"Pharm Representative",   targetLC:"395,525",  targetUSD:"1,189",  salesLC:"0",        fieldLC:"0",       totalLC:"0",        totalUSD:"0",      pct:"0%"   },
+      { no:55, name:"Sakalbayeva Aliya",                         pos:"Medical Representative", targetLC:"395,525",  targetUSD:"1,189",  salesLC:"221,494",  fieldLC:"39,553",  totalLC:"261,047",  totalUSD:"785",    pct:"66%"  },
+      { no:56, name:"Sarbassova Dina (Shymkent)",                pos:"Pharm Representative",   targetLC:"263,683",  targetUSD:"793",    salesLC:"0",        fieldLC:"0",       totalLC:"0",        totalUSD:"0",      pct:"0%"   },
+      { no:57, name:"Sariyeva Ainur",                            pos:"Pharm Representative",   targetLC:"395,525",  targetUSD:"1,189",  salesLC:"221,494",  fieldLC:"79,105",  totalLC:"300,599",  totalUSD:"904",    pct:"76%"  },
+      { no:58, name:"Sarsenbayeva Saniya",                       pos:"Medical Representative", targetLC:"395,525",  targetUSD:"1,189",  salesLC:"474,630",  fieldLC:"79,105",  totalLC:"553,735",  totalUSD:"1,664",  pct:"140%" },
+      { no:59, name:"Simachkova Yelena",                         pos:"Pharm Representative",   targetLC:"131,842",  targetUSD:"396",    salesLC:"168,757",  fieldLC:"0",       totalLC:"168,757",  totalUSD:"507",    pct:"128%" },
+      { no:60, name:"Soni Laura",                                pos:"Medical Representative", targetLC:"395,525",  targetUSD:"1,189",  salesLC:"316,420",  fieldLC:"79,105",  totalLC:"395,525",  totalUSD:"1,189",  pct:"100%" },
+      { no:61, name:"Suttubayeva Gulnar",                        pos:"Regional Manager",       targetLC:"726,000",  targetUSD:"2,182",  salesLC:"1,422,960",fieldLC:"145,200", totalLC:"1,568,160",totalUSD:"4,713",  pct:"216%" },
+      { no:62, name:"Tasbulatova Saule",                         pos:"Medical Representative", targetLC:"395,525",  targetUSD:"1,189",  salesLC:"791,050",  fieldLC:"79,105",  totalLC:"870,155",  totalUSD:"2,615",  pct:"220%" },
+      { no:63, name:"Temirbayeva Akzhunis",                      pos:"Medical Representative", targetLC:"395,525",  targetUSD:"1,189",  salesLC:"259,464",  fieldLC:"39,553",  totalLC:"299,017",  totalUSD:"899",    pct:"76%"  },
+      { no:64, name:"Tilessova Altynay",                         pos:"Medical Representative", targetLC:"395,525",  targetUSD:"1,189",  salesLC:"259,464",  fieldLC:"79,105",  totalLC:"338,569",  totalUSD:"1,018",  pct:"86%"  },
+      { no:65, name:"Tipalov Sergey",                            pos:"Medical Representative", targetLC:"395,525",  targetUSD:"1,189",  salesLC:"664,482",  fieldLC:"39,553",  totalLC:"704,035",  totalUSD:"2,116",  pct:"178%" },
+      { no:66, name:"Ungarbayeva Zhanna",                        pos:"Medical Representative", targetLC:"395,525",  targetUSD:"1,189",  salesLC:"221,494",  fieldLC:"79,105",  totalLC:"300,599",  totalUSD:"904",    pct:"76%"  },
+      { no:67, name:"Yerkin Nadiyam",                            pos:"Medical Representative", targetLC:"395,525",  targetUSD:"1,189",  salesLC:"316,420",  fieldLC:"79,105",  totalLC:"395,525",  totalUSD:"1,189",  pct:"100%" },
+      { no:68, name:"Yesbolova Gulnur",                          pos:"Medical Representative", targetLC:"395,525",  targetUSD:"1,189",  salesLC:"316,420",  fieldLC:"79,105",  totalLC:"395,525",  totalUSD:"1,189",  pct:"100%" },
+      { no:69, name:"Yevseyenko Larissa",                        pos:"Regional Manager",       targetLC:"726,000",  targetUSD:"2,182",  salesLC:"1,103,520",fieldLC:"145,200", totalLC:"1,248,720",totalUSD:"3,753",  pct:"172%" },
+      { no:70, name:"Yu Vitaliya",                               pos:"Medical Representative", targetLC:"395,525",  targetUSD:"1,189",  salesLC:"316,420",  fieldLC:"79,105",  totalLC:"395,525",  totalUSD:"1,189",  pct:"100%" },
+      { no:71, name:"Zhanabekova Kamshat",                       pos:"Medical Representative", targetLC:"395,525",  targetUSD:"1,189",  salesLC:"442,988",  fieldLC:"79,105",  totalLC:"522,093",  totalUSD:"1,569",  pct:"132%" },
+      { no:72, name:"Zhazylbekova Aitolkyn",                     pos:"Medical Representative", targetLC:"395,525",  targetUSD:"1,189",  salesLC:"648,661",  fieldLC:"79,105",  totalLC:"727,766",  totalUSD:"2,187",  pct:"184%" },
+      { no:73, name:"Zhmailova Yelena",                          pos:"Regional Manager",       targetLC:"726,000",  targetUSD:"2,182",  salesLC:"493,680",  fieldLC:"145,200", totalLC:"638,880",  totalUSD:"1,920",  pct:"88%"  },
+      { no:74, name:"Kaderov Nursultan",                         pos:"Medical Representative", targetLC:"395,525",  targetUSD:"1,189",  salesLC:"791,050",  fieldLC:"79,105",  totalLC:"870,155",  totalUSD:"2,615",  pct:"220%" },
+      { no:75, name:"Ospanova Zhumagul",                         pos:"Medical Representative", targetLC:"395,525",  targetUSD:"1,189",  salesLC:"664,482",  fieldLC:"79,105",  totalLC:"743,587",  totalUSD:"2,235",  pct:"188%" },
+      { no:76, name:"Zhanuzakova Gulbakyt",                      pos:"Medical Representative", targetLC:"395,525",  targetUSD:"1,189",  salesLC:"0",        fieldLC:"0",       totalLC:"0",        totalUSD:"0",      pct:"0%"   },
+      { no:77, name:"Nurikhanova Alissa",                        pos:"Regional Manager",       targetLC:"726,000",  targetUSD:"2,182",  salesLC:"493,680",  fieldLC:"72,600",  totalLC:"566,280",  totalUSD:"1,702",  pct:"78%"  },
+      { no:78, name:"Konurub Roza",                              pos:"Medical Representative", targetLC:"395,525",  targetUSD:"1,189",  salesLC:"537,914",  fieldLC:"79,105",  totalLC:"617,019",  totalUSD:"1,855",  pct:"156%" },
+      { no:79, name:"Tulemyrzayeva Madina",                      pos:"Regional Manager",       targetLC:"0",        targetUSD:"0",      salesLC:"0",        fieldLC:"0",       totalLC:"0",        totalUSD:"0",      pct:"0%"   },
+      { no:80, name:"Kusmanova Shynar",                          pos:"Pharm Representative",   targetLC:"131,842",  targetUSD:"396",    salesLC:"258,410",  fieldLC:"0",       totalLC:"258,410",  totalUSD:"777",    pct:"196%" },
+      { no:81, name:"Salikhova Akbota",                          pos:"Medical Representative", targetLC:"263,683",  targetUSD:"793",    salesLC:"527,367",  fieldLC:"0",       totalLC:"527,367",  totalUSD:"1,585",  pct:"200%" },
+      { no:82, name:"Turganbayeva Zhazira",                      pos:"Medical Representative", targetLC:"131,842",  targetUSD:"396",    salesLC:"0",        fieldLC:"0",       totalLC:"0",        totalUSD:"0",      pct:"0%"   },
+      { no:83, name:"Makenova Yuliya",                           pos:"Medical Representative", targetLC:"131,842",  targetUSD:"396",    salesLC:"210,947",  fieldLC:"13,184",  totalLC:"224,131",  totalUSD:"674",    pct:"170%" },
+      { no:84, name:"Sarbassova Dina (Astana)",                  pos:"Medical Representative", targetLC:"131,842",  targetUSD:"396",    salesLC:"101,254",  fieldLC:"0",       totalLC:"101,254",  totalUSD:"304",    pct:"77%"  },
+      { no:85, name:"Zhakenova Botagoz",                         pos:"Medical Representative", targetLC:"263,683",  targetUSD:"793",    salesLC:"147,663",  fieldLC:"26,368",  totalLC:"174,031",  totalUSD:"523",    pct:"66%"  },
+      { no:86, name:"Dikambayev Zhiger",                         pos:"Medical Representative", targetLC:"0",        targetUSD:"0",      salesLC:"0",        fieldLC:"0",       totalLC:"0",        totalUSD:"0",      pct:"0%"   },
+      { no:87, name:"Dubova Yevgeniya",                          pos:"Medical Representative", targetLC:"197,763",  targetUSD:"594",    salesLC:"395,525",  fieldLC:"39,553",  totalLC:"435,078",  totalUSD:"1,308",  pct:"220%" },
+      { no:88, name:"Kalacheva Larissa",                         pos:"Medical Representative", targetLC:"0",        targetUSD:"0",      salesLC:"0",        fieldLC:"0",       totalLC:"0",        totalUSD:"0",      pct:"0%"   },
+      { no:89, name:"Kalen Temirlan",                            pos:"Medical Representative", targetLC:"0",        targetUSD:"0",      salesLC:"0",        fieldLC:"0",       totalLC:"0",        totalUSD:"0",      pct:"0%"   },
+      { no:90, name:"Kassanova Elmira",                          pos:"Medical Representative", targetLC:"263,683",  targetUSD:"793",    salesLC:"316,420",  fieldLC:"26,368",  totalLC:"342,788",  totalUSD:"1,030",  pct:"130%" },
+      { no:91, name:"Nassyrov Farukh",                           pos:"Pharm Representative",   targetLC:"0",        targetUSD:"0",      salesLC:"0",        fieldLC:"0",       totalLC:"0",        totalUSD:"0",      pct:"0%"   },
+      { no:92, name:"Volkova Svetlana",                          pos:"Medical Representative", targetLC:"0",        targetUSD:"0",      salesLC:"0",        fieldLC:"0",       totalLC:"0",        totalUSD:"0",      pct:"0%"   }
+    ];
+
+    const renderToSignView = (filteredData) => {
+        // ── Use the dedicated tosign container — NEVER touch the normal table ──
+        const container = tosignContainerEl;
+        container.innerHTML = '';   // clear previous render
+
+        // Filter toSignData to match names present in filteredData
+        const activeNames = new Set(filteredData.map(d => d.Name ? d.Name.trim().toLowerCase() : ''));
+        let rows = toSignData.filter(ts => {
+            if (filterRep.value !== 'all') return ts.name.trim().toLowerCase() === filterRep.value.trim().toLowerCase();
+            if (filterTeam.value !== 'all' || filterCountry.value !== 'all') {
+                return activeNames.has(ts.name.trim().toLowerCase());
+            }
+            return ts.totalLC !== '0';
+        });
+
+        // Apply name search
+        const sv = searchInput.value.toLowerCase();
+        if (sv) rows = rows.filter(r => r.name.toLowerCase().includes(sv));
+
+        // ── Statement header ──
+        const header = document.createElement('div');
+        header.className = 'tosign-header';
+        header.innerHTML = `
+            <div class="company">Abbott &mdash; Established Pharmaceuticals Division</div>
+            <h2>&#x1F4DC; Statement of Bonuses &nbsp;<span style="opacity:.7; font-weight:400; font-size:1rem;">Q2 2017 · Kazakhstan</span></h2>
+            <div class="tosign-meta">
+                <div class="tosign-meta-item"><div class="lbl">Exchange Rate</div><div class="val">332.70 LC/USD</div></div>
+                <div class="tosign-meta-item"><div class="lbl">Total Reps Shown</div><div class="val">${rows.length}</div></div>
+                <div class="tosign-meta-item"><div class="lbl">Total Target (LC)</div><div class="val">34,615,404</div></div>
+                <div class="tosign-meta-item"><div class="lbl">Total Incentive (LC)</div><div class="val">43,672,924</div></div>
+                <div class="tosign-meta-item"><div class="lbl">Overall Payout vs Target</div><div class="val">126%</div></div>
+            </div>`;
+        container.appendChild(header);
+
+        // ── Table ──
+        const tableWrap = document.createElement('div');
+        tableWrap.style.cssText = 'overflow-x:auto;';
+        const tbl = document.createElement('table');
+        tbl.className = 'data-table';
+        tbl.style.cssText = 'min-width:900px; font-size:0.88rem;';
+
+        const thead = document.createElement('thead');
+        thead.innerHTML = `<tr>
+            <th style="width:44px;">No</th>
+            <th>Name</th>
+            <th>Position</th>
+            <th style="text-align:right;">Target Incentive, LC</th>
+            <th style="text-align:right;">Target Incentive, USD</th>
+            <th style="text-align:right;">Inc. Amount (Sales Result), LC</th>
+            <th style="text-align:right;">Inc. Amount (Field Work), LC</th>
+            <th style="text-align:right; background:#dcfce7; color:#15803d;">Total Incentive, LC ★</th>
+            <th style="text-align:right;">Total Incentive, USD</th>
+            <th style="text-align:center;">Payout vs Target</th>
+            <th style="width:120px; text-align:center;">Signature</th>
+        </tr>`;
+        tbl.appendChild(thead);
+
+        const tbody = document.createElement('tbody');
+        rows.forEach(r => {
+            const pctNum = parseInt(r.pct);
+            const pctClass = pctNum === 0 ? '' : pctNum >= 110 ? 'pct-over' : pctNum >= 95 ? 'pct-exact' : 'pct-under';
+            const isZero = r.totalLC === '0';
+
+            const tr = document.createElement('tr');
+            if (isZero) tr.style.opacity = '0.45';
+            tr.innerHTML = `
+                <td style="text-align:center; color:#64748b; font-size:0.8rem;">${r.no}</td>
+                <td style="font-weight:600; color:#0369a1; white-space:nowrap;">${r.name}</td>
+                <td style="white-space:nowrap; color:#64748b; font-size:0.82rem;">${r.pos}</td>
+                <td style="text-align:right; font-family:monospace;">${r.targetLC}</td>
+                <td style="text-align:right; font-family:monospace; color:#64748b;">${r.targetUSD}</td>
+                <td style="text-align:right; font-family:monospace;">${r.salesLC}</td>
+                <td style="text-align:right; font-family:monospace; color:#059669;">${r.fieldLC}</td>
+                <td style="text-align:right; font-weight:700; font-size:1rem; color:#15803d; background:#f0fdf4;">${r.totalLC}</td>
+                <td style="text-align:right; font-family:monospace; color:#64748b;">${r.totalUSD}</td>
+                <td style="text-align:center;"><span class="percent-badge ${pctClass}" style="font-size:0.85rem; padding:3px 8px;">${r.pct}</span></td>
+                <td style="border-bottom:1px solid #cbd5e1; padding-bottom:2px;"></td>`;
+            tbody.appendChild(tr);
+        });
+
+        // ── Totals row ──
+        const totTr = document.createElement('tr');
+        totTr.className = 'tosign-totals';
+        totTr.innerHTML = `
+            <td colspan="3" style="font-weight:700; text-align:left;">TOTAL</td>
+            <td style="text-align:right; font-family:monospace;">34,615,404</td>
+            <td style="text-align:right; font-family:monospace; color:#64748b;">104,044</td>
+            <td style="text-align:right; font-family:monospace;">38,243,075</td>
+            <td style="text-align:right; font-family:monospace; color:#059669;">5,429,843</td>
+            <td style="text-align:right; font-weight:800; font-size:1.05rem; color:#15803d; background:#dcfce7;">43,672,924</td>
+            <td style="text-align:right; font-family:monospace; color:#64748b;">131,268</td>
+            <td style="text-align:center;"><span class="percent-badge pct-over" style="font-size:0.9rem; padding:4px 10px;">126%</span></td>
+            <td></td>`;
+        tbody.appendChild(totTr);
+        tbl.appendChild(tbody);
+        tableWrap.appendChild(tbl);
+        container.appendChild(tableWrap);
+
+        // ── Signature block ──
+        const sigBox = document.createElement('div');
+        sigBox.className = 'signatures-box';
+        sigBox.innerHTML = `
+            <h3>Authorized Signatures</h3>
+            <div class="signatures-grid">
+                <div class="sig-line"><div class="sig-role">National Sales Manager</div><div class="sig-blank"></div></div>
+                <div class="sig-line"><div class="sig-role">General Manager</div><div class="sig-blank"></div></div>
+                <div class="sig-line"><div class="sig-role">Regional Sales Force Effectiveness Director — Turkey &amp; CIS</div><div class="sig-blank"></div></div>
+                <div class="sig-line"><div class="sig-role">HR Manager</div><div class="sig-blank"></div></div>
+                <div class="sig-line"><div class="sig-role">CIS Finance Director EPD</div><div class="sig-blank"></div></div>
+            </div>`;
+        container.appendChild(sigBox);
+
+        // ── Canvas particle animation on the header ──
+        const canvas = document.createElement('canvas');
+        canvas.style.cssText = 'position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;opacity:0.35;border-radius:8px 8px 0 0;';
+        header.style.position = 'relative';
+        header.style.overflow = 'hidden';
+        header.appendChild(canvas);
+
+        const resize = () => {
+            canvas.width  = header.offsetWidth;
+            canvas.height = header.offsetHeight;
+        };
+        resize();
+        window.addEventListener('resize', resize);
+
+        const ctx = canvas.getContext('2d');
+        const DOTS = 55;
+        const dots = Array.from({length: DOTS}, () => ({
+            x: Math.random() * canvas.width,
+            y: Math.random() * canvas.height,
+            vx: (Math.random() - 0.5) * 0.5,
+            vy: (Math.random() - 0.5) * 0.5,
+            r:  Math.random() * 2 + 1
+        }));
+
+        let animId;
+        const draw = () => {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            dots.forEach(d => {
+                d.x += d.vx; d.y += d.vy;
+                if (d.x < 0 || d.x > canvas.width)  d.vx *= -1;
+                if (d.y < 0 || d.y > canvas.height) d.vy *= -1;
+                ctx.beginPath();
+                ctx.arc(d.x, d.y, d.r, 0, Math.PI * 2);
+                ctx.fillStyle = 'rgba(125,211,252,0.8)';
+                ctx.fill();
+            });
+            // Draw connecting lines for nearby dots
+            for (let i = 0; i < dots.length; i++) {
+                for (let j = i + 1; j < dots.length; j++) {
+                    const dx = dots[i].x - dots[j].x, dy = dots[i].y - dots[j].y;
+                    const dist = Math.sqrt(dx*dx + dy*dy);
+                    if (dist < 90) {
+                        ctx.beginPath();
+                        ctx.moveTo(dots[i].x, dots[i].y);
+                        ctx.lineTo(dots[j].x, dots[j].y);
+                        ctx.strokeStyle = `rgba(125,211,252,${0.4 * (1 - dist/90)})`;
+                        ctx.lineWidth = 0.6;
+                        ctx.stroke();
+                    }
+                }
+            }
+            animId = requestAnimationFrame(draw);
+        };
+        draw();
+        // Stop animation when view switches away to save CPU
+        const stopCanvas = () => { cancelAnimationFrame(animId); window.removeEventListener('resize', resize); };
+        filterView.addEventListener('change', stopCanvas, { once: true });
+        resetBtn.addEventListener('click', stopCanvas, { once: true });
+    };
+
+    // ── Column Resizer / Auto-fit removed — simple static layout ────────────
+
+    // ── Performance: debounce search ──
+    let _searchTimer;
+    const debouncedSearch = () => {
+        clearTimeout(_searchTimer);
+        _searchTimer = setTimeout(applySearchAndFilter, 280);
+    };
+
+    // Event Listeners
+    searchInput.addEventListener('input', debouncedSearch);
+    filterCountry.addEventListener('change', applySearchAndFilter);
+    filterYear.addEventListener('change', applySearchAndFilter);
+    filterQuarter.addEventListener('change', applySearchAndFilter);
+    filterTeam.addEventListener('change', applySearchAndFilter);
+    filterRep.addEventListener('change', applySearchAndFilter);
+    filterView.addEventListener('change', applySearchAndFilter);
+
+    resetBtn.addEventListener('click', () => {
+        searchInput.value = '';
+        filterCountry.value = 'all';
+        filterYear.value = 'all';
+        filterQuarter.value = 'all';
+        filterTeam.value = 'all';
+        filterRep.value = 'all';
+        filterView.value = 'detailed';
+        toolbarLabel.textContent = 'Loading data…';
+        showTable();
+        applySearchAndFilter();
+    });
+
+    // Initial load
+    renderTable(augmentedData);
+});
+
+</script>
+</body>
+</html>
+
