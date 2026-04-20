@@ -1,4 +1,4 @@
-import { X, LayoutDashboard, Users, Package } from "lucide-react";
+import { X, LayoutDashboard, Users, Package, Home } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface SidebarProps {
@@ -10,6 +10,7 @@ interface SidebarProps {
 
 export default function Sidebar({ isOpen, onClose, activePage, onPageChange }: SidebarProps) {
   const menuItems = [
+    { id: "landing", label: "Home", icon: Home },
     { id: "dashboard", label: "Dashboard", icon: LayoutDashboard },
     { id: "staff", label: "Staff Input", icon: Users },
     { id: "promo", label: "Product Promo", icon: Package },

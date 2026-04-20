@@ -16,6 +16,7 @@ import StatCard from "@/components/dashboard/StatCard";
 import Login from "@/components/auth/Login";
 import StaffView from "@/components/dashboard/views/StaffView";
 import ProductPromoView from "@/components/dashboard/views/ProductPromoView";
+import LandingView from "@/components/dashboard/views/LandingView";
 import { TrendingUp, DollarSign, Users, Target } from "lucide-react";
 
 const DEFAULT_FILTERS: Filters = {
@@ -32,7 +33,7 @@ export default function Dashboard() {
   const [user, setUser] = useState<{ email: string; name: string; role: string } | null>(null);
   const [filters, setFilters] = useState<Filters>(DEFAULT_FILTERS);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [activePage, setActivePage] = useState("dashboard");
+  const [activePage, setActivePage] = useState("landing");
 
   // Dynamic fetch (falls back to static if Supabase not configured)
   const { data: dbData } = useSupabaseData(comprehensiveData);
@@ -118,7 +119,9 @@ export default function Dashboard() {
 
       <main className="max-w-[1600px] mx-auto w-full p-6 space-y-6">
         
-        {activePage === "staff" ? (
+        {activePage === "landing" ? (
+          <LandingView data={dbData} user={user} onNavigate={setActivePage} />
+        ) : activePage === "staff" ? (
           <StaffView data={dbData} filters={filters} user={user} />
         ) : activePage === "promo" ? (
           <ProductPromoView data={filteredData} filters={filters} />
