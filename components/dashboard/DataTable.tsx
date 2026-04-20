@@ -69,8 +69,8 @@ export default function DataTable({ data, view, filters }: DataTableProps) {
           </div>
         </div>
 
-        {/* Table Content */}
-        <div className="overflow-x-auto w-full">
+        {/* Table Content — overflow-x+y-auto with max-height enables sticky thead freeze */}
+        <div className="overflow-x-auto overflow-y-auto w-full" style={{ maxHeight: view === "detailed" ? "520px" : undefined }}>
           {view === "detailed" && <DetailedView data={paginatedData} />}
           {view === "summary" && <SummaryView data={paginatedData} fullData={data} startIndex={(safePage - 1) * PAGE_SIZE} />}
           {view === "signoff" && <SignOffView data={paginatedData} filters={filters} fullData={data} startIndex={(safePage - 1) * PAGE_SIZE} />}
