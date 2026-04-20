@@ -1,10 +1,12 @@
 "use client";
 
+import { useState } from "react";
 import DetailedView from "./views/DetailedView";
 import SummaryView from "./views/SummaryView";
 import SignOffView from "./views/SignOffView";
 import type { IncentiveRecord, Filters } from "@/lib/types";
-import { Filter, MoreVertical, ChevronLeft, ChevronRight } from "lucide-react";
+import { Filter, MoreVertical, ChevronLeft, ChevronRight, Download } from "lucide-react";
+import { exportSummaryViewToCSV, exportSignOffViewToCSV } from "@/lib/exportUtils";
 
 interface DataTableProps {
   data: IncentiveRecord[];
@@ -13,12 +15,29 @@ interface DataTableProps {
 }
 
 export default function DataTable({ data, view, filters }: DataTableProps) {
+  const [currentPage, setCurrentPage] = useState(1);
+  const PAGE_SIZE = 10;
+
+  const totalPages = Math.max(1, Math.ceil(data.length / PAGE_SIZE));
+  const safePage = Math.min(currentPage, totalPages);
+  const paginatedData = data.slice((safePage - 1) * PAGE_SIZE, safePage * PAGE_SIZE);
+
+  const handleExport = () => {
+    if (view === "summary") {
+      exportSummaryViewToCSV(data); // Export ALL filtered data, not just paginated chunk
+    } else if (view === "signoff") {
+      const region = filters.country === "all" ? "All Regions" : filters.country;
+      const period = filters.quarter === "all" ? (data.length > 0 ? (data[0].Quarter || "All Quarters") : "All Quarters") : filters.quarter;
+      exportSignOffViewToCSV(data, region, period);
+    }
+  };
+
   return (
     <div className="mt-2 text-slate-800">
-      <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm">
+      <div className="bg-white rounded-2xl border border-slate-200 shadow-sm relative overflow-visible">
         
         {/* Table Toolbar */}
-        <div className="px-6 py-4 border-b border-slate-200 flex items-center justify-between bg-slate-50">
+        <div className="px-6 py-4 border-b border-slate-200 flex items-center justify-between bg-slate-50 rounded-t-2xl">
           <div className="flex items-center gap-3">
             <div className="p-2 bg-blue-50 rounded-lg border border-blue-100">
               <Filter className="w-4 h-4 text-blue-600" />
@@ -28,6 +47,15 @@ export default function DataTable({ data, view, filters }: DataTableProps) {
             </span>
           </div>
           <div className="flex gap-2">
+            {(view === "summary" || view === "signoff") && data.length > 0 && (
+              <button 
+                onClick={handleExport}
+                className="px-3 py-1.5 flex items-center gap-1.5 text-[13px] font-bold bg-white text-emerald-600 hover:bg-emerald-50 border border-emerald-200 hover:border-emerald-300 rounded-lg transition-all shadow-sm"
+              >
+                <Download className="w-4 h-4" />
+                Export to Excel
+              </button>
+            )}
             <button className="p-2 text-slate-400 hover:text-slate-700 rounded-lg hover:bg-slate-100 transition-all outline-none">
               <MoreVertical className="w-5 h-5" />
             </button>
@@ -35,10 +63,10 @@ export default function DataTable({ data, view, filters }: DataTableProps) {
         </div>
 
         {/* Table Content */}
-        <div className="overflow-x-auto overflow-y-auto scroller custom-scrollbar" style={{ maxHeight: "calc(100vh - 350px)" }}>
-          {view === "detailed" && <DetailedView data={data} />}
-          {view === "summary" && <SummaryView data={data} />}
-          {view === "signoff" && <SignOffView data={data} filters={filters} />}
+        <div className="overflow-x-auto w-full">
+          {view === "detailed" && <DetailedView data={paginatedData} />}
+          {view === "summary" && <SummaryView data={paginatedData} fullData={data} />}
+          {view === "signoff" && <SignOffView data={paginatedData} filters={filters} fullData={data} />}
           
           {data.length === 0 && (
             <div className="p-16 flex flex-col items-center justify-center text-center">
@@ -53,13 +81,43 @@ export default function DataTable({ data, view, filters }: DataTableProps) {
 
         {/* Table Footer pagination */}
         {data.length > 0 && (
-          <div className="px-6 py-4 bg-slate-50 border-t border-slate-200 flex items-center justify-between">
-            <span className="text-xs font-medium text-slate-500">Showing 1-{Math.min(10, data.length)} of {data.length} results</span>
+          <div className="px-6 py-4 bg-slate-50 border-t border-slate-200 flex items-center justify-between rounded-b-2xl">
+            <span className="text-xs font-medium text-slate-500">
+              Showing {(safePage - 1) * PAGE_SIZE + 1}-{Math.min(safePage * PAGE_SIZE, data.length)} of {data.length} results
+            </span>
             <div className="flex items-center gap-1.5 p-1 bg-white rounded-xl border border-slate-200 shadow-sm">
-              <button className="p-1.5 text-slate-400 hover:text-slate-600 disabled:opacity-50 transition-colors"><ChevronLeft className="w-4 h-4"/></button>
-              <button className="px-3 py-1 bg-blue-600 text-white text-xs font-bold rounded-lg shadow-sm">1</button>
-              {data.length > 10 && <button className="px-3 py-1 text-slate-600 hover:text-slate-900 text-xs font-semibold rounded-lg transition-colors">2</button>}
-              <button className="p-1.5 text-slate-400 hover:text-slate-600 transition-colors"><ChevronRight className="w-4 h-4"/></button>
+              <button 
+                onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                disabled={safePage === 1}
+                className="p-1.5 text-slate-400 hover:text-slate-600 disabled:opacity-20 transition-colors"
+               >
+                 <ChevronLeft className="w-4 h-4"/>
+               </button>
+              
+              <button className="px-3 py-1 bg-blue-600 text-white text-xs font-bold rounded-lg shadow-sm">
+                {safePage}
+              </button>
+              
+              {safePage < totalPages && (
+                 <button 
+                  onClick={() => setCurrentPage(safePage + 1)}
+                  className="px-3 py-1 text-slate-600 hover:text-slate-900 text-xs font-semibold rounded-lg transition-colors"
+                 >
+                   {safePage + 1}
+                 </button>
+              )}
+              
+              {safePage + 1 < totalPages && (
+                <span className="text-slate-400 text-xs px-1">...</span>
+              )}
+              
+              <button 
+                onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+                disabled={safePage === totalPages}
+                className="p-1.5 text-slate-400 hover:text-slate-600 disabled:opacity-20 transition-colors"
+               >
+                 <ChevronRight className="w-4 h-4"/>
+               </button>
             </div>
           </div>
         )}

@@ -16,15 +16,27 @@ export function useFilteredData(
   filters: Filters,
   user?: { email: string; name: string; role: string } | null
 ) {
-  // Augment data (mirrors the original mock Country/Year logic from app.js)
-  // Also distribute FLMs
   const augmentedData = useMemo(() => {
-    return rawData.map((d, index) => ({
-      ...d,
-      Country: index % 3 === 0 ? "Kazakhstan" : "Georgia",
-      Year: index < 50 ? "2017" : "2018",
-      FLM: index % 2 === 0 ? "Abdul Manan" : "Fahad Ayub"
-    }));
+    return rawData.map((d, index) => {
+      // Create fallbacks only if fields are missing
+      let existingYear = d.Year;
+      if (!existingYear && d.Quarter) {
+        const match = d.Quarter.match(/\d{4}/);
+        if (match) {
+          existingYear = match[0];
+        }
+      }
+      const fallbackYearStr = index < 50 ? "2017" : "2018";
+      const finalYear = existingYear || fallbackYearStr;
+
+      return {
+        ...d,
+        Country: d.Country || (index % 3 === 0 ? "Kazakhstan" : "Georgia"),
+        Year: finalYear,
+        Quarter: d.Quarter || `Q2 ${finalYear}`,
+        FLM: d.FLM || (index < 40 ? "Fahad Ayub" : "Abdul Manan")
+      };
+    });
   }, [rawData]);
 
   // Apply Role filtering based on User Authentication

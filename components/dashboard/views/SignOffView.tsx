@@ -6,9 +6,10 @@ import { Badge } from "@/components/ui/badge";
 interface SignOffViewProps {
   data: IncentiveRecord[];
   filters: Filters;
+  fullData?: IncentiveRecord[];
 }
 
-export default function SignOffView({ data, filters }: SignOffViewProps) {
+export default function SignOffView({ data, filters, fullData }: SignOffViewProps) {
   const computedRows = data
     .filter((d) => d.Name && d.Name.trim() !== "")
     .map((d, i) => {
@@ -28,11 +29,19 @@ export default function SignOffView({ data, filters }: SignOffViewProps) {
       };
     });
 
-  const totals = computedRows.reduce((acc, row) => ({
-      targetIncentiveLC: acc.targetIncentiveLC + row.targetIncentiveLC,
+  const totalSource = fullData || data;
+  const computedTotals = totalSource
+    .filter((d) => d.Name && d.Name.trim() !== "")
+    .map((d) => {
+      const input = buildPerformanceInputFromRecord(d);
+      return computeSummaryRow(input);
+    });
+
+  const totals = computedTotals.reduce((acc, row) => ({
+      targetIncentiveLC: acc.targetIncentiveLC + row.targetBaseLC,
       targetIncentiveUSD: acc.targetIncentiveUSD + row.targetIncentiveUSD,
-      incSalesResultLC: acc.incSalesResultLC + row.incSalesResultLC,
-      incFieldWorkLC: acc.incFieldWorkLC + row.incFieldWorkLC,
+      incSalesResultLC: acc.incSalesResultLC + row.incSalesResult,
+      incFieldWorkLC: acc.incFieldWorkLC + row.fieldWork,
       totalIncentiveLC: acc.totalIncentiveLC + row.totalIncentiveLC,
       totalIncentiveUSD: acc.totalIncentiveUSD + row.totalIncentiveUSD,
     }), {

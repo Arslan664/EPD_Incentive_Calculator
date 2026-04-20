@@ -39,7 +39,13 @@ export default function Dashboard() {
   }, []);
 
   const handleFilterChange = useCallback((key: keyof Filters, value: string) => {
-    setFilters((prev) => ({ ...prev, [key]: value }));
+    setFilters((prev) => {
+      const next = { ...prev, [key]: value };
+      if (key === "year") {
+        next.quarter = "all";
+      }
+      return next;
+    });
   }, []);
 
   const handleReset = useCallback(() => {
