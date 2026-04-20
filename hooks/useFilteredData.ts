@@ -13,34 +13,51 @@ import type { IncentiveRecord, Filters } from "@/lib/types";
  */
 export function useFilteredData(
   rawData: IncentiveRecord[],
-  filters: Filters
+  filters: Filters,
+  user?: { email: string; name: string; role: string } | null
 ) {
   // Augment data (mirrors the original mock Country/Year logic from app.js)
+  // Also distribute FLMs
   const augmentedData = useMemo(() => {
     return rawData.map((d, index) => ({
       ...d,
       Country: index % 3 === 0 ? "Kazakhstan" : "Georgia",
       Year: index < 50 ? "2017" : "2018",
+      FLM: index % 2 === 0 ? "Abdul Manan" : "Fahad Ayub"
     }));
   }, [rawData]);
 
-  // Dropdown options — only recomputed when the source data changes
+  // Apply Role filtering based on User Authentication
+  const roleFilteredData = useMemo(() => {
+    if (user?.role === "FLM") {
+      // strict check so Abdul Manan only sees his reps, etc.
+      return augmentedData.filter(d => d.FLM === user.name);
+    }
+    // DVP (Arslan Sohail) sees all
+    return augmentedData;
+  }, [augmentedData, user]);
+
+  // Dropdown options — recomputed when data or relevant filters change
   const options = useMemo(() => {
-    const unique = (key: keyof IncentiveRecord) =>
-      [...new Set(augmentedData.map((d) => d[key] as string).filter(Boolean))].sort();
+    const unique = (key: string, source = roleFilteredData) =>
+      [...new Set(source.map((d: any) => d[key] as string).filter(Boolean))].sort();
+
+    const yearFilteredData = filters.year !== "all" 
+      ? roleFilteredData.filter((d: any) => d.Year === filters.year)
+      : roleFilteredData;
 
     return {
       countries: unique("Country"),
       years: unique("Year"),
-      quarters: unique("Quarter"),
+      quarters: unique("Quarter", yearFilteredData),
       teams: unique("PromoLine"),
       reps: unique("Name"),
     };
-  }, [augmentedData]);
+  }, [roleFilteredData, filters.year]);
 
   // Filtered data — only recomputed when filters change
   const filteredData = useMemo(() => {
-    let result = augmentedData;
+    let result = roleFilteredData;
     const search = filters.search.toLowerCase();
 
     if (search) {
@@ -52,18 +69,18 @@ export function useFilteredData(
     }
 
     if (filters.country !== "all")
-      result = result.filter((d) => d.Country === filters.country);
+      result = result.filter((d: any) => d.Country === filters.country);
     if (filters.year !== "all")
-      result = result.filter((d) => d.Year === filters.year);
+      result = result.filter((d: any) => d.Year === filters.year);
     if (filters.quarter !== "all")
-      result = result.filter((d) => d.Quarter === filters.quarter);
+      result = result.filter((d: any) => d.Quarter === filters.quarter);
     if (filters.team !== "all")
-      result = result.filter((d) => d.PromoLine === filters.team);
+      result = result.filter((d: any) => d.PromoLine === filters.team);
     if (filters.rep !== "all")
-      result = result.filter((d) => d.Name === filters.rep);
+      result = result.filter((d: any) => d.Name === filters.rep);
 
-    return result;
-  }, [augmentedData, filters]);
+    return result as IncentiveRecord[];
+  }, [roleFilteredData, filters]);
 
   return { filteredData, options };
 }

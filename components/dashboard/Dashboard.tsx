@@ -12,6 +12,7 @@ import Header from "@/components/layout/Header";
 import FilterBar from "@/components/dashboard/FilterBar";
 import DataTable from "@/components/dashboard/DataTable";
 import StatCard from "@/components/dashboard/StatCard";
+import Login from "@/components/auth/Login";
 import { TrendingUp, DollarSign, Users, Target } from "lucide-react";
 
 const DEFAULT_FILTERS: Filters = {
@@ -25,11 +26,17 @@ const DEFAULT_FILTERS: Filters = {
 };
 
 export default function Dashboard() {
+  const [user, setUser] = useState<{ email: string; name: string; role: string } | null>(null);
   const [filters, setFilters] = useState<Filters>(DEFAULT_FILTERS);
 
   // Dynamic fetch (falls back to static if Supabase not configured)
   const { data: dbData } = useSupabaseData(comprehensiveData);
-  const { filteredData, options } = useFilteredData(dbData, filters);
+  const { filteredData, options } = useFilteredData(dbData, filters, user);
+
+  const handleLogout = useCallback(() => {
+    setUser(null);
+    setFilters(DEFAULT_FILTERS);
+  }, []);
 
   const handleFilterChange = useCallback((key: keyof Filters, value: string) => {
     setFilters((prev) => ({ ...prev, [key]: value }));
@@ -76,20 +83,28 @@ export default function Dashboard() {
     };
   }, [filteredData]);
 
+  if (!user) {
+    return <Login onLogin={setUser} />;
+  }
+
   return (
     <div className="flex min-h-screen flex-col bg-transparent font-sans selection:bg-blue-500/30">
-      <Header searchValue={filters.search} onSearchChange={handleSearchChange} />
+      <Header 
+        searchValue={filters.search} 
+        onSearchChange={handleSearchChange} 
+        user={user} 
+        onLogout={handleLogout} 
+      />
 
       <main className="max-w-[1600px] mx-auto w-full p-6 space-y-6">
         
         {/* Title & Stats Overview */}
         <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 animate-in fade-in slide-in-from-bottom-4 duration-700">
           <div className="relative">
-            <div className="absolute -inset-1 bg-gradient-to-r from-blue-600 to-indigo-600 blur opacity-20" />
-            <h2 className="relative text-3xl font-black tracking-tight text-white mb-2">
+            <h2 className="text-3xl font-bold tracking-tight text-slate-900 mb-2">
               Medical Representatives Performance
             </h2>
-            <p className="relative text-slate-400 font-medium">
+            <p className="text-slate-500 font-medium">
               Detailed comparison of Actual vs. Planned achievements and incentives.
             </p>
           </div>
@@ -132,7 +147,7 @@ export default function Dashboard() {
             onFilterChange={handleFilterChange}
             onReset={handleReset}
           />
-          <DataTable data={filteredData} view={filters.view} />
+          <DataTable data={filteredData} view={filters.view} filters={filters} />
         </div>
 
       </main>

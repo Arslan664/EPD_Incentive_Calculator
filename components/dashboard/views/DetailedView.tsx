@@ -31,16 +31,16 @@ function ProductBreakdown({ record }: { record: IncentiveRecord }) {
         return (
           <div key={i} className="group/prod w-full">
             <div className="flex justify-between items-end mb-1.5 w-full">
-              <span className="font-bold text-slate-300 text-[10px] uppercase tracking-widest truncate max-w-[120px]" title={p.name || "Product"}>
+              <span className="font-bold text-slate-600 text-[10px] uppercase tracking-widest truncate max-w-[120px]" title={p.name || "Product"}>
                 {p.name || "Product"}
               </span>
-              <span className={`text-[10px] ${percent >= 100 ? 'text-emerald-400' : 'text-rose-400'} font-bold tabular-nums`}>
+              <span className={`text-[10px] ${percent >= 100 ? 'text-emerald-600' : 'text-rose-400'} font-bold tabular-nums`}>
                 {formatNum(pAct)} <span className="text-slate-600 font-medium px-1">/</span> {formatNum(pPlan)}
               </span>
             </div>
-            <div className="w-full h-1.5 bg-slate-800/50 rounded-full overflow-hidden border border-white/5 relative shadow-inner">
+            <div className="w-full h-1.5 bg-slate-100 rounded-full overflow-hidden border border-slate-200 relative shadow-inner">
               <div 
-                className={`h-full rounded-full transition-all duration-1000 ${percent >= 100 ? 'bg-gradient-to-r from-emerald-500 to-teal-400 shadow-[0_0_10px_rgba(52,211,153,0.5)]' : 'bg-gradient-to-r from-rose-500 to-pink-400 shadow-[0_0_10px_rgba(244,63,94,0.5)]'}`}
+                className={`h-full rounded-full transition-all duration-1000 ${percent >= 100 ? 'bg-emerald-500 shadow-sm' : 'bg-rose-500 shadow-sm'}`}
                 style={{ width: `${Math.min(percent, 100)}%` }}
               />
             </div>
@@ -54,16 +54,16 @@ function ProductBreakdown({ record }: { record: IncentiveRecord }) {
 export default function DetailedView({ data }: DetailedViewProps) {
   return (
     <table className="w-full text-left border-collapse min-w-[1400px]">
-      <thead className="bg-slate-900/90 backdrop-blur-md sticky top-0 z-10 border-b border-white/10 shadow-[0_1px_0_0_rgba(255,255,255,0.05)]">
+      <thead className="bg-slate-50 sticky top-0 z-10 border-b border-slate-200">
         <tr>
-          <th className="pl-8 pr-4 py-4 text-[10px] font-black uppercase tracking-widest text-slate-400 w-[240px]">Representative</th>
-          <th className="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-slate-400 w-[180px]">Team / Period</th>
-          <th className="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-slate-400 text-right w-[140px]">Plan (LC)</th>
-          <th className="px-8 py-4 text-[10px] font-black uppercase tracking-widest text-slate-400 text-right w-[160px]">Actual (LC)</th>
-          <th className="px-8 py-4 text-[10px] font-black uppercase tracking-widest text-slate-400 w-[280px]">Product Breakdown</th>
-          <th className="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-slate-400 text-center w-[100px]">TCFA %</th>
-          <th className="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-slate-400 text-right w-[140px]">Target Base</th>
-          <th className="pr-8 pl-4 py-4 text-[10px] font-black uppercase tracking-widest text-blue-400 text-right w-[160px]">Final Incentive</th>
+          <th className="pl-8 pr-4 py-4 text-[10px] font-semibold uppercase tracking-widest text-slate-500 w-[240px]">Representative</th>
+          <th className="px-6 py-4 text-[10px] font-semibold uppercase tracking-widest text-slate-500 w-[180px]">Team / Period</th>
+          <th className="px-6 py-4 text-[10px] font-semibold uppercase tracking-widest text-slate-500 text-right w-[140px]">Plan (LC)</th>
+          <th className="px-8 py-4 text-[10px] font-semibold uppercase tracking-widest text-slate-500 text-right w-[160px]">Actual (LC)</th>
+          <th className="px-8 py-4 text-[10px] font-semibold uppercase tracking-widest text-slate-500 w-[280px]">Product Breakdown</th>
+          <th className="px-6 py-4 text-[10px] font-semibold uppercase tracking-widest text-slate-500 text-center w-[100px]">TCFA %</th>
+          <th className="px-6 py-4 text-[10px] font-semibold uppercase tracking-widest text-slate-500 text-right w-[140px]">Target Base</th>
+          <th className="pr-8 pl-4 py-4 text-[10px] font-bold uppercase tracking-widest text-blue-600 text-right w-[160px]">Final Incentive</th>
         </tr>
       </thead>
       <tbody className="divide-y divide-white/5">
@@ -83,11 +83,11 @@ export default function DetailedView({ data }: DetailedViewProps) {
           const tarInc = computed.totalIncentiveLC;
 
           return (
-            <tr key={`${rep.Name}-${idx}`} className="hover:bg-slate-800/40 transition-colors group animate-in fade-in duration-500">
+            <tr key={`${rep.Name}-${idx}`} className="hover:bg-slate-50 transition-colors group animate-in fade-in duration-500 border-b border-slate-100">
               
               <td className="pl-8 pr-4 py-6 align-top">
                 <div className="flex flex-col">
-                  <span className="font-bold text-blue-400 hover:text-blue-300 hover:underline cursor-pointer text-[13px] tracking-wide">{rep.Name}</span>
+                  <span className="font-bold text-blue-600 hover:text-blue-300 hover:underline cursor-pointer text-[13px] tracking-wide">{rep.Name}</span>
                   <div className="flex items-center gap-1.5 text-[11px] text-slate-500 mt-1.5 w-full">
                     <MapPin className="w-3 h-3 flex-shrink-0" />
                     <span className="truncate max-w-[120px]" title={rep.Position}>{rep.Position}</span>
@@ -99,25 +99,25 @@ export default function DetailedView({ data }: DetailedViewProps) {
               
               <td className="px-6 py-6 align-top">
                 <div className="flex flex-col gap-2.5 items-start">
-                  <span className="inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-bold bg-blue-500/10 text-blue-400 border border-blue-500/20 leading-tight tracking-wider">
+                  <span className="inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-bold bg-blue-50 text-blue-600 border border-blue-100 leading-tight tracking-wider">
                     {rep.PromoLine || "Unknown"}
                   </span>
-                  <span className="text-[11px] font-bold text-slate-500 uppercase tracking-widest">{rep.Quarter} {rep.Year}</span>
+                  <span className="text-[11px] font-semibold text-slate-500 uppercase tracking-widest">{rep.Quarter}</span>
                 </div>
               </td>
               
               <td className="px-6 py-6 text-right align-top pt-8">
-                <span className="font-semibold text-slate-300 text-sm tabular-nums tracking-tight">
+                <span className="text-slate-600 text-sm tabular-nums tracking-tight font-medium">
                   {formatNum(tPlan)}
                 </span>
               </td>
               
               <td className="px-8 py-6 text-right align-top">
                 <div className="flex flex-col items-end gap-1.5">
-                  <span className="font-black text-white text-[1.1rem] tabular-nums tracking-tight">{formatNum(tAct)}</span>
+                  <span className="text-slate-800 text-[1.05rem] tabular-nums tracking-tight font-medium">{formatNum(tAct)}</span>
                   <span className={`text-[10px] font-bold px-2 py-0.5 rounded border ${
-                    achVal >= 100 ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' : 
-                    achVal > 0 ? 'bg-amber-500/10 text-amber-400 border-amber-500/20' : 'bg-rose-500/10 text-rose-400 border-rose-500/20'
+                    achVal >= 100 ? 'bg-emerald-50 text-emerald-600 border-emerald-200' : 
+                    achVal > 0 ? 'bg-amber-50 text-amber-600 border-amber-200' : 'bg-rose-50 text-rose-600 border-rose-200'
                   }`}>
                     {achVal}%
                   </span>
@@ -129,22 +129,22 @@ export default function DetailedView({ data }: DetailedViewProps) {
               </td>
               
               <td className="px-6 py-6 text-center align-top pt-7">
-                <span className={`inline-flex items-center justify-center w-[42px] h-[42px] rounded-full font-bold text-xs border shadow-lg ${
-                  tcfaNum >= 90 ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20 shadow-emerald-500/10' : 'bg-rose-500/10 text-rose-400 border-rose-500/20 shadow-rose-500/10'
+                <span className={`inline-flex items-center justify-center w-[42px] h-[42px] rounded-full font-bold text-xs border shadow-sm ${
+                  tcfaNum >= 90 ? 'bg-emerald-50 text-emerald-600 border-emerald-200' : 'bg-rose-50 text-rose-600 border-rose-200'
                 }`}>
                   {tcfaVal}
                 </span>
               </td>
               
               <td className="px-6 py-6 text-right align-top pt-8">
-                <span className="font-semibold text-slate-300 text-sm tabular-nums tracking-tight">
+                <span className="font-medium text-slate-600 text-sm tabular-nums tracking-tight">
                   {formatNum(tarBase)}
                 </span>
               </td>
               
               <td className="pr-8 pl-4 py-6 text-right align-top pt-7">
                 <div className="flex flex-col items-end gap-0.5">
-                  <span className={`text-xl font-black tabular-nums tracking-tight drop-shadow-md ${tarInc > 0 ? 'text-emerald-400' : 'text-slate-600'}`}>
+                  <span className={`text-xl font-bold tabular-nums tracking-tight ${tarInc > 0 ? 'text-emerald-600' : 'text-slate-600'}`}>
                     {tarInc > 0 ? formatNum(tarInc) : "0"}
                   </span>
                   <span className="text-[9px] font-bold text-slate-500 uppercase tracking-widest leading-none">LC</span>

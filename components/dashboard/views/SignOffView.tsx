@@ -1,13 +1,14 @@
-import type { IncentiveRecord } from "@/lib/types";
+import type { IncentiveRecord, Filters } from "@/lib/types";
 import { buildPerformanceInputFromRecord, computeSummaryRow } from "@/lib/incentiveCalculations";
 import { formatNum } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 
 interface SignOffViewProps {
   data: IncentiveRecord[];
+  filters: Filters;
 }
 
-export default function SignOffView({ data }: SignOffViewProps) {
+export default function SignOffView({ data, filters }: SignOffViewProps) {
   const computedRows = data
     .filter((d) => d.Name && d.Name.trim() !== "")
     .map((d, i) => {
@@ -43,18 +44,22 @@ export default function SignOffView({ data }: SignOffViewProps) {
     : 0;
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col bg-white">
       {/* Corporate Header */}
-      <div className="bg-[#0a2540] px-8 py-8 text-white">
+      <div className="bg-white px-8 py-8 border-b border-slate-200">
         <div className="flex justify-between items-start">
           <div>
-            <div className="text-[10px] font-bold uppercase tracking-[0.2em] text-blue-300/80 mb-2">Abbott</div>
-            <div className="text-sm font-medium tracking-wide text-blue-100/90 mb-4">Established Pharmaceuticals Division</div>
-            <h2 className="text-3xl font-extrabold tracking-tight">Statement of Bonuses</h2>
+            <div className="text-[10px] font-extrabold uppercase tracking-[0.2em] text-slate-500 mb-2">Abbott</div>
+            <div className="text-sm font-medium tracking-wide text-blue-600 mb-4">Established Pharmaceuticals Division</div>
+            <h2 className="text-3xl font-extrabold tracking-tight text-slate-900">Statement of Bonuses</h2>
           </div>
-          <div className="flex flex-col items-end gap-1 bg-white/10 px-5 py-3 rounded-lg backdrop-blur-md border border-white/5">
-            <span className="text-[10px] font-bold text-blue-200 uppercase tracking-wider">Region / Period</span>
-            <span className="font-bold text-lg">87 Georgia <span className="text-white/30 mx-2">•</span> {data.length > 0 ? data[0].Quarter || "Q2 2017" : "Q2 2017"}</span>
+          <div className="flex flex-col items-end gap-1 bg-slate-50 px-5 py-3 rounded-lg border border-slate-200">
+            <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Region / Period</span>
+            <span className="font-bold text-lg text-slate-800">
+              {filters.country === "all" ? "All Regions" : filters.country} 
+              <span className="text-slate-300 mx-2">•</span> 
+              {filters.quarter === "all" ? (data.length > 0 ? data[0].Quarter || "All Quarters" : "All Quarters") : filters.quarter}
+            </span>
           </div>
         </div>
       </div>
@@ -77,7 +82,7 @@ export default function SignOffView({ data }: SignOffViewProps) {
         <tbody className="divide-y divide-slate-100">
           {computedRows.map((row) => (
             <tr key={`signoff-${row.rowNum}`} className="text-sm hover:bg-slate-50/80 transition-colors animate-in fade-in duration-300">
-              <td className="px-6 py-4 text-center text-slate-400 font-mono text-xs">{row.rowNum}</td>
+              <td className="px-6 py-4 text-center text-slate-500 font-mono text-xs">{row.rowNum}</td>
               <td className="px-6 py-4 font-bold text-blue-600 whitespace-nowrap">{row.name}</td>
               <td className="px-6 py-4 text-slate-500 text-xs truncate max-w-[160px]" title={row.position}>{row.position}</td>
               <td className="px-6 py-4 text-right text-slate-600 font-medium tabular-nums">{formatNum(Math.round(row.targetIncentiveLC))}</td>
@@ -85,7 +90,7 @@ export default function SignOffView({ data }: SignOffViewProps) {
               <td className="px-6 py-4 text-right font-medium text-slate-800 tabular-nums">{formatNum(row.incSalesResultLC)}</td>
               <td className="px-6 py-4 text-right font-medium text-slate-800 tabular-nums">{formatNum(row.incFieldWorkLC)}</td>
               <td className="px-6 py-4 text-right bg-blue-50/20">
-                <span className={`text-[1.05rem] font-black tracking-tight tabular-nums ${row.totalIncentiveLC > 0 ? 'text-emerald-600' : 'text-slate-300'}`}>
+                <span className={`text-[1.05rem] font-black tracking-tight tabular-nums ${row.totalIncentiveLC > 0 ? 'text-emerald-600' : 'text-slate-600'}`}>
                   {row.totalIncentiveLC > 0 ? formatNum(row.totalIncentiveLC) : "0"}
                 </span>
               </td>
@@ -123,8 +128,8 @@ export default function SignOffView({ data }: SignOffViewProps) {
       </table>
 
       {/* Signature Area */}
-      <div className="p-8 bg-slate-50/50 border-t border-slate-100">
-        <h3 className="mb-10 text-[10px] font-bold uppercase tracking-[0.15em] text-slate-400">Signatures Required For Approval</h3>
+      <div className="p-8 bg-white border-t border-slate-100">
+        <h3 className="mb-10 text-[10px] font-bold uppercase tracking-[0.15em] text-slate-500">Signatures Required For Approval</h3>
         <div className="flex flex-wrap gap-x-12 gap-y-12">
           {[
             "National Sales Manager",
