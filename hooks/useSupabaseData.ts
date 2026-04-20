@@ -85,6 +85,7 @@ export function useSupabaseData(fallbackData: IncentiveRecord[]) {
               Quarter: qrt.label,
               Year: qrt.year?.toString() || "2017",
               Country: rep.cities?.name || "Kazakhstan", 
+              Status: row.status || "Staff",
               
               TotalAct: row.total_actual?.toString() || "0",
               TotalPlan: row.total_plan?.toString() || "0",

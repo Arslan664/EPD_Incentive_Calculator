@@ -11,6 +11,7 @@ export interface IncentiveRecord {
   Quarter: string;
   Country?: string;
   Year?: string;
+  Status?: string;
 
   // Performance (Actual vs Plan)
   TotalAct: string;

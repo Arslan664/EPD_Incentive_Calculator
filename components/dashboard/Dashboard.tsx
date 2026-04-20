@@ -9,10 +9,12 @@ import { cleanNum, formatNum } from "@/lib/utils";
 import { buildPerformanceInputFromRecord, computeSummaryRow } from "@/lib/incentiveCalculations";
 
 import Header from "@/components/layout/Header";
+import Sidebar from "@/components/layout/Sidebar";
 import FilterBar from "@/components/dashboard/FilterBar";
 import DataTable from "@/components/dashboard/DataTable";
 import StatCard from "@/components/dashboard/StatCard";
 import Login from "@/components/auth/Login";
+import StaffView from "@/components/dashboard/views/StaffView";
 import { TrendingUp, DollarSign, Users, Target } from "lucide-react";
 
 const DEFAULT_FILTERS: Filters = {
@@ -28,6 +30,8 @@ const DEFAULT_FILTERS: Filters = {
 export default function Dashboard() {
   const [user, setUser] = useState<{ email: string; name: string; role: string } | null>(null);
   const [filters, setFilters] = useState<Filters>(DEFAULT_FILTERS);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [activePage, setActivePage] = useState("dashboard");
 
   // Dynamic fetch (falls back to static if Supabase not configured)
   const { data: dbData } = useSupabaseData(comprehensiveData);
@@ -95,16 +99,28 @@ export default function Dashboard() {
 
   return (
     <div className="flex min-h-screen flex-col bg-transparent font-sans selection:bg-blue-500/30">
+      <Sidebar 
+        isOpen={isSidebarOpen} 
+        onClose={() => setIsSidebarOpen(false)} 
+        activePage={activePage} 
+        onPageChange={setActivePage} 
+      />
+      
       <Header 
         searchValue={filters.search} 
         onSearchChange={handleSearchChange} 
         user={user} 
         onLogout={handleLogout} 
+        onMenuClick={() => setIsSidebarOpen(true)}
       />
 
       <main className="max-w-[1600px] mx-auto w-full p-6 space-y-6">
         
-        {/* Title & Stats Overview */}
+        {activePage === "staff" ? (
+          <StaffView data={dbData} filters={filters} user={user} />
+        ) : (
+          <>
+            {/* Title & Stats Overview */}
         <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 animate-in fade-in slide-in-from-bottom-4 duration-700">
           <div className="relative">
             <h2 className="text-3xl font-bold tracking-tight text-slate-900 mb-2">
@@ -155,6 +171,8 @@ export default function Dashboard() {
           />
           <DataTable data={filteredData} view={filters.view} filters={filters} />
         </div>
+        </>
+        )}
 
       </main>
     </div>

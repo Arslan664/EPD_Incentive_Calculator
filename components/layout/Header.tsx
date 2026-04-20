@@ -1,16 +1,17 @@
 "use client";
 
 import { ChangeEvent } from "react";
-import { Search, User, LayoutDashboard, LogOut } from "lucide-react";
+import { Search, User, LayoutDashboard, LogOut, Menu } from "lucide-react";
 
 interface HeaderProps {
   searchValue: string;
   onSearchChange: (value: string) => void;
   user?: { email: string; name: string; role: string } | null;
   onLogout?: () => void;
+  onMenuClick?: () => void;
 }
 
-export default function Header({ searchValue, onSearchChange, user, onLogout }: HeaderProps) {
+export default function Header({ searchValue, onSearchChange, user, onLogout, onMenuClick }: HeaderProps) {
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     onSearchChange(e.target.value);
   };
@@ -21,6 +22,14 @@ export default function Header({ searchValue, onSearchChange, user, onLogout }: 
         
         {/* Logo Section */}
         <div className="flex items-center gap-4 w-auto flex-shrink-0 group cursor-pointer">
+          {onMenuClick && (
+            <button 
+              onClick={onMenuClick}
+              className="p-2 -ml-2 text-slate-500 hover:text-slate-900 hover:bg-slate-100 rounded-lg transition-colors mr-1"
+            >
+              <Menu className="w-6 h-6" />
+            </button>
+          )}
           <div className="bg-gradient-to-br from-blue-500 to-indigo-600 p-2.5 rounded-xl shadow-lg shadow-blue-500/20 group-hover:shadow-blue-500/40 transition-all duration-300">
             <LayoutDashboard className="w-5 h-5 text-white" />
           </div>
