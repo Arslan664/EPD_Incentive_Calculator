@@ -9,9 +9,11 @@ import { MapPin } from "lucide-react";
 
 interface SummaryViewProps {
   data: IncentiveRecord[];
+  fullData?: IncentiveRecord[];
+  startIndex?: number;
 }
 
-export default function SummaryView({ data }: SummaryViewProps) {
+export default function SummaryView({ data, fullData, startIndex = 0 }: SummaryViewProps) {
   const computedRows: ComputedSummaryRow[] = data
     .filter((d) => d.Name && d.Name.trim() !== "")
     .map((d) => {
@@ -44,7 +46,7 @@ export default function SummaryView({ data }: SummaryViewProps) {
       <tbody className="divide-y divide-slate-100">
         {computedRows.map((row, i) => (
           <tr key={`${row.name}-summary-${i}`} className="hover:bg-slate-50/80 transition-colors animate-in fade-in duration-300">
-            <td className="px-6 py-4 text-center text-slate-500 font-mono text-xs">{i + 1}</td>
+            <td className="px-6 py-4 text-center text-slate-500 font-mono text-xs">{i + 1 + startIndex}</td>
             
             <td className="px-6 py-4">
                <div className="flex flex-col">

@@ -7,16 +7,17 @@ interface SignOffViewProps {
   data: IncentiveRecord[];
   filters: Filters;
   fullData?: IncentiveRecord[];
+  startIndex?: number;
 }
 
-export default function SignOffView({ data, filters, fullData }: SignOffViewProps) {
+export default function SignOffView({ data, filters, fullData, startIndex = 0 }: SignOffViewProps) {
   const computedRows = data
     .filter((d) => d.Name && d.Name.trim() !== "")
     .map((d, i) => {
       const input = buildPerformanceInputFromRecord(d);
       const computed = computeSummaryRow(input);
       return {
-        rowNum: i + 1,
+        rowNum: i + 1 + startIndex,
         name: computed.name,
         position: computed.position,
         targetIncentiveLC: computed.targetBaseLC,

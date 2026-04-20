@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import DetailedView from "./views/DetailedView";
 import SummaryView from "./views/SummaryView";
 import SignOffView from "./views/SignOffView";
@@ -16,11 +16,18 @@ interface DataTableProps {
 
 export default function DataTable({ data, view, filters }: DataTableProps) {
   const [currentPage, setCurrentPage] = useState(1);
-  const PAGE_SIZE = 10;
+  const PAGE_SIZE = 5;
 
   const totalPages = Math.max(1, Math.ceil(data.length / PAGE_SIZE));
   const safePage = Math.min(currentPage, totalPages);
   const paginatedData = data.slice((safePage - 1) * PAGE_SIZE, safePage * PAGE_SIZE);
+
+  // Reset to first page when data length changes
+  // We use [data.length] instead of [data] to avoid unnecessary resets if the array identity changes but size doesn't 
+  // (though in this app, data filter change is the only way length changes)
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [data.length]);
 
   const handleExport = () => {
     if (view === "summary") {
@@ -65,8 +72,8 @@ export default function DataTable({ data, view, filters }: DataTableProps) {
         {/* Table Content */}
         <div className="overflow-x-auto w-full">
           {view === "detailed" && <DetailedView data={paginatedData} />}
-          {view === "summary" && <SummaryView data={paginatedData} fullData={data} />}
-          {view === "signoff" && <SignOffView data={paginatedData} filters={filters} fullData={data} />}
+          {view === "summary" && <SummaryView data={paginatedData} fullData={data} startIndex={(safePage - 1) * PAGE_SIZE} />}
+          {view === "signoff" && <SignOffView data={paginatedData} filters={filters} fullData={data} startIndex={(safePage - 1) * PAGE_SIZE} />}
           
           {data.length === 0 && (
             <div className="p-16 flex flex-col items-center justify-center text-center">
@@ -87,7 +94,7 @@ export default function DataTable({ data, view, filters }: DataTableProps) {
             </span>
             <div className="flex items-center gap-1.5 p-1 bg-white rounded-xl border border-slate-200 shadow-sm">
               <button 
-                onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                onClick={() => setCurrentPage(Math.max(1, safePage - 1))}
                 disabled={safePage === 1}
                 className="p-1.5 text-slate-400 hover:text-slate-600 disabled:opacity-20 transition-colors"
                >
@@ -112,7 +119,7 @@ export default function DataTable({ data, view, filters }: DataTableProps) {
               )}
               
               <button 
-                onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+                onClick={() => setCurrentPage(Math.min(totalPages, safePage + 1))}
                 disabled={safePage === totalPages}
                 className="p-1.5 text-slate-400 hover:text-slate-600 disabled:opacity-20 transition-colors"
                >
