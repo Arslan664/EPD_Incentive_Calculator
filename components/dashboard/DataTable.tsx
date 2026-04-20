@@ -50,7 +50,7 @@ export default function DataTable({ data, view, filters }: DataTableProps) {
               <Filter className="w-4 h-4 text-blue-600" />
             </div>
             <span className="text-sm font-bold text-slate-700 tracking-wide">
-              {data.length} <span className="text-slate-500 font-medium tracking-normal">representatives found</span>
+              {new Set(data.map(d => d.Name).filter(Boolean)).size} <span className="text-slate-500 font-medium tracking-normal">representatives found</span>
             </span>
           </div>
           <div className="flex gap-2">

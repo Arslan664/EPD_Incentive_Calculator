@@ -78,7 +78,8 @@ export default function Dashboard() {
       tBase += computed.targetBaseLC;
     });
 
-    const activeReps = filteredData.length;
+    // Active Reps = unique names (avoids double-counting Q1+Q2 for same person)
+    const activeReps = new Set(filteredData.map(d => d.Name).filter(Boolean)).size;
     const overallAch = tPlan > 0 ? (tAct / tPlan) * 100 : 0;
     const avgBase = activeReps > 0 ? (tBase / activeReps) : 0;
 
