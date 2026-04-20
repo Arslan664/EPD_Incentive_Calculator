@@ -1,7 +1,10 @@
+"use client";
+
+import { useState } from "react";
 import type { IncentiveRecord } from "@/lib/types";
 import { cleanNum, formatNum, getPct } from "@/lib/utils";
 import { buildPerformanceInputFromRecord, computeSummaryRow } from "@/lib/incentiveCalculations";
-import { MapPin } from "lucide-react";
+import { MapPin, ChevronUp, ChevronDown } from "lucide-react";
 
 interface DetailedViewProps {
   data: IncentiveRecord[];
@@ -27,7 +30,7 @@ function ProductBreakdown({ record }: { record: IncentiveRecord }) {
         const pPlan = cleanNum(p.plan);
         const res = getPct(pAct, pPlan);
         const percent = res ? res.value : 0;
-        
+
         return (
           <div key={i} className="group/prod w-full">
             <div className="flex justify-between items-end mb-1.5 w-full">
@@ -39,7 +42,7 @@ function ProductBreakdown({ record }: { record: IncentiveRecord }) {
               </span>
             </div>
             <div className="w-full h-1.5 bg-slate-100 rounded-full overflow-hidden border border-slate-200 relative shadow-inner">
-              <div 
+              <div
                 className={`h-full rounded-full transition-all duration-1000 ${percent >= 100 ? 'bg-emerald-500 shadow-sm' : 'bg-rose-500 shadow-sm'}`}
                 style={{ width: `${Math.min(percent, 100)}%` }}
               />
@@ -51,12 +54,43 @@ function ProductBreakdown({ record }: { record: IncentiveRecord }) {
   );
 }
 
+type SortDir = "asc" | "desc";
+
 export default function DetailedView({ data }: DetailedViewProps) {
+  const [sortDir, setSortDir] = useState<SortDir>("asc");
+
+  const toggleSort = () => setSortDir(prev => prev === "asc" ? "desc" : "asc");
+
+  const sorted = [...data].sort((a, b) => {
+    const nameA = (a.Name || "").toLowerCase();
+    const nameB = (b.Name || "").toLowerCase();
+    if (nameA < nameB) return sortDir === "asc" ? -1 : 1;
+    if (nameA > nameB) return sortDir === "asc" ? 1 : -1;
+    return 0;
+  });
+
   return (
     <table className="w-full text-left border-collapse min-w-[1400px]">
       <thead className="bg-slate-50 sticky top-0 z-10 border-b border-slate-200">
         <tr>
-          <th className="pl-8 pr-4 py-4 text-[10px] font-semibold uppercase tracking-widest text-slate-500 w-[240px]">Representative</th>
+          {/* Sortable Representative column */}
+          <th className="pl-8 pr-4 py-4 text-[10px] font-semibold uppercase tracking-widest text-slate-500 w-[240px]">
+            <button
+              onClick={toggleSort}
+              className="flex items-center gap-1 group/sort hover:text-blue-600 transition-colors cursor-pointer select-none"
+              title={`Sort ${sortDir === "asc" ? "Z → A" : "A → Z"}`}
+            >
+              Representative
+              <span className="flex flex-col gap-px ml-0.5">
+                <ChevronUp
+                  className={`w-2.5 h-2.5 transition-colors ${sortDir === "asc" ? "text-blue-600" : "text-slate-300 group-hover/sort:text-slate-400"}`}
+                />
+                <ChevronDown
+                  className={`w-2.5 h-2.5 transition-colors ${sortDir === "desc" ? "text-blue-600" : "text-slate-300 group-hover/sort:text-slate-400"}`}
+                />
+              </span>
+            </button>
+          </th>
           <th className="px-6 py-4 text-[10px] font-semibold uppercase tracking-widest text-slate-500 w-[180px]">Team / Period</th>
           <th className="px-6 py-4 text-[10px] font-semibold uppercase tracking-widest text-slate-500 text-right w-[140px]">Plan (LC)</th>
           <th className="px-8 py-4 text-[10px] font-semibold uppercase tracking-widest text-slate-500 text-right w-[160px]">Actual (LC)</th>
@@ -67,16 +101,16 @@ export default function DetailedView({ data }: DetailedViewProps) {
         </tr>
       </thead>
       <tbody className="divide-y divide-white/5">
-        {data.map((rep, idx) => {
+        {sorted.map((rep, idx) => {
           const tAct = cleanNum(rep.TotalAct);
           const tPlan = cleanNum(rep.TotalPlan);
-          
+
           const input = buildPerformanceInputFromRecord(rep);
           const computed = computeSummaryRow(input);
-          
+
           const achRes = getPct(tAct, tPlan);
           const achVal = achRes ? achRes.value : 0;
-          
+
           const tcfaVal = rep.TCFA_Act || "0%";
           const tcfaNum = Math.round(parseFloat(tcfaVal.replace("%", "")));
           const tcfaDisplay = `${tcfaNum}%`;
@@ -85,7 +119,7 @@ export default function DetailedView({ data }: DetailedViewProps) {
 
           return (
             <tr key={`${rep.Name}-${idx}`} className="hover:bg-slate-50 transition-colors group animate-in fade-in duration-500 border-b border-slate-100">
-              
+
               <td className="pl-8 pr-4 py-6 align-top">
                 <div className="flex flex-col">
                   <span className="font-bold text-blue-600 hover:text-blue-300 hover:underline cursor-pointer text-[13px] tracking-wide">{rep.Name}</span>
@@ -97,7 +131,7 @@ export default function DetailedView({ data }: DetailedViewProps) {
                   </div>
                 </div>
               </td>
-              
+
               <td className="px-6 py-6 align-top">
                 <div className="flex flex-col gap-2.5 items-start">
                   <span className="inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-bold bg-blue-50 text-blue-600 border border-blue-100 leading-tight tracking-wider">
@@ -106,29 +140,29 @@ export default function DetailedView({ data }: DetailedViewProps) {
                   <span className="text-[11px] font-semibold text-slate-500 uppercase tracking-widest">{rep.Quarter}</span>
                 </div>
               </td>
-              
+
               <td className="px-6 py-6 text-right align-top pt-8">
                 <span className="text-slate-600 text-sm tabular-nums tracking-tight font-medium">
                   {formatNum(tPlan)}
                 </span>
               </td>
-              
+
               <td className="px-8 py-6 text-right align-top">
                 <div className="flex flex-col items-end gap-1.5">
                   <span className="text-slate-800 text-[1.05rem] tabular-nums tracking-tight font-medium">{formatNum(tAct)}</span>
                   <span className={`text-[10px] font-bold px-2 py-0.5 rounded border ${
-                    achVal >= 100 ? 'bg-emerald-50 text-emerald-600 border-emerald-200' : 
+                    achVal >= 100 ? 'bg-emerald-50 text-emerald-600 border-emerald-200' :
                     achVal > 0 ? 'bg-amber-50 text-amber-600 border-amber-200' : 'bg-rose-50 text-rose-600 border-rose-200'
                   }`}>
                     {achVal}%
                   </span>
                 </div>
               </td>
-              
+
               <td className="px-8 py-6 align-top">
                 <ProductBreakdown record={rep} />
               </td>
-              
+
               <td className="px-6 py-6 text-center align-top pt-7">
                 <span className={`inline-flex items-center justify-center w-[42px] h-[42px] rounded-full font-bold text-xs border shadow-sm ${
                   tcfaNum >= 90 ? 'bg-emerald-50 text-emerald-600 border-emerald-200' : 'bg-rose-50 text-rose-600 border-rose-200'
@@ -136,13 +170,13 @@ export default function DetailedView({ data }: DetailedViewProps) {
                   {tcfaDisplay}
                 </span>
               </td>
-              
+
               <td className="px-6 py-6 text-right align-top pt-8">
                 <span className="font-medium text-slate-600 text-sm tabular-nums tracking-tight">
                   {formatNum(tarBase)}
                 </span>
               </td>
-              
+
               <td className="pr-8 pl-4 py-6 text-right align-top pt-7">
                 <div className="flex flex-col items-end gap-0.5">
                   <span className={`text-xl font-bold tabular-nums tracking-tight ${tarInc > 0 ? 'text-emerald-600' : 'text-slate-600'}`}>

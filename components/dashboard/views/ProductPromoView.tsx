@@ -4,7 +4,10 @@ import { useMemo, useState } from "react";
 import type { IncentiveRecord, Filters } from "@/lib/types";
 import { cleanNum, formatNum } from "@/lib/utils";
 import { cn } from "@/lib/utils";
-import { TrendingUp, TrendingDown, Package, Layers, BarChart3, ChevronDown, SlidersHorizontal, Calendar } from "lucide-react";
+import {
+  TrendingUp, TrendingDown, Package, Layers, BarChart3,
+  ChevronDown, SlidersHorizontal, Calendar,
+} from "lucide-react";
 
 // Portfolio configuration from Input Assumptions sheet (share %)
 const PROMO_LINE_PORTFOLIOS: Record<string, Array<{ products: string[]; share: number; color: string }>> = {
@@ -50,13 +53,14 @@ interface ProductPromoViewProps {
   filters: Filters;
 }
 
-export default function ProductPromoView({ data, filters }: ProductPromoViewProps) {
-  const [selectedLine, setSelectedLine] = useState("all");
+export default function ProductPromoView({ data }: ProductPromoViewProps) {
+  // ── Section 1: Product Performance Breakdown ───────────────────────────
   const [sortBy, setSortBy] = useState<"plan" | "act" | "ach">("plan");
+  const [topN, setTopN] = useState(10); // Top N filter for Product Performance Breakdown
 
-  // ── Part 2 state: Qtr filter + Top N slicer ──────────────────────────
-  const [portfolioQtr, setPortfolioQtr] = useState("all");
-  const [topN, setTopN] = useState(10);
+  // ── Section 2: Portfolio Share Configuration ──────────────────────────
+  const [selectedLine, setSelectedLine] = useState("all");
+  const [portfolioQtr, setPortfolioQtr] = useState("all"); // Qtr filter for Portfolio Share
 
   // Derive available quarters from data
   const availableQuarters = useMemo(() => {
@@ -65,7 +69,7 @@ export default function ProductPromoView({ data, filters }: ProductPromoViewProp
     return ["all", ...Array.from(set).sort()];
   }, [data]);
 
-  // Aggregate actual vs plan per product from records
+  // Aggregate actual vs plan per product (Section 1 — uses all data, respects topN)
   const productTotals = useMemo(() => {
     const map = new Map<string, { act: number; plan: number; lines: Set<string> }>();
 
@@ -99,48 +103,33 @@ export default function ProductPromoView({ data, filters }: ProductPromoViewProp
     }));
 
     const totalPlan = rows.reduce((s, r) => s + r.plan, 0);
-    return rows
+    const sorted = rows
       .map(r => ({ ...r, share: totalPlan > 0 ? Math.round((r.plan / totalPlan) * 1000) / 10 : 0 }))
       .sort((a, b) => {
         if (sortBy === "act") return b.act - a.act;
         if (sortBy === "ach") return b.ach - a.ach;
         return b.plan - a.plan;
       });
-  }, [data, sortBy]);
 
-  // Filtered data for Portfolio Share section (by Qtr)
-  const portfolioFilteredData = useMemo(() => {
-    if (portfolioQtr === "all") return data;
-    return data.filter(d => d.Quarter?.trim() === portfolioQtr);
-  }, [data, portfolioQtr]);
+    // Apply Top N filter
+    return sorted.slice(0, topN);
+  }, [data, sortBy, topN]);
 
-  // Aggregate product shares for Part 2, respecting Qtr filter & top N
-  const portfolioProductTotals = useMemo(() => {
-    const map = new Map<string, { plan: number }>();
-    portfolioFilteredData.forEach(d => {
-      if (!d.Name?.trim()) return;
-      const prods = [
-        { name: d.P1Name, plan: d.P1Plan },
-        { name: d.P2Name, plan: d.P2Plan },
-        { name: d.P3Name, plan: d.P3Plan },
-      ];
-      prods.forEach(p => {
-        const name = p.name?.trim();
-        if (!name) return;
-        const plan = cleanNum(p.plan);
-        if (plan === 0) return;
-        if (!map.has(name)) map.set(name, { plan: 0 });
-        map.get(name)!.plan += plan;
-      });
+  const totalAllAct  = useMemo(() => {
+    let s = 0;
+    data.forEach(d => {
+      [d.P1Act, d.P2Act, d.P3Act].forEach(v => { s += cleanNum(v); });
     });
+    return s;
+  }, [data]);
 
-    const rows = Array.from(map.entries()).map(([name, v]) => ({ name, plan: v.plan }));
-    const totalPlan = rows.reduce((s, r) => s + r.plan, 0);
-    return rows
-      .map(r => ({ ...r, share: totalPlan > 0 ? (r.plan / totalPlan) * 100 : 0 }))
-      .sort((a, b) => b.plan - a.plan)
-      .slice(0, topN);
-  }, [portfolioFilteredData, topN]);
+  const totalAllPlan = useMemo(() => {
+    let s = 0;
+    data.forEach(d => {
+      [d.P1Plan, d.P2Plan, d.P3Plan].forEach(v => { s += cleanNum(v); });
+    });
+    return s;
+  }, [data]);
 
   const totalAct  = productTotals.reduce((s, r) => s + r.act,  0);
   const totalPlan = productTotals.reduce((s, r) => s + r.plan, 0);
@@ -149,31 +138,30 @@ export default function ProductPromoView({ data, filters }: ProductPromoViewProp
   const promoLines = Object.keys(PROMO_LINE_PORTFOLIOS);
   const activeLines = selectedLine === "all" ? promoLines : [selectedLine];
 
-  const achColor = (p: number) =>
-    p >= 100 ? "text-emerald-600" : p >= 90 ? "text-amber-600" : "text-rose-600";
   const achBg = (p: number) =>
     p >= 100 ? "bg-emerald-500" : p >= 90 ? "bg-amber-500" : "bg-rose-500";
-
-  // Colors for pie-like share bar
-  const shareColors = [
-    "#3b82f6", "#10b981", "#f59e0b", "#8b5cf6", "#ef4444",
-    "#06b6d4", "#f97316", "#84cc16", "#ec4899", "#6366f1",
-  ];
 
   return (
     <div className="space-y-6 animate-in fade-in zoom-in-95 duration-500">
 
-      {/* Hero Summary Cards */}
+      {/* ── Hero Summary Cards ──────────────────────────────────────────── */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {[
-          { label: "Total Products", value: String(productTotals.length), sub: "tracked", icon: Package, color: "from-blue-500 to-indigo-600", shadow: "shadow-blue-200" },
-          { label: "Total Plan (LC)", value: totalPlan >= 1e6 ? (totalPlan/1e6).toFixed(1)+"M" : (totalPlan/1e3).toFixed(0)+"K", sub: "planned revenue", icon: BarChart3, color: "from-slate-600 to-slate-800", shadow: "shadow-slate-200" },
-          { label: "Total Actual (LC)", value: totalAct >= 1e6 ? (totalAct/1e6).toFixed(1)+"M" : (totalAct/1e3).toFixed(0)+"K", sub: "actual revenue", icon: TrendingUp, color: "from-emerald-500 to-teal-600", shadow: "shadow-emerald-200" },
-          { label: "Overall Achievement", value: `${overallAch}%`, sub: overallAch >= 100 ? "above target 🎯" : "below target", icon: overallAch >= 100 ? TrendingUp : TrendingDown, color: overallAch >= 100 ? "from-emerald-500 to-green-600" : "from-amber-500 to-orange-600", shadow: overallAch >= 100 ? "shadow-emerald-200": "shadow-amber-200" },
+          { label: "Total Products", value: String(productTotals.length), sub: `top ${topN} shown`, icon: Package, color: "from-blue-500 to-indigo-600", shadow: "shadow-blue-200" },
+          { label: "Total Plan (LC)", value: totalAllPlan >= 1e6 ? (totalAllPlan/1e6).toFixed(1)+"M" : (totalAllPlan/1e3).toFixed(0)+"K", sub: "planned revenue", icon: BarChart3, color: "from-slate-600 to-slate-800", shadow: "shadow-slate-200" },
+          { label: "Total Actual (LC)", value: totalAllAct >= 1e6 ? (totalAllAct/1e6).toFixed(1)+"M" : (totalAllAct/1e3).toFixed(0)+"K", sub: "actual revenue", icon: TrendingUp, color: "from-emerald-500 to-teal-600", shadow: "shadow-emerald-200" },
+          {
+            label: "Overall Achievement",
+            value: `${totalAllPlan > 0 ? Math.round((totalAllAct / totalAllPlan) * 100) : 0}%`,
+            sub: (totalAllPlan > 0 && totalAllAct >= totalAllPlan) ? "above target 🎯" : "below target",
+            icon: (totalAllPlan > 0 && totalAllAct >= totalAllPlan) ? TrendingUp : TrendingDown,
+            color: (totalAllPlan > 0 && totalAllAct >= totalAllPlan) ? "from-emerald-500 to-green-600" : "from-amber-500 to-orange-600",
+            shadow: (totalAllPlan > 0 && totalAllAct >= totalAllPlan) ? "shadow-emerald-200" : "shadow-amber-200",
+          },
         ].map(card => {
           const Icon = card.icon;
           return (
-            <div key={card.label} className={`bg-white rounded-2xl border border-slate-200/80 p-5 shadow-sm hover:shadow-md transition-all duration-300`}>
+            <div key={card.label} className="bg-white rounded-2xl border border-slate-200/80 p-5 shadow-sm hover:shadow-md transition-all duration-300">
               <div className="flex items-start justify-between mb-4">
                 <div className={`w-10 h-10 rounded-xl bg-gradient-to-br ${card.color} flex items-center justify-center shadow-md ${card.shadow}`}>
                   <Icon className="w-5 h-5 text-white" />
@@ -187,30 +175,50 @@ export default function ProductPromoView({ data, filters }: ProductPromoViewProp
         })}
       </div>
 
-      {/* Product Performance Table */}
+      {/* ── 1. Product Performance Breakdown (with Top N slicer) ─────────── */}
       <div className="bg-white rounded-2xl border border-slate-200 shadow-sm">
         <div className="px-6 py-5 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
             <h2 className="text-lg font-bold text-slate-900 tracking-tight">Product Performance Breakdown</h2>
             <p className="text-xs text-slate-500 font-medium mt-0.5">Actual vs Planned sales by product across all filtered records</p>
           </div>
-          {/* Sort controls */}
-          <div className="flex items-center gap-2">
-            <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Sort by:</span>
-            {[["plan","Plan"] as const, ["act","Actual"] as const, ["ach","Achiev."] as const].map(([k, label]) => (
-              <button
-                key={k}
-                onClick={() => setSortBy(k)}
-                className={cn(
-                  "px-3 py-1.5 text-[11px] font-bold rounded-lg transition-colors border",
-                  sortBy === k
-                    ? "bg-blue-600 text-white border-blue-600"
-                    : "bg-white text-slate-600 border-slate-200 hover:border-slate-300"
-                )}
-              >
-                {label}
-              </button>
-            ))}
+
+          {/* Right controls: Top N + Sort */}
+          <div className="flex items-center gap-3 flex-wrap">
+            {/* Top N slicer */}
+            <div className="flex items-center gap-2 bg-slate-50 border border-slate-200 rounded-lg px-3 py-1.5">
+              <SlidersHorizontal className="w-3.5 h-3.5 text-slate-500 flex-shrink-0" />
+              <span className="text-[11px] font-bold text-slate-600 whitespace-nowrap">Top</span>
+              <input
+                id="top-n-slicer"
+                type="number"
+                min={1}
+                max={100}
+                value={topN}
+                onChange={e => setTopN(Math.max(1, Math.min(100, Number(e.target.value) || 10)))}
+                className="w-12 h-6 text-center text-[12px] font-bold text-slate-800 border border-slate-200 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 bg-white"
+              />
+              <span className="text-[11px] font-bold text-slate-600 whitespace-nowrap">products</span>
+            </div>
+
+            {/* Sort buttons */}
+            <div className="flex items-center gap-1.5">
+              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Sort:</span>
+              {[["plan","Plan"] as const, ["act","Actual"] as const, ["ach","Achiev."] as const].map(([k, label]) => (
+                <button
+                  key={k}
+                  onClick={() => setSortBy(k)}
+                  className={cn(
+                    "px-3 py-1.5 text-[11px] font-bold rounded-lg transition-colors border",
+                    sortBy === k
+                      ? "bg-blue-600 text-white border-blue-600"
+                      : "bg-white text-slate-600 border-slate-200 hover:border-slate-300"
+                  )}
+                >
+                  {label}
+                </button>
+              ))}
+            </div>
           </div>
         </div>
 
@@ -291,9 +299,8 @@ export default function ProductPromoView({ data, filters }: ProductPromoViewProp
         </div>
       </div>
 
-      {/* Portfolio Share Configuration */}
+      {/* ── 2. Portfolio Share Configuration (with Qtr filter) ───────────── */}
       <div className="bg-white rounded-2xl border border-slate-200 shadow-sm">
-        {/* Section Header */}
         <div className="px-6 py-5 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="flex items-center gap-3">
             <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center shadow-md shadow-indigo-200">
@@ -304,8 +311,25 @@ export default function ProductPromoView({ data, filters }: ProductPromoViewProp
               <p className="text-xs text-slate-500 font-medium mt-0.5">Product portfolio weights per Promo Line — from Input Assumptions sheet</p>
             </div>
           </div>
-          {/* Filters row */}
+
+          {/* Right controls: Qtr filter + Promo line filter */}
           <div className="flex items-center gap-2 flex-wrap">
+            {/* Quarter filter */}
+            <div className="relative">
+              <Calendar className="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+              <select
+                id="portfolio-qtr-filter"
+                value={portfolioQtr}
+                onChange={e => setPortfolioQtr(e.target.value)}
+                className="appearance-none h-9 pl-8 pr-8 bg-white border border-slate-200 hover:border-indigo-300 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-200 rounded-lg text-[12px] font-semibold text-slate-700 shadow-sm cursor-pointer transition-colors"
+              >
+                {availableQuarters.map(q => (
+                  <option key={q} value={q}>{q === "all" ? "All Quarters" : q}</option>
+                ))}
+              </select>
+              <ChevronDown className="absolute right-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-slate-400 pointer-events-none" />
+            </div>
+
             {/* Promo line filter */}
             <div className="relative">
               <select
@@ -320,6 +344,16 @@ export default function ProductPromoView({ data, filters }: ProductPromoViewProp
             </div>
           </div>
         </div>
+
+        {/* Quarter label if filtered */}
+        {portfolioQtr !== "all" && (
+          <div className="px-6 pt-4">
+            <span className="inline-flex items-center gap-1.5 text-[11px] font-bold text-indigo-600 bg-indigo-50 border border-indigo-100 px-2.5 py-1 rounded-full">
+              <Calendar className="w-3 h-3" />
+              Filtered: {portfolioQtr}
+            </span>
+          </div>
+        )}
 
         <div className="p-6 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
           {activeLines.map(line => (
@@ -370,141 +404,6 @@ export default function ProductPromoView({ data, filters }: ProductPromoViewProp
             </div>
           ))}
         </div>
-      </div>
-
-      {/* ── Product Share Detail Section (with Qtr filter + Top N slicer) ── */}
-      <div className="bg-white rounded-2xl border border-slate-200 shadow-sm">
-        {/* Section header */}
-        <div className="px-6 py-5 border-b border-slate-100">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-            <div className="flex items-center gap-3">
-              <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center shadow-md shadow-blue-200">
-                <BarChart3 className="w-4 h-4 text-white" />
-              </div>
-              <div>
-                <h2 className="text-lg font-bold text-slate-900 tracking-tight">Product Share Analysis</h2>
-                <p className="text-xs text-slate-500 font-medium mt-0.5">Detailed share breakdown by product — filter by quarter and top N</p>
-              </div>
-            </div>
-
-            {/* Controls: Qtr + Top N */}
-            <div className="flex items-center gap-2 flex-wrap">
-              {/* Quarter filter */}
-              <div className="relative flex items-center gap-1.5">
-                <Calendar className="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-1/2 -translate-y-1/2 pointer-events-none" />
-                <select
-                  id="portfolio-qtr-filter"
-                  value={portfolioQtr}
-                  onChange={e => setPortfolioQtr(e.target.value)}
-                  className="appearance-none h-9 pl-8 pr-8 bg-white border border-slate-200 hover:border-blue-300 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-200 rounded-lg text-[12px] font-semibold text-slate-700 shadow-sm cursor-pointer transition-colors"
-                >
-                  {availableQuarters.map(q => (
-                    <option key={q} value={q}>{q === "all" ? "All Quarters" : q}</option>
-                  ))}
-                </select>
-                <ChevronDown className="absolute right-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-slate-400 pointer-events-none" />
-              </div>
-
-              {/* Top N slicer */}
-              <div className="flex items-center gap-2 bg-slate-50 border border-slate-200 rounded-lg px-3 py-1.5">
-                <SlidersHorizontal className="w-3.5 h-3.5 text-slate-500 flex-shrink-0" />
-                <span className="text-[11px] font-bold text-slate-600 whitespace-nowrap">Top</span>
-                <input
-                  id="top-n-slicer"
-                  type="number"
-                  min={1}
-                  max={50}
-                  value={topN}
-                  onChange={e => setTopN(Math.max(1, Math.min(50, Number(e.target.value) || 10)))}
-                  className="w-12 h-6 text-center text-[12px] font-bold text-slate-800 border border-slate-200 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 bg-white"
-                />
-                <span className="text-[11px] font-bold text-slate-600 whitespace-nowrap">products</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Share bar */}
-        {portfolioProductTotals.length > 0 && (
-          <div className="px-6 pt-5 pb-2">
-            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2">
-              Combined Share Distribution
-              {portfolioQtr !== "all" && (
-                <span className="ml-2 text-blue-500">— {portfolioQtr}</span>
-              )}
-            </p>
-            <div className="flex h-5 rounded-full overflow-hidden gap-px">
-              {portfolioProductTotals.map((p, i) => (
-                <div
-                  key={p.name}
-                  className="h-full first:rounded-l-full last:rounded-r-full transition-all relative group/bar cursor-default"
-                  style={{ width: `${p.share}%`, background: shareColors[i % shareColors.length] }}
-                  title={`${p.name}: ${p.share.toFixed(1)}%`}
-                >
-                  <span className="absolute inset-0 flex items-center justify-center text-white text-[8px] font-black opacity-0 group-hover/bar:opacity-100 transition-opacity">
-                    {p.share >= 5 ? `${p.share.toFixed(0)}%` : ""}
-                  </span>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* Product rows */}
-        <div className="p-6">
-          {portfolioProductTotals.length === 0 ? (
-            <div className="py-12 text-center text-slate-400 font-medium">
-              No product data available for the selected quarter.
-            </div>
-          ) : (
-            <div className="space-y-3">
-              {portfolioProductTotals.map((p, i) => (
-                <div key={p.name} className="flex items-center gap-4 group">
-                  {/* Rank */}
-                  <span className="w-5 text-[10px] font-black text-slate-400 tabular-nums text-right flex-shrink-0">{i + 1}</span>
-                  {/* Color dot */}
-                  <div
-                    className="w-3 h-3 rounded-sm flex-shrink-0"
-                    style={{ background: shareColors[i % shareColors.length] }}
-                  />
-                  {/* Name */}
-                  <span className="text-[13px] font-bold text-slate-700 w-36 flex-shrink-0 truncate group-hover:text-blue-600 transition-colors" title={p.name}>
-                    {p.name}
-                  </span>
-                  {/* Bar */}
-                  <div className="flex-1 h-2.5 bg-slate-100 rounded-full overflow-hidden border border-slate-200/60">
-                    <div
-                      className="h-full rounded-full transition-all duration-700"
-                      style={{ width: `${p.share}%`, background: shareColors[i % shareColors.length], opacity: 0.8 }}
-                    />
-                  </div>
-                  {/* Share % */}
-                  <span
-                    className="text-[12px] font-black tabular-nums w-14 text-right flex-shrink-0"
-                    style={{ color: shareColors[i % shareColors.length] }}
-                  >
-                    {p.share.toFixed(1)}%
-                  </span>
-                  {/* Plan */}
-                  <span className="text-[11px] font-medium text-slate-400 tabular-nums w-20 text-right flex-shrink-0 hidden md:block">
-                    {formatNum(Math.round(p.plan))} LC
-                  </span>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-
-        {portfolioProductTotals.length > 0 && (
-          <div className="px-6 py-3 border-t border-slate-100 bg-slate-50/40 rounded-b-2xl">
-            <p className="text-[10px] text-slate-400 font-medium">
-              Showing top <span className="font-bold text-slate-600">{portfolioProductTotals.length}</span> of{" "}
-              <span className="font-bold text-slate-600">{portfolioProductTotals.length >= topN ? "many" : portfolioProductTotals.length}</span> products
-              {portfolioQtr !== "all" ? ` for ${portfolioQtr}` : " across all quarters"}.
-              Adjust the top-N slicer above to show more or fewer.
-            </p>
-          </div>
-        )}
       </div>
     </div>
   );
