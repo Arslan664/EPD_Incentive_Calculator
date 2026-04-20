@@ -15,6 +15,7 @@ import DataTable from "@/components/dashboard/DataTable";
 import StatCard from "@/components/dashboard/StatCard";
 import Login from "@/components/auth/Login";
 import StaffView from "@/components/dashboard/views/StaffView";
+import ProductPromoView from "@/components/dashboard/views/ProductPromoView";
 import { TrendingUp, DollarSign, Users, Target } from "lucide-react";
 
 const DEFAULT_FILTERS: Filters = {
@@ -118,6 +119,8 @@ export default function Dashboard() {
         
         {activePage === "staff" ? (
           <StaffView data={dbData} filters={filters} user={user} />
+        ) : activePage === "promo" ? (
+          <ProductPromoView data={filteredData} filters={filters} />
         ) : (
           <>
             {/* Title & Stats Overview */}

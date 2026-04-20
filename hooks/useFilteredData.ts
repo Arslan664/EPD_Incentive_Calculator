@@ -18,7 +18,7 @@ export function useFilteredData(
 ) {
   const augmentedData = useMemo(() => {
     return rawData.map((d, index) => {
-      // Create fallbacks only if fields are missing
+      // Extract year from Quarter string if Year field is not set
       let existingYear = d.Year;
       if (!existingYear && d.Quarter) {
         const match = d.Quarter.match(/\d{4}/);
@@ -26,15 +26,18 @@ export function useFilteredData(
           existingYear = match[0];
         }
       }
-      const fallbackYearStr = index < 50 ? "2017" : "2018";
-      const finalYear = existingYear || fallbackYearStr;
+      // All static fallback data is Kazakhstan Q1 2017 — year extracted from Quarter label is most reliable
+      const finalYear = existingYear || "2017";
 
       return {
         ...d,
-        Country: d.Country || (index % 3 === 0 ? "Kazakhstan" : "Georgia"),
+        // Static data doesn't have Country — all records in comprehensiveData.ts are Kazakhstan
+        // Supabase data will have Country from the city lookup. Fall back to Kazakhstan.
+        Country: d.Country || "Kazakhstan",
         Year: finalYear,
-        Quarter: d.Quarter || `Q2 ${finalYear}`,
-        FLM: d.FLM || (index < 40 ? "Fahad Ayub" : "Abdul Manan")
+        Quarter: d.Quarter || `Q1 ${finalYear}`,
+        // FLM is only relevant when Supabase is live — for static data default to first manager
+        FLM: (d as any).FLM || (index < 40 ? "Fahad Ayub" : "Abdul Manan")
       };
     });
   }, [rawData]);

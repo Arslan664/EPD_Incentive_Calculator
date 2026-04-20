@@ -78,7 +78,8 @@ export default function DetailedView({ data }: DetailedViewProps) {
           const achVal = achRes ? achRes.value : 0;
           
           const tcfaVal = rep.TCFA_Act || "0%";
-          const tcfaNum = parseFloat(tcfaVal.replace("%", ""));
+          const tcfaNum = Math.round(parseFloat(tcfaVal.replace("%", "")));
+          const tcfaDisplay = `${tcfaNum}%`;
           const tarBase = computed.targetBaseLC;
           const tarInc = computed.totalIncentiveLC;
 
@@ -132,7 +133,7 @@ export default function DetailedView({ data }: DetailedViewProps) {
                 <span className={`inline-flex items-center justify-center w-[42px] h-[42px] rounded-full font-bold text-xs border shadow-sm ${
                   tcfaNum >= 90 ? 'bg-emerald-50 text-emerald-600 border-emerald-200' : 'bg-rose-50 text-rose-600 border-rose-200'
                 }`}>
-                  {tcfaVal}
+                  {tcfaDisplay}
                 </span>
               </td>
               

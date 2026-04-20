@@ -128,7 +128,7 @@ export default function FilterBar({
                 : "text-slate-500 hover:text-slate-700 hover:bg-slate-200/50"
             )}
           >
-            Sign-Off
+            To Sign
           </button>
         </div>
       </div>
