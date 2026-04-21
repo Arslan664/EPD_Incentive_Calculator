@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useMemo } from "react";
+import { useState, useCallback, useMemo, useEffect } from "react";
 import { comprehensiveData } from "@/data/comprehensiveData";
 import { useFilteredData } from "@/hooks/useFilteredData";
 import { useSupabaseData } from "@/hooks/useSupabaseData";
@@ -30,7 +30,27 @@ const DEFAULT_FILTERS: Filters = {
 };
 
 export default function Dashboard() {
+  // ── Session persistence via localStorage ──────────────────────────────────
   const [user, setUser] = useState<{ email: string; name: string; role: string } | null>(null);
+  const [sessionLoaded, setSessionLoaded] = useState(false);
+
+  // Restore session on mount
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem("epd_user_session");
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (parsed?.email && parsed?.name && parsed?.role) {
+          setUser(parsed);
+        }
+      }
+    } catch {
+      // Ignore corrupt storage
+    } finally {
+      setSessionLoaded(true);
+    }
+  }, []);
+
   const [filters, setFilters] = useState<Filters>(DEFAULT_FILTERS);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [activePage, setActivePage] = useState("landing");
@@ -39,9 +59,15 @@ export default function Dashboard() {
   const { data: dbData } = useSupabaseData(comprehensiveData);
   const { filteredData, options } = useFilteredData(dbData, filters, user);
 
+  const handleLogin = useCallback((u: { email: string; name: string; role: string }) => {
+    setUser(u);
+    try { localStorage.setItem("epd_user_session", JSON.stringify(u)); } catch {}
+  }, []);
+
   const handleLogout = useCallback(() => {
     setUser(null);
     setFilters(DEFAULT_FILTERS);
+    try { localStorage.removeItem("epd_user_session"); } catch {}
   }, []);
 
   const handleFilterChange = useCallback((key: keyof Filters, value: string) => {
@@ -96,12 +122,27 @@ export default function Dashboard() {
     };
   }, [filteredData]);
 
+  // Don't render until session is loaded (avoids login flash on refresh)
+  if (!sessionLoaded) {
+    return (
+      <div
+        className="min-h-screen flex items-center justify-center"
+        style={{ backgroundColor: "#F4F6FC" }}
+      >
+        <div className="w-8 h-8 border-4 border-transparent border-t-[#000074] rounded-full animate-spin" />
+      </div>
+    );
+  }
+
   if (!user) {
-    return <Login onLogin={setUser} />;
+    return <Login onLogin={handleLogin} />;
   }
 
   return (
-    <div className="flex min-h-screen flex-col bg-transparent font-sans selection:bg-blue-500/30">
+    <div
+      className="flex min-h-screen flex-col font-sans"
+      style={{ backgroundColor: "#F0F4F8", color: "#0F1827" }}
+    >
       <Sidebar 
         isOpen={isSidebarOpen} 
         onClose={() => setIsSidebarOpen(false)} 
@@ -130,10 +171,10 @@ export default function Dashboard() {
             {/* Title & Stats Overview */}
         <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 animate-in fade-in slide-in-from-bottom-4 duration-700">
           <div className="relative">
-            <h2 className="text-3xl font-bold tracking-tight text-slate-900 mb-2">
+            <h2 className="text-3xl font-bold tracking-tight mb-2" style={{ color: "#0B0B3B" }}>
               Medical Representatives Performance
             </h2>
-            <p className="text-slate-500 font-medium">
+            <p className="font-medium" style={{ color: "#5B6A9A" }}>
               Detailed comparison of Actual vs. Planned achievements and incentives.
             </p>
           </div>

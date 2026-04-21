@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import type { IncentiveRecord, Filters } from "@/lib/types";
-import { CheckCircle, MapPin } from "lucide-react";
+import { CheckCircle, MapPin, XCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface StaffViewProps {
@@ -19,17 +19,12 @@ export default function StaffView({ data, filters, user, onCountryChange, countr
   const staffList = useMemo(() => {
     let safeData = data.filter(d => d.Name && d.Name.trim() !== "");
 
-    // Country filter (local to staff view)
     if (selectedCountry !== "all") {
       safeData = safeData.filter(d => d.Country === selectedCountry);
     }
-
-    // Team/PromoLine filter from main filters
     if (filters.team !== "all") {
       safeData = safeData.filter(d => d.PromoLine === filters.team);
     }
-
-    // Search filter
     if (filters.search) {
       const search = filters.search.toLowerCase();
       safeData = safeData.filter(d =>
@@ -38,7 +33,6 @@ export default function StaffView({ data, filters, user, onCountryChange, countr
       );
     }
 
-    // Group by Representative name
     const map = new Map<string, any>();
     safeData.forEach(d => {
       if (!d.Name) return;
@@ -49,24 +43,13 @@ export default function StaffView({ data, filters, user, onCountryChange, countr
           country: d.Country,
           promoLine: d.PromoLine,
           isMaternity: false,
-          q1: false,
-          q2: false,
-          q3: false,
-          q4: false,
+          q1: false, q2: false, q3: false, q4: false,
         });
       }
-
       const rep = map.get(d.Name);
-
-      // Detect maternity leave from Status field or from the data
-      if (
-        d.Status === "Maternity leave" ||
-        d.Status?.toLowerCase().includes("maternity")
-      ) {
+      if (d.Status === "Maternity leave" || d.Status?.toLowerCase().includes("maternity")) {
         rep.isMaternity = true;
       }
-
-      // Map quarter flags from Quarter label
       const q = d.Quarter || "";
       if (q.includes("Q1")) rep.q1 = true;
       if (q.includes("Q2")) rep.q2 = true;
@@ -77,12 +60,10 @@ export default function StaffView({ data, filters, user, onCountryChange, countr
     return Array.from(map.values()).sort((a, b) => a.name.localeCompare(b.name));
   }, [data, filters, selectedCountry, user]);
 
-  // Reset page when data changes
   const totalPages = Math.max(1, Math.ceil(staffList.length / PAGE_SIZE));
   const safePage = Math.min(currentPage, totalPages);
   const paginatedList = staffList.slice((safePage - 1) * PAGE_SIZE, safePage * PAGE_SIZE);
 
-  // Derive unique countries from data
   const countries = useMemo(() => {
     const set = new Set<string>();
     data.forEach(d => { if (d.Country) set.add(d.Country); });
@@ -95,89 +76,168 @@ export default function StaffView({ data, filters, user, onCountryChange, countr
   };
 
   return (
-    <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm animate-in fade-in zoom-in-95 duration-500">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-6 pb-5 border-b border-slate-100 gap-4">
+    <div
+      className="p-6 rounded-2xl animate-in fade-in zoom-in-95 duration-500"
+      style={{
+        backgroundColor: "#FFFFFF",
+        border: "1.5px solid #DDE2F0",
+        boxShadow: "0 2px 12px rgba(0,0,116,0.07)",
+      }}
+    >
+      {/* Header */}
+      <div
+        className="flex flex-col sm:flex-row sm:items-center justify-between mb-6 pb-5 gap-4"
+        style={{ borderBottom: "1.5px solid #DDE2F0" }}
+      >
         <div>
-          <h2 className="text-2xl font-bold text-slate-900 tracking-tight">Staff Input Directory</h2>
-          <p className="text-slate-500 font-medium mt-1">Staff status, maternity leave, and quarterly availability.</p>
+          <h2 className="text-2xl font-bold tracking-tight" style={{ color: "#0F1827" }}>
+            Staff
+          </h2>
+          <p className="font-medium mt-1" style={{ color: "#5B6A9A" }}>
+            Staff status, maternity leave, and quarterly availability.
+          </p>
         </div>
         <div className="flex items-center gap-3">
           {/* Country Filter */}
           <div className="flex flex-col gap-1">
-            <label className="text-[10px] font-bold uppercase tracking-wider text-slate-500">Country</label>
-            <select
-              value={selectedCountry}
-              onChange={e => handleCountryChange(e.target.value)}
-              className="h-9 appearance-none bg-white border border-slate-200 hover:border-slate-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 pl-3 pr-8 rounded-lg text-[13px] font-medium text-slate-700 transition-all outline-none cursor-pointer shadow-sm"
-            >
-              <option value="all">All Countries</option>
-              {countries.map(c => <option key={c} value={c}>{c}</option>)}
-            </select>
+            <label className="text-[10px] font-bold uppercase tracking-wider" style={{ color: "#5B6A9A" }}>
+              Country
+            </label>
+            <div className="relative">
+              <select
+                value={selectedCountry}
+                onChange={e => handleCountryChange(e.target.value)}
+                className="h-9 appearance-none rounded-xl pl-3 pr-8 text-[13px] font-semibold transition-all outline-none cursor-pointer"
+                style={{
+                  backgroundColor: "#FFFFFF",
+                  border: "1.5px solid #DDE2F0",
+                  color: selectedCountry === "all" ? "#8FA0C8" : "#0B0B3B",
+                }}
+                onFocus={e => {
+                  e.target.style.borderColor = "#2C49E4";
+                  e.target.style.boxShadow = "0 0 0 3px rgba(44,73,228,0.12)";
+                }}
+                onBlur={e => {
+                  e.target.style.borderColor = "#DDE2F0";
+                  e.target.style.boxShadow = "none";
+                }}
+              >
+                <option value="all">All Countries</option>
+                {countries.map(c => <option key={c} value={c}>{c}</option>)}
+              </select>
+            </div>
           </div>
-          <div className="bg-blue-50 text-blue-600 px-4 py-2 rounded-xl font-bold text-sm border border-blue-100 self-end">
+
+          {/* Count badge */}
+          <div
+            className="px-4 py-2 rounded-xl font-bold text-sm self-end"
+            style={{
+              backgroundColor: "rgba(11,31,58,0.08)",
+              color: "#0B1F3A",
+              border: "1px solid rgba(11,31,58,0.14)",
+            }}
+          >
             {staffList.length} Staff
           </div>
         </div>
       </div>
 
-      <div className="overflow-x-auto w-full border border-slate-200 rounded-xl">
+      {/* Table */}
+      <div
+        className="overflow-x-auto w-full rounded-xl"
+        style={{ border: "1.5px solid #D0DCE8" }}
+      >
         <table className="w-full text-left border-collapse min-w-[750px]">
-          <thead className="bg-slate-50">
+          <thead style={{ background: "linear-gradient(90deg, #0B1F3A 0%, #122D5A 100%)" }}>
             <tr>
-              <th className="px-6 py-4 text-[11px] font-bold uppercase tracking-wider text-slate-500 w-[50px] text-center border-b border-slate-200">#</th>
-              <th className="px-6 py-4 text-[11px] font-bold uppercase tracking-wider text-slate-500 border-b border-slate-200">Name & Position</th>
-              <th className="px-6 py-4 text-[11px] font-bold uppercase tracking-wider text-slate-500 border-b border-slate-200">Promo Line</th>
-              <th className="px-6 py-4 text-[11px] font-bold uppercase tracking-wider text-slate-500 border-b border-slate-200 text-center">Maternity</th>
-              <th className="px-6 py-4 text-[11px] font-bold uppercase tracking-wider text-slate-500 text-center border-b border-slate-200">Q1</th>
-              <th className="px-6 py-4 text-[11px] font-bold uppercase tracking-wider text-slate-500 text-center border-b border-slate-200">Q2</th>
-              <th className="px-6 py-4 text-[11px] font-bold uppercase tracking-wider text-slate-500 text-center border-b border-slate-200">Q3</th>
-              <th className="px-6 py-4 text-[11px] font-bold uppercase tracking-wider text-slate-500 text-center border-b border-slate-200">Q4</th>
+              {["#", "Name & Position", "Promo Line", "Maternity", "Q1", "Q2", "Q3", "Q4"].map((h, i) => (
+                <th
+                  key={h}
+                  className="px-5 py-4 text-[10px] font-bold uppercase tracking-widest"
+                  style={{
+                    color: "rgba(160,191,206,0.80)",
+                    textAlign: i === 0 || i >= 3 ? "center" : "left",
+                  }}
+                >
+                  {h}
+                </th>
+              ))}
             </tr>
           </thead>
-          <tbody className="divide-y divide-slate-100">
-            {paginatedList.map((row, i) => (
-              <tr key={row.name} className="hover:bg-slate-50/80 transition-colors">
-                <td className="px-6 py-4 text-center text-slate-500 font-mono text-xs">{(safePage - 1) * PAGE_SIZE + i + 1}</td>
-                <td className="px-6 py-4">
-                  <div className="flex flex-col">
-                    <span className="font-bold text-slate-800 text-sm">{row.name}</span>
-                    <div className="flex items-center gap-1.5 text-[11px] text-slate-500 mt-0.5">
-                      <MapPin className="w-3 h-3 flex-shrink-0" />
-                      <span className="truncate">{row.position}</span>
-                      {row.country && (
-                        <>
-                          <span className="text-slate-300">•</span>
-                          <span>{row.country}</span>
-                        </>
-                      )}
-                    </div>
-                  </div>
-                </td>
-                <td className="px-6 py-4">
-                  <span className="inline-flex px-2 py-0.5 bg-blue-50 text-blue-600 border border-blue-100 rounded-md text-xs font-bold">
-                    {row.promoLine || "—"}
-                  </span>
-                </td>
-                <td className="px-6 py-4 text-center">
-                  {row.isMaternity ? (
-                    <span className="inline-flex px-2 py-1 bg-purple-100 text-purple-700 rounded-md text-xs font-bold">Yes</span>
-                  ) : (
-                    <span className="text-slate-300 text-sm">—</span>
-                  )}
-                </td>
-                {[row.q1, row.q2, row.q3, row.q4].map((active, qi) => (
-                  <td key={qi} className="px-6 py-4 text-center">
-                    {active
-                      ? <CheckCircle className="w-5 h-5 text-emerald-500 mx-auto" />
-                      : <span className="text-slate-300 font-medium">—</span>
-                    }
+          <tbody>
+            {paginatedList.map((row, i) => {
+              const isEven = i % 2 === 0;
+              return (
+                <tr
+                  key={row.name}
+                  style={{
+                    backgroundColor: isEven ? "#FFFFFF" : "#F7FAFC",
+                    borderBottom: "1px solid #D0DCE8",
+                    transition: "background-color 0.15s ease",
+                  }}
+                  onMouseEnter={e => (e.currentTarget.style.backgroundColor = "rgba(0,87,168,0.04)")}
+                  onMouseLeave={e => (e.currentTarget.style.backgroundColor = isEven ? "#FFFFFF" : "#F7FAFC")}
+                >
+                  <td className="px-5 py-4 text-center font-mono text-xs" style={{ color: "#8FA0C8" }}>
+                    {(safePage - 1) * PAGE_SIZE + i + 1}
                   </td>
-                ))}
-              </tr>
-            ))}
+                  <td className="px-5 py-4">
+                    <div className="flex flex-col">
+                      <span className="font-bold text-sm" style={{ color: "#0B0B3B" }}>{row.name}</span>
+                      <div className="flex items-center gap-1.5 text-[11px] mt-0.5" style={{ color: "#8FA0C8" }}>
+                        <MapPin className="w-3 h-3 flex-shrink-0" />
+                        <span className="truncate">{row.position}</span>
+                        {row.country && (
+                          <>
+                            <span style={{ color: "#DDE2F0" }}>•</span>
+                            <span>{row.country}</span>
+                          </>
+                        )}
+                      </div>
+                    </div>
+                  </td>
+                  <td className="px-5 py-4">
+                    <span
+                      className="inline-flex px-2.5 py-1 rounded-lg text-xs font-bold"
+                      style={{
+                        backgroundColor: "rgba(0,87,168,0.08)",
+                        color: "#0057A8",
+                        border: "1px solid rgba(0,87,168,0.16)",
+                      }}
+                    >
+                      {row.promoLine || "—"}
+                    </span>
+                  </td>
+                  <td className="px-5 py-4 text-center">
+                    {row.isMaternity ? (
+                      <span
+                        className="inline-flex px-2.5 py-1 rounded-lg text-xs font-bold"
+                        style={{ backgroundColor: "rgba(109,40,217,0.10)", color: "#6D28D9", border: "1px solid rgba(109,40,217,0.20)" }}
+                      >
+                        Yes
+                      </span>
+                    ) : (
+                      <span style={{ color: "#DDE2F0", fontWeight: 500 }}>—</span>
+                    )}
+                  </td>
+                  {[row.q1, row.q2, row.q3, row.q4].map((active, qi) => (
+                    <td key={qi} className="px-5 py-4 text-center">
+                      {active
+                        ? <CheckCircle className="w-5 h-5 mx-auto" style={{ color: "#0E7A4F" }} />
+                        : <span style={{ color: "#DDE2F0", fontWeight: 500 }}>—</span>
+                      }
+                    </td>
+                  ))}
+                </tr>
+              );
+            })}
             {paginatedList.length === 0 && (
               <tr>
-                <td colSpan={8} className="px-6 py-12 text-center text-slate-500 font-medium">
+                <td
+                  colSpan={8}
+                  className="px-6 py-12 text-center font-medium"
+                  style={{ color: "#5B6A9A" }}
+                >
                   No staff entries found.
                 </td>
               </tr>
@@ -186,9 +246,10 @@ export default function StaffView({ data, filters, user, onCountryChange, countr
         </table>
       </div>
 
+      {/* Pagination */}
       {staffList.length > PAGE_SIZE && (
         <div className="mt-4 flex items-center justify-between">
-          <span className="text-xs font-medium text-slate-500">
+          <span className="text-xs font-medium" style={{ color: "#5B6A9A" }}>
             Showing {(safePage - 1) * PAGE_SIZE + 1}–{Math.min(safePage * PAGE_SIZE, staffList.length)} of {staffList.length}
           </span>
           <div className="flex items-center gap-1.5">
@@ -196,12 +257,24 @@ export default function StaffView({ data, filters, user, onCountryChange, countr
               <button
                 key={pg}
                 onClick={() => setCurrentPage(pg)}
-                className={cn(
-                  "px-3 py-1 text-xs font-bold rounded-lg transition-colors",
+                className="px-3 py-1 text-xs font-bold rounded-lg transition-colors"
+                style={
                   safePage === pg
-                    ? "bg-blue-600 text-white shadow-sm"
-                    : "text-slate-600 hover:bg-slate-100 bg-white border border-slate-200/60"
-                )}
+                    ? { backgroundColor: "#000074", color: "#FFFFFF", boxShadow: "0 1px 6px rgba(0,0,116,0.25)" }
+                    : { backgroundColor: "#FFFFFF", color: "#5B6A9A", border: "1.5px solid #DDE2F0" }
+                }
+                onMouseEnter={e => {
+                  if (safePage !== pg) {
+                    (e.currentTarget as HTMLElement).style.backgroundColor = "#D1D9F3";
+                    (e.currentTarget as HTMLElement).style.color = "#000074";
+                  }
+                }}
+                onMouseLeave={e => {
+                  if (safePage !== pg) {
+                    (e.currentTarget as HTMLElement).style.backgroundColor = "#FFFFFF";
+                    (e.currentTarget as HTMLElement).style.color = "#5B6A9A";
+                  }
+                }}
               >
                 {pg}
               </button>

@@ -1,28 +1,111 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 @import "tailwindcss";
 
+/* ============================================================
+   ABBOTT EPD — PREMIUM DESIGN SYSTEM
+   Color Philosophy: Fortune 500 Pharmaceutical — Trust, Precision, Authority
+   Primary: Midnight Navy #0B1F3A | Corporate Blue #0057A8
+   ============================================================ */
+
 @theme {
-  --color-border: #e2e8f0;
-  --color-foreground: #0f172a;
-  --color-background: #f8fafc;
-  --color-primary: #2563eb;
-  --color-glass: rgba(255, 255, 255, 0.95);
-  --color-glass-border: rgba(0, 0, 0, 0.05);
+  --font-sans: "Inter", "system-ui", sans-serif;
+
+  /* ── Abbott Corporate Color Tokens ─────────────────────── */
+  --color-abbott-navy:      #0B1F3A;  /* Structural: headers, sidebars */
+  --color-abbott-navy-mid:  #122D5A;  /* Gradient end / depth */
+  --color-abbott-navy-deep: #091829;  /* Extra depth */
+  --color-abbott-blue:      #0057A8;  /* Primary action: buttons, CTAs */
+  --color-abbott-blue-hover:#004A91;  /* Hover: -10% lightness */
+  --color-abbott-blue-light:#D6E8F5;  /* Tint backgrounds */
+
+  --color-success:          #0E7A4F;
+  --color-warning:          #B45309;
+  --color-danger:           #B91C1C;
+
+  --color-bg:               #F0F4F8;  /* App background */
+  --color-surface:          #FFFFFF;  /* Cards */
+  --color-border:           #D0DCE8;  /* Default borders */
+  --color-border-strong:    #A8BFCE;  /* Strong borders */
+
+  --color-text-primary:     #0F1827;  /* Near-black headings */
+  --color-text-secondary:   #3D5875;  /* Body text */
+  --color-text-muted:       #6B8499;  /* Captions, labels */
+  --color-text-subtle:      #9BAFBE;  /* Placeholders */
 }
 
-@layer base {
-  * {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-  }
-  
-  body {
-    background-color: var(--color-background);
-    color: var(--color-foreground);
-    font-family: 'Inter', sans-serif;
-    font-feature-settings: "rlig" 1, "calt" 1;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-  }
+/* ── Base Resets ─────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; }
+
+html { font-size: 16px; -webkit-font-smoothing: antialiased; }
+
+body {
+  font-family: "Inter", "system-ui", sans-serif;
+  background-color: #F0F4F8;
+  color: #0F1827;
+  line-height: 1.5;
 }
+
+/* ── Scrollbar ───────────────────────────────────────────── */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #A8BFCE; border-radius: 99px; }
+::-webkit-scrollbar-thumb:hover { background: #0057A8; }
+
+/* ── Utility: Abbott Card ────────────────────────────────── */
+.abbott-card {
+  background: #FFFFFF;
+  border: 1.5px solid #D0DCE8;
+  border-radius: 16px;
+  box-shadow: 0 1px 4px rgba(11,31,58,0.06);
+}
+
+.abbott-card:hover {
+  box-shadow: 0 6px 24px rgba(11,31,58,0.10);
+  border-color: #A8BFCE;
+}
+
+/* ── Utility: Primary Button ─────────────────────────────── */
+.btn-abbott-primary {
+  background: linear-gradient(135deg, #0057A8 0%, #004A91 100%);
+  color: #FFFFFF;
+  font-weight: 700;
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(0,87,168,0.30);
+  transition: all 0.2s ease;
+}
+
+.btn-abbott-primary:hover {
+  box-shadow: 0 6px 24px rgba(0,87,168,0.45);
+  transform: translateY(-1px);
+}
+
+/* ── Utility: Table ──────────────────────────────────────── */
+.table-abbott thead tr {
+  background: linear-gradient(90deg, #0B1F3A 0%, #122D5A 100%);
+}
+
+/* ── Utility: Input ──────────────────────────────────────── */
+.input-abbott {
+  background: #FFFFFF;
+  border: 1.5px solid #D0DCE8;
+  border-radius: 12px;
+  color: #0F1827;
+  transition: all 0.15s ease;
+}
+
+.input-abbott:focus {
+  border-color: #0057A8;
+  box-shadow: 0 0 0 3px rgba(0,87,168,0.12);
+  outline: none;
+}
+
+/* ── Tailwind Animate Utilities ──────────────────────────── */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.animate-in { animation: fadeInUp 0.45s ease both; }
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+.animate-spin { animation: spin 0.75s linear infinite; }

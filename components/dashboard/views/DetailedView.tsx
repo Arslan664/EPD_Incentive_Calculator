@@ -21,7 +21,7 @@ function ProductBreakdown({ record }: { record: IncentiveRecord }) {
     (p) => cleanNum(p.plan) > 0 || cleanNum(p.act) > 0
   );
 
-  if (visibleProducts.length === 0) return <span className="text-slate-600">—</span>;
+  if (visibleProducts.length === 0) return <span style={{ color: "#8FA0C8" }}>—</span>;
 
   return (
     <div className="space-y-4 w-full">
@@ -32,19 +32,32 @@ function ProductBreakdown({ record }: { record: IncentiveRecord }) {
         const percent = res ? res.value : 0;
 
         return (
-          <div key={i} className="group/prod w-full">
+          <div key={i} className="w-full">
             <div className="flex justify-between items-end mb-1.5 w-full">
-              <span className="font-bold text-slate-600 text-[10px] uppercase tracking-widest truncate max-w-[120px]" title={p.name || "Product"}>
+              <span
+                className="font-bold text-[10px] uppercase tracking-widest truncate max-w-[120px]"
+                title={p.name || "Product"}
+                style={{ color: "#5B6A9A" }}
+              >
                 {p.name || "Product"}
               </span>
-              <span className={`text-[10px] ${percent >= 100 ? 'text-emerald-600' : 'text-rose-400'} font-bold tabular-nums`}>
-                {formatNum(pAct)} <span className="text-slate-600 font-medium px-1">/</span> {formatNum(pPlan)}
+              <span
+                className="text-[10px] font-bold tabular-nums"
+                style={{ color: percent >= 100 ? "#0E7A4F" : "#B91C1C" }}
+              >
+                {formatNum(pAct)} <span style={{ color: "#8FA0C8", fontWeight: 500 }}>/</span> {formatNum(pPlan)}
               </span>
             </div>
-            <div className="w-full h-1.5 bg-slate-100 rounded-full overflow-hidden border border-slate-200 relative shadow-inner">
+            <div
+              className="w-full h-1.5 rounded-full overflow-hidden relative"
+              style={{ backgroundColor: "#DDE2F0" }}
+            >
               <div
-                className={`h-full rounded-full transition-all duration-1000 ${percent >= 100 ? 'bg-emerald-500 shadow-sm' : 'bg-rose-500 shadow-sm'}`}
-                style={{ width: `${Math.min(percent, 100)}%` }}
+                className="h-full rounded-full transition-all duration-1000"
+                style={{
+                  width: `${Math.min(percent, 100)}%`,
+                  backgroundColor: percent >= 100 ? "#0E7A4F" : "#B91C1C",
+                }}
               />
             </div>
           </div>
@@ -69,38 +82,63 @@ export default function DetailedView({ data }: DetailedViewProps) {
     return 0;
   });
 
+  // Abbott-styled header
+  const thStyle: React.CSSProperties = {
+    padding: "14px 20px",
+    fontSize: "10px",
+    fontWeight: 700,
+    textTransform: "uppercase",
+    letterSpacing: "0.08em",
+    color: "rgba(160,191,206,0.80)",
+    whiteSpace: "nowrap",
+    background: "transparent",
+  };
+
   return (
     <table className="w-full text-left border-collapse min-w-[1400px]">
-      <thead className="bg-slate-50 sticky top-0 z-10 border-b border-slate-200">
+      <thead
+        className="sticky top-0 z-10"
+        style={{ background: "linear-gradient(90deg, #0B1F3A 0%, #122D5A 100%)" }}
+      >
         <tr>
-          {/* Sortable Representative column */}
-          <th className="pl-8 pr-4 py-4 text-[10px] font-semibold uppercase tracking-widest text-slate-500 w-[240px]">
+          <th style={{ ...thStyle, paddingLeft: "32px", width: "240px" }}>
             <button
               onClick={toggleSort}
-              className="flex items-center gap-1 group/sort hover:text-blue-600 transition-colors cursor-pointer select-none"
+              className="flex items-center gap-1 transition-colors cursor-pointer select-none"
+              style={{ color: "rgba(255,255,255,0.80)" }}
+              onMouseEnter={e => {
+                (e.currentTarget as HTMLElement).style.color = "rgba(160,191,206,0.90)";
+              }}
+              onMouseLeave={e => {
+                (e.currentTarget as HTMLElement).style.color = "rgba(160,191,206,0.80)";
+              }}
               title={`Sort ${sortDir === "asc" ? "Z → A" : "A → Z"}`}
             >
               Representative
               <span className="flex flex-col gap-px ml-0.5">
                 <ChevronUp
-                  className={`w-2.5 h-2.5 transition-colors ${sortDir === "asc" ? "text-blue-600" : "text-slate-300 group-hover/sort:text-slate-400"}`}
+                  className="w-2.5 h-2.5"
+                  style={{ color: sortDir === "asc" ? "rgba(160,191,206,0.90)" : "rgba(160,191,206,0.28)" }}
                 />
                 <ChevronDown
-                  className={`w-2.5 h-2.5 transition-colors ${sortDir === "desc" ? "text-blue-600" : "text-slate-300 group-hover/sort:text-slate-400"}`}
+                  className="w-2.5 h-2.5"
+                  style={{ color: sortDir === "desc" ? "rgba(160,191,206,0.90)" : "rgba(160,191,206,0.28)" }}
                 />
               </span>
             </button>
           </th>
-          <th className="px-6 py-4 text-[10px] font-semibold uppercase tracking-widest text-slate-500 w-[180px]">Team / Period</th>
-          <th className="px-6 py-4 text-[10px] font-semibold uppercase tracking-widest text-slate-500 text-right w-[140px]">Plan (LC)</th>
-          <th className="px-8 py-4 text-[10px] font-semibold uppercase tracking-widest text-slate-500 text-right w-[160px]">Actual (LC)</th>
-          <th className="px-8 py-4 text-[10px] font-semibold uppercase tracking-widest text-slate-500 w-[280px]">Product Breakdown</th>
-          <th className="px-6 py-4 text-[10px] font-semibold uppercase tracking-widest text-slate-500 text-center w-[100px]">TCFA %</th>
-          <th className="px-6 py-4 text-[10px] font-semibold uppercase tracking-widest text-slate-500 text-right w-[140px]">Target Base</th>
-          <th className="pr-8 pl-4 py-4 text-[10px] font-bold uppercase tracking-widest text-blue-600 text-right w-[160px]">Final Incentive</th>
+          <th style={{ ...thStyle, width: "180px" }}>Team / Period</th>
+          <th style={{ ...thStyle, textAlign: "right", width: "140px" }}>Plan (LC)</th>
+          <th style={{ ...thStyle, textAlign: "right", width: "160px" }}>Actual (LC)</th>
+          <th style={{ ...thStyle, width: "280px" }}>Product Breakdown</th>
+          <th style={{ ...thStyle, textAlign: "center", width: "100px" }}>TCFA %</th>
+          <th style={{ ...thStyle, textAlign: "right", width: "140px" }}>Target Base</th>
+          <th style={{ ...thStyle, textAlign: "right", width: "160px", color: "#D1D9F3", paddingRight: "32px" }}>
+            Final Incentive
+          </th>
         </tr>
       </thead>
-      <tbody className="divide-y divide-white/5">
+      <tbody>
         {sorted.map((rep, idx) => {
           const tAct = cleanNum(rep.TotalAct);
           const tPlan = cleanNum(rep.TotalPlan);
@@ -116,73 +154,115 @@ export default function DetailedView({ data }: DetailedViewProps) {
           const tcfaDisplay = `${tcfaNum}%`;
           const tarBase = computed.targetBaseLC;
           const tarInc = computed.totalIncentiveLC;
+          const isEven = idx % 2 === 0;
 
           return (
-            <tr key={`${rep.Name}-${idx}`} className="hover:bg-slate-50 transition-colors group animate-in fade-in duration-500 border-b border-slate-100">
-
-              <td className="pl-8 pr-4 py-6 align-top">
+            <tr
+              key={`${rep.Name}-${idx}`}
+              className="animate-in fade-in duration-500"
+              style={{
+                backgroundColor: isEven ? "#FFFFFF" : "#F7FAFC",
+                borderBottom: "1px solid #D0DCE8",
+                transition: "background-color 0.15s ease",
+              }}
+              onMouseEnter={e => (e.currentTarget.style.backgroundColor = "rgba(0,87,168,0.04)")}
+              onMouseLeave={e => (e.currentTarget.style.backgroundColor = isEven ? "#FFFFFF" : "#F7FAFC")}
+            >
+              <td style={{ paddingLeft: "32px", paddingRight: "16px", paddingTop: "20px", paddingBottom: "20px", verticalAlign: "top" }}>
                 <div className="flex flex-col">
-                  <span className="font-bold text-blue-600 hover:text-blue-300 hover:underline cursor-pointer text-[13px] tracking-wide">{rep.Name}</span>
-                  <div className="flex items-center gap-1.5 text-[11px] text-slate-500 mt-1.5 w-full">
+                  <span
+                    className="font-bold text-[13px] tracking-wide cursor-pointer hover:underline"
+                    style={{ color: "#0057A8" }}
+                  >
+                    {rep.Name}
+                  </span>
+                  <div className="flex items-center gap-1.5 text-[11px] mt-1.5 w-full" style={{ color: "#8FA0C8" }}>
                     <MapPin className="w-3 h-3 flex-shrink-0" />
                     <span className="truncate max-w-[120px]" title={rep.Position}>{rep.Position}</span>
-                    <span className="text-slate-600">|</span>
+                    <span style={{ color: "#DDE2F0" }}>|</span>
                     <span className="truncate max-w-[80px]">{rep.Country}</span>
                   </div>
                 </div>
               </td>
 
-              <td className="px-6 py-6 align-top">
-                <div className="flex flex-col gap-2.5 items-start">
-                  <span className="inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-bold bg-blue-50 text-blue-600 border border-blue-100 leading-tight tracking-wider">
+              <td style={{ padding: "20px 24px", verticalAlign: "top" }}>
+                <div className="flex flex-col gap-2 items-start">
+                  <span
+                    className="inline-flex items-center px-2 py-0.5 rounded-lg text-[10px] font-bold leading-tight tracking-wider"
+                    style={{
+                      backgroundColor: "rgba(0,87,168,0.08)",
+                      color: "#0057A8",
+                      border: "1px solid rgba(0,87,168,0.16)",
+                    }}
+                  >
                     {rep.PromoLine || "Unknown"}
                   </span>
-                  <span className="text-[11px] font-semibold text-slate-500 uppercase tracking-widest">{rep.Quarter}</span>
+                  <span className="text-[11px] font-semibold uppercase tracking-widest" style={{ color: "#8FA0C8" }}>
+                    {rep.Quarter}
+                  </span>
                 </div>
               </td>
 
-              <td className="px-6 py-6 text-right align-top pt-8">
-                <span className="text-slate-600 text-sm tabular-nums tracking-tight font-medium">
+              <td style={{ padding: "20px 24px", textAlign: "right", verticalAlign: "top", paddingTop: "28px" }}>
+                <span className="text-sm tabular-nums tracking-tight font-medium" style={{ color: "#5B6A9A" }}>
                   {formatNum(tPlan)}
                 </span>
               </td>
 
-              <td className="px-8 py-6 text-right align-top">
+              <td style={{ padding: "20px 32px", textAlign: "right", verticalAlign: "top" }}>
                 <div className="flex flex-col items-end gap-1.5">
-                  <span className="text-slate-800 text-[1.05rem] tabular-nums tracking-tight font-medium">{formatNum(tAct)}</span>
-                  <span className={`text-[10px] font-bold px-2 py-0.5 rounded border ${
-                    achVal >= 100 ? 'bg-emerald-50 text-emerald-600 border-emerald-200' :
-                    achVal > 0 ? 'bg-amber-50 text-amber-600 border-amber-200' : 'bg-rose-50 text-rose-600 border-rose-200'
-                  }`}>
+                  <span className="text-[1.05rem] tabular-nums tracking-tight font-medium" style={{ color: "#0B0B3B" }}>
+                    {formatNum(tAct)}
+                  </span>
+                  <span
+                    className="text-[10px] font-bold px-2 py-0.5 rounded"
+                    style={
+                      achVal >= 100
+                        ? { backgroundColor: "rgba(14,122,79,0.10)", color: "#0E7A4F", border: "1px solid rgba(14,122,79,0.20)" }
+                        : achVal > 0
+                        ? { backgroundColor: "rgba(180,83,9,0.08)", color: "#B45309", border: "1px solid rgba(180,83,9,0.20)" }
+                        : { backgroundColor: "rgba(185,28,28,0.08)", color: "#B91C1C", border: "1px solid rgba(185,28,28,0.18)" }
+                    }
+                  >
                     {achVal}%
                   </span>
                 </div>
               </td>
 
-              <td className="px-8 py-6 align-top">
+              <td style={{ padding: "20px 32px", verticalAlign: "top" }}>
                 <ProductBreakdown record={rep} />
               </td>
 
-              <td className="px-6 py-6 text-center align-top pt-7">
-                <span className={`inline-flex items-center justify-center w-[42px] h-[42px] rounded-full font-bold text-xs border shadow-sm ${
-                  tcfaNum >= 90 ? 'bg-emerald-50 text-emerald-600 border-emerald-200' : 'bg-rose-50 text-rose-600 border-rose-200'
-                }`}>
+              <td style={{ padding: "20px 24px", textAlign: "center", verticalAlign: "top", paddingTop: "24px" }}>
+                <span
+                  className="inline-flex items-center justify-center w-[42px] h-[42px] rounded-full font-bold text-xs border"
+                  style={
+                    tcfaNum >= 90
+                      ? { backgroundColor: "rgba(14,122,79,0.10)", color: "#0E7A4F", border: "1.5px solid rgba(14,122,79,0.25)" }
+                      : { backgroundColor: "rgba(185,28,28,0.08)", color: "#B91C1C", border: "1.5px solid rgba(185,28,28,0.20)" }
+                  }
+                >
                   {tcfaDisplay}
                 </span>
               </td>
 
-              <td className="px-6 py-6 text-right align-top pt-8">
-                <span className="font-medium text-slate-600 text-sm tabular-nums tracking-tight">
+              <td style={{ padding: "20px 24px", textAlign: "right", verticalAlign: "top", paddingTop: "28px" }}>
+                <span className="font-medium text-sm tabular-nums tracking-tight" style={{ color: "#5B6A9A" }}>
                   {formatNum(tarBase)}
                 </span>
               </td>
 
-              <td className="pr-8 pl-4 py-6 text-right align-top pt-7">
+              <td style={{ paddingRight: "32px", paddingLeft: "16px", padding: "20px 16px 20px 16px", paddingRight: "32px", textAlign: "right", verticalAlign: "top", paddingTop: "24px" }}>
                 <div className="flex flex-col items-end gap-0.5">
-                  <span className={`text-xl font-bold tabular-nums tracking-tight ${tarInc > 0 ? 'text-emerald-600' : 'text-slate-600'}`}>
+                  <span
+                    className="text-xl font-black tabular-nums tracking-tight"
+                    style={{ color: tarInc > 0 ? "#0E7A4F" : "#5B6A9A" }}
+                  >
                     {tarInc > 0 ? formatNum(tarInc) : "0"}
                   </span>
-                  <span className="text-[9px] font-bold text-slate-500 uppercase tracking-widest leading-none">LC</span>
+                  <span className="text-[9px] font-bold uppercase tracking-widest leading-none" style={{ color: "#8FA0C8" }}>
+                    LC
+                  </span>
                 </div>
               </td>
             </tr>

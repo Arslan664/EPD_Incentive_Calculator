@@ -10,6 +10,16 @@ interface SignOffViewProps {
   startIndex?: number;
 }
 
+const thStyle: React.CSSProperties = {
+  padding: "14px 20px",
+  fontSize: "11px",
+  fontWeight: 700,
+  textTransform: "uppercase",
+  letterSpacing: "0.08em",
+  color: "rgba(160,191,206,0.80)",
+  whiteSpace: "nowrap",
+};
+
 export default function SignOffView({ data, filters, fullData, startIndex = 0 }: SignOffViewProps) {
   const computedRows = data
     .filter((d) => d.Name && d.Name.trim() !== "")
@@ -54,82 +64,165 @@ export default function SignOffView({ data, filters, fullData, startIndex = 0 }:
     : 0;
 
   return (
-    <div className="flex flex-col bg-white">
-      {/* Corporate Header */}
-      <div className="bg-white px-8 py-8 border-b border-slate-200">
+    <div className="flex flex-col" style={{ backgroundColor: "#FFFFFF" }}>
+
+      {/* Corporate Document Header */}
+      <div
+        className="px-8 py-8"
+        style={{ borderBottom: "3px solid #000074" }}
+      >
         <div className="flex justify-between items-start">
           <div>
-            <div className="text-[10px] font-extrabold uppercase tracking-[0.2em] text-slate-500 mb-2">Abbott</div>
-            <div className="text-sm font-medium tracking-wide text-blue-600 mb-4">Established Pharmaceuticals Division</div>
-            <h2 className="text-3xl font-extrabold tracking-tight text-slate-900">Statement of Bonuses</h2>
+            {/* Abbott "A" mark */}
+            <div className="flex items-center gap-3 mb-4">
+              <div
+                className="w-10 h-10 rounded-xl flex items-center justify-center font-black text-xl flex-shrink-0"
+                style={{
+                  background: "linear-gradient(135deg, #0B1F3A 0%, #122D5A 100%)",
+                  color: "#FFFFFF",
+                  letterSpacing: "-0.05em",
+                }}
+              >
+                A
+              </div>
+              <div>
+                <p className="text-[10px] font-bold uppercase tracking-[0.20em]" style={{ color: "#0B1F3A" }}>
+                  Abbott Laboratories
+                </p>
+                <p className="text-[12px] font-semibold" style={{ color: "#0057A8" }}>
+                  Established Pharmaceuticals Division
+                </p>
+              </div>
+            </div>
+            <h2 className="text-3xl font-extrabold tracking-tight" style={{ color: "#0B0B3B" }}>
+              Statement of Bonuses
+            </h2>
           </div>
-          <div className="flex flex-col items-end gap-1 bg-slate-50 px-5 py-3 rounded-lg border border-slate-200">
-            <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Region / Period</span>
-            <span className="font-bold text-lg text-slate-800">
-              {filters.country === "all" ? "All Regions" : filters.country} 
-              <span className="text-slate-300 mx-2">•</span> 
-              {filters.quarter === "all" ? (data.length > 0 ? data[0].Quarter || "All Quarters" : "All Quarters") : filters.quarter}
+          <div
+            className="flex flex-col items-end gap-1 px-5 py-3 rounded-xl"
+            style={{ backgroundColor: "#F4F6FC", border: "1.5px solid #DDE2F0" }}
+          >
+            <span className="text-[10px] font-bold uppercase tracking-wider" style={{ color: "#5B6A9A" }}>Region / Period</span>
+            <span className="font-bold text-lg" style={{ color: "#0B0B3B" }}>
+              {filters.country === "all" ? "All Regions" : filters.country}
+              <span style={{ color: "#DDE2F0", margin: "0 8px" }}>•</span>
+              {filters.quarter === "all"
+                ? data.length > 0 ? data[0].Quarter || "All Quarters" : "All Quarters"
+                : filters.quarter}
             </span>
           </div>
         </div>
       </div>
 
       <table className="w-full text-left border-collapse min-w-[1100px]">
-        <thead className="bg-slate-50 border-b border-slate-200">
+        <thead
+          className="sticky top-0 z-10"
+          style={{ background: "linear-gradient(90deg, #0B1F3A 0%, #122D5A 100%)", borderBottom: "none" }}
+        >
           <tr>
-            <th className="px-6 py-4 text-[11px] font-bold uppercase tracking-wider text-slate-500 text-center w-[50px]">#</th>
-            <th className="px-6 py-4 text-[11px] font-bold uppercase tracking-wider text-slate-500">Name</th>
-            <th className="px-6 py-4 text-[11px] font-bold uppercase tracking-wider text-slate-500">Position</th>
-            <th className="px-6 py-4 text-[11px] font-bold uppercase tracking-wider text-slate-500 text-right">Target Inc, LC</th>
-            <th className="px-6 py-4 text-[11px] font-bold uppercase tracking-wider text-slate-500 text-right">Target Inc, USD</th>
-            <th className="px-6 py-4 text-[11px] font-bold uppercase tracking-wider text-slate-500 text-right">Inc (Sales), LC</th>
-            <th className="px-6 py-4 text-[11px] font-bold uppercase tracking-wider text-slate-500 text-right">Inc (Fld Work), LC</th>
-            <th className="px-6 py-4 text-[11px] font-bold uppercase tracking-wider text-slate-900 text-right bg-blue-50/50">Total Inc, LC</th>
-            <th className="px-6 py-4 text-[11px] font-bold uppercase tracking-wider text-slate-500 text-right">Total Inc, USD</th>
-            <th className="px-6 py-4 text-[11px] font-bold uppercase tracking-wider text-slate-500 text-center">Payout vs Target</th>
+            <th style={{ ...thStyle, textAlign: "center", width: "50px" }}>#</th>
+            <th style={thStyle}>Name</th>
+            <th style={thStyle}>Position</th>
+            <th style={{ ...thStyle, textAlign: "right" }}>Target Inc, LC</th>
+            <th style={{ ...thStyle, textAlign: "right" }}>Target Inc, USD</th>
+            <th style={{ ...thStyle, textAlign: "right" }}>Inc (Sales), LC</th>
+            <th style={{ ...thStyle, textAlign: "right" }}>Inc (Fld Work), LC</th>
+            <th style={{ ...thStyle, textAlign: "right", color: "#D1D9F3" }}>Total Inc, LC</th>
+            <th style={{ ...thStyle, textAlign: "right" }}>Total Inc, USD</th>
+            <th style={{ ...thStyle, textAlign: "center" }}>Payout vs Target</th>
           </tr>
         </thead>
-        <tbody className="divide-y divide-slate-100">
-          {computedRows.map((row) => (
-            <tr key={`signoff-${row.rowNum}`} className="text-sm hover:bg-slate-50/80 transition-colors animate-in fade-in duration-300">
-              <td className="px-6 py-4 text-center text-slate-500 font-mono text-xs">{row.rowNum}</td>
-              <td className="px-6 py-4 font-bold text-blue-600 whitespace-nowrap">{row.name}</td>
-              <td className="px-6 py-4 text-slate-500 text-xs truncate max-w-[160px]" title={row.position}>{row.position}</td>
-              <td className="px-6 py-4 text-right text-slate-600 font-medium tabular-nums">{formatNum(Math.round(row.targetIncentiveLC))}</td>
-              <td className="px-6 py-4 text-right text-slate-600 tabular-nums">{formatNum(Math.round(row.targetIncentiveUSD))}</td>
-              <td className="px-6 py-4 text-right font-medium text-slate-800 tabular-nums">{formatNum(row.incSalesResultLC)}</td>
-              <td className="px-6 py-4 text-right font-medium text-slate-800 tabular-nums">{formatNum(row.incFieldWorkLC)}</td>
-              <td className="px-6 py-4 text-right bg-blue-50/20">
-                <span className={`text-[1.05rem] font-black tracking-tight tabular-nums ${row.totalIncentiveLC > 0 ? 'text-emerald-600' : 'text-slate-600'}`}>
-                  {row.totalIncentiveLC > 0 ? formatNum(row.totalIncentiveLC) : "0"}
-                </span>
-              </td>
-              <td className="px-6 py-4 text-right text-slate-700 font-medium tabular-nums">{formatNum(row.totalIncentiveUSD)}</td>
-              <td className="px-6 py-4 text-center">
-                <span className={`inline-flex px-2 py-0.5 rounded text-[10px] font-bold ${
-                  row.payoutVsTargetPct >= 100 ? 'bg-emerald-100/80 text-emerald-700' : 
-                  row.payoutVsTargetPct > 0 ? 'bg-amber-100 text-amber-700' : 'bg-rose-100/80 text-rose-700'
-                }`}>
-                  {row.payoutVsTargetPct}%
-                </span>
-              </td>
-            </tr>
-          ))}
-          
-          <tr className="bg-slate-50 border-t-2 border-slate-200">
+        <tbody>
+          {computedRows.map((row, idx) => {
+            const isEven = idx % 2 === 0;
+            return (
+              <tr
+                key={`signoff-${row.rowNum}`}
+                className="text-sm animate-in fade-in duration-300"
+                style={{
+                  backgroundColor: isEven ? "#FFFFFF" : "#F7FAFC",
+                  borderBottom: "1px solid #D0DCE8",
+                  transition: "background-color 0.15s ease",
+                }}
+                onMouseEnter={e => (e.currentTarget.style.backgroundColor = "rgba(0,87,168,0.04)")}
+                onMouseLeave={e => (e.currentTarget.style.backgroundColor = isEven ? "#FFFFFF" : "#F7FAFC")}
+              >
+                <td className="px-5 py-4 text-center font-mono text-xs" style={{ color: "#8FA0C8" }}>{row.rowNum}</td>
+                <td className="px-5 py-4 font-bold whitespace-nowrap" style={{ color: "#2C49E4" }}>{row.name}</td>
+                <td className="px-5 py-4 text-xs truncate max-w-[160px]" title={row.position} style={{ color: "#5B6A9A" }}>
+                  {row.position}
+                </td>
+                <td className="px-5 py-4 text-right tabular-nums font-medium" style={{ color: "#5B6A9A" }}>
+                  {formatNum(Math.round(row.targetIncentiveLC))}
+                </td>
+                <td className="px-5 py-4 text-right tabular-nums" style={{ color: "#5B6A9A" }}>
+                  {formatNum(Math.round(row.targetIncentiveUSD))}
+                </td>
+                <td className="px-5 py-4 text-right tabular-nums font-medium" style={{ color: "#0B0B3B" }}>
+                  {formatNum(row.incSalesResultLC)}
+                </td>
+                <td className="px-5 py-4 text-right tabular-nums font-medium" style={{ color: "#0B0B3B" }}>
+                  {formatNum(row.incFieldWorkLC)}
+                </td>
+                <td className="px-5 py-4 text-right" style={{ backgroundColor: "rgba(0,87,168,0.04)" }}>
+                  <span
+                    className="text-[1.05rem] font-black tracking-tight tabular-nums"
+                    style={{ color: row.totalIncentiveLC > 0 ? "#0E7A4F" : "#5B6A9A" }}
+                  >
+                    {row.totalIncentiveLC > 0 ? formatNum(row.totalIncentiveLC) : "0"}
+                  </span>
+                </td>
+                <td className="px-5 py-4 text-right tabular-nums font-medium" style={{ color: "#5B6A9A" }}>
+                  {formatNum(row.totalIncentiveUSD)}
+                </td>
+                <td className="px-5 py-4 text-center">
+                  <span
+                    className="inline-flex px-2 py-0.5 rounded text-[10px] font-bold"
+                    style={
+                      row.payoutVsTargetPct >= 100
+                        ? { backgroundColor: "rgba(14,122,79,0.10)", color: "#0E7A4F" }
+                        : row.payoutVsTargetPct > 0
+                        ? { backgroundColor: "rgba(180,83,9,0.08)", color: "#B45309" }
+                        : { backgroundColor: "rgba(185,28,28,0.08)", color: "#B91C1C" }
+                    }
+                  >
+                    {row.payoutVsTargetPct}%
+                  </span>
+                </td>
+              </tr>
+            );
+          })}
+
+          {/* Totals row */}
+          <tr style={{ backgroundColor: "#0B1F3A", borderTop: "2px solid #0B1F3A" }}>
             <td></td>
-            <td className="px-6 py-5 font-black text-slate-900 text-sm">TOTAL SUMMARY</td>
+            <td className="px-5 py-5 font-black text-sm" style={{ color: "#FFFFFF" }}>TOTAL SUMMARY</td>
             <td></td>
-            <td className="px-6 py-5 text-right font-bold text-slate-800 tabular-nums">{formatNum(Math.round(totals.targetIncentiveLC))}</td>
-            <td className="px-6 py-5 text-right font-bold text-slate-800 tabular-nums">{formatNum(Math.round(totals.targetIncentiveUSD))}</td>
-            <td className="px-6 py-5 text-right font-bold text-slate-800 tabular-nums">{formatNum(Math.round(totals.incSalesResultLC))}</td>
-            <td className="px-6 py-5 text-right font-bold text-slate-800 tabular-nums">{formatNum(Math.round(totals.incFieldWorkLC))}</td>
-            <td className="px-6 py-5 text-right bg-blue-50">
-              <span className="text-[1.1rem] font-black text-emerald-700 tabular-nums tracking-tight">{formatNum(Math.round(totals.totalIncentiveLC))}</span>
+            <td className="px-5 py-5 text-right font-bold tabular-nums" style={{ color: "#D1D9F3" }}>
+              {formatNum(Math.round(totals.targetIncentiveLC))}
             </td>
-            <td className="px-6 py-5 text-right font-bold text-slate-800 tabular-nums">{formatNum(Math.round(totals.totalIncentiveUSD))}</td>
-            <td className="px-6 py-5 text-center">
-              <span className="inline-flex px-3 py-1 bg-emerald-100 text-emerald-700 rounded-md text-xs font-bold shadow-sm">
+            <td className="px-5 py-5 text-right font-bold tabular-nums" style={{ color: "#D1D9F3" }}>
+              {formatNum(Math.round(totals.targetIncentiveUSD))}
+            </td>
+            <td className="px-5 py-5 text-right font-bold tabular-nums" style={{ color: "#D1D9F3" }}>
+              {formatNum(Math.round(totals.incSalesResultLC))}
+            </td>
+            <td className="px-5 py-5 text-right font-bold tabular-nums" style={{ color: "#D1D9F3" }}>
+              {formatNum(Math.round(totals.incFieldWorkLC))}
+            </td>
+            <td className="px-5 py-5 text-right" style={{ backgroundColor: "rgba(0,87,168,0.20)" }}>
+              <span className="text-[1.1rem] font-black tabular-nums tracking-tight" style={{ color: "#86EFAC" }}>
+                {formatNum(Math.round(totals.totalIncentiveLC))}
+              </span>
+            </td>
+            <td className="px-5 py-5 text-right font-bold tabular-nums" style={{ color: "#D1D9F3" }}>
+              {formatNum(Math.round(totals.totalIncentiveUSD))}
+            </td>
+            <td className="px-5 py-5 text-center">
+              <span
+                className="inline-flex px-3 py-1 rounded-md text-xs font-bold"
+                style={{ backgroundColor: "rgba(14,122,79,0.25)", color: "#86EFAC" }}
+              >
                 {totalPayoutPct}%
               </span>
             </td>
@@ -138,9 +231,15 @@ export default function SignOffView({ data, filters, fullData, startIndex = 0 }:
       </table>
 
       {/* Signature Area */}
-      <div className="p-8 bg-white border-t border-slate-100">
-        <h3 className="mb-10 text-[10px] font-bold uppercase tracking-[0.15em] text-slate-500">Signatures Required For Approval</h3>
-        <div className="flex flex-wrap gap-x-12 gap-y-12">
+      <div className="p-8" style={{ borderTop: "1px solid #DDE2F0" }}>
+        <div className="flex items-center gap-2 mb-8">
+          <div className="h-px flex-1" style={{ backgroundColor: "#DDE2F0" }} />
+          <h3 className="text-[10px] font-bold uppercase tracking-[0.18em]" style={{ color: "#5B6A9A" }}>
+            Signatures Required For Approval
+          </h3>
+          <div className="h-px flex-1" style={{ backgroundColor: "#DDE2F0" }} />
+        </div>
+        <div className="flex flex-wrap gap-x-12 gap-y-10">
           {[
             "National Sales Manager",
             "General Manager",
@@ -149,10 +248,10 @@ export default function SignOffView({ data, filters, fullData, startIndex = 0 }:
             "CIS Finance Director EPD"
           ].map((role) => (
             <div key={role} className="flex min-w-[200px] flex-col gap-2 flex-1">
-              <span className="text-[10px] font-bold uppercase tracking-wider text-slate-600 leading-normal">
+              <span className="text-[10px] font-bold uppercase tracking-wider leading-normal" style={{ color: "#5B6A9A" }}>
                 {role}
               </span>
-              <div className="mt-8 border-b-2 border-slate-300 h-2"></div>
+              <div className="h-2" style={{ borderBottom: "2px solid #0B1F3A" }} />
             </div>
           ))}
         </div>

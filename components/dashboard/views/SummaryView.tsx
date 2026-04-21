@@ -13,6 +13,17 @@ interface SummaryViewProps {
   startIndex?: number;
 }
 
+const thStyle: React.CSSProperties = {
+  padding: "14px 20px",
+  fontSize: "10px",
+  fontWeight: 700,
+  textTransform: "uppercase",
+  letterSpacing: "0.08em",
+  color: "rgba(160,191,206,0.80)",
+  whiteSpace: "nowrap",
+  background: "transparent",
+};
+
 export default function SummaryView({ data, fullData, startIndex = 0 }: SummaryViewProps) {
   const computedRows: ComputedSummaryRow[] = data
     .filter((d) => d.Name && d.Name.trim() !== "")
@@ -23,68 +34,121 @@ export default function SummaryView({ data, fullData, startIndex = 0 }: SummaryV
 
   return (
     <table className="w-full text-left border-collapse min-w-[1700px] text-sm">
-      <thead className="bg-white sticky top-0 z-10 shadow-[0_1px_0_0_#f1f5f9]">
+      <thead
+        className="sticky top-0 z-10"
+        style={{ background: "linear-gradient(90deg, #0B1F3A 0%, #122D5A 100%)" }}
+      >
         <tr>
-          <th className="px-6 py-4 text-[11px] font-bold uppercase tracking-wider text-slate-500 w-[50px] text-center">No</th>
-          <th className="px-6 py-4 text-[11px] font-bold uppercase tracking-wider text-slate-500 w-[200px]">Representative</th>
-          <th className="px-6 py-4 text-[11px] font-bold uppercase tracking-wider text-slate-500 text-right">Target Inc (QTR)</th>
-          <th className="px-6 py-4 text-[11px] font-bold uppercase tracking-wider text-slate-500 text-center">Reimb. %</th>
-          <th className="px-6 py-4 text-[11px] font-bold uppercase tracking-wider text-slate-500 text-right">Target Base LC</th>
-          <th className="px-6 py-4 text-[11px] font-bold uppercase tracking-wider text-slate-500 text-right">Target (Sales)</th>
-          <th className="px-6 py-4 text-[11px] font-bold uppercase tracking-wider text-slate-500 text-right">P1 Val</th>
-          <th className="px-6 py-4 text-[11px] font-bold uppercase tracking-wider text-slate-500 text-right">P2 Val</th>
-          <th className="px-6 py-4 text-[11px] font-bold uppercase tracking-wider text-slate-500 text-right">P3 Val</th>
-          <th className="px-6 py-4 text-[11px] font-bold uppercase tracking-wider text-slate-500 text-bg-slate-100/50 text-right text-slate-700">Inc (Sales)</th>
-          <th className="px-6 py-4 text-[11px] font-bold uppercase tracking-wider text-slate-500 text-right">Target (TCFA)</th>
-          <th className="px-6 py-4 text-[11px] font-bold uppercase tracking-wider text-slate-500 text-right">Target (TIC)</th>
-          <th className="px-6 py-4 text-[11px] font-bold uppercase tracking-wider text-slate-500 text-right">Inc (TCFA)</th>
-          <th className="px-6 py-4 text-[11px] font-bold uppercase tracking-wider text-slate-500 text-right">Inc (TIC)</th>
-          <th className="px-6 py-4 text-[11px] font-bold uppercase tracking-wider text-slate-500 text-bg-slate-100/50 text-right text-slate-700">Field Work</th>
-          <th className="px-6 py-4 text-[11px] font-bold uppercase tracking-wider text-slate-500 text-right">Total Incentive</th>
+          <th style={{ ...thStyle, textAlign: "center", width: "50px" }}>No</th>
+          <th style={{ ...thStyle, width: "200px" }}>Representative</th>
+          <th style={{ ...thStyle, textAlign: "right" }}>Target Inc (QTR)</th>
+          <th style={{ ...thStyle, textAlign: "center" }}>Reimb. %</th>
+          <th style={{ ...thStyle, textAlign: "right" }}>Target Base LC</th>
+          <th style={{ ...thStyle, textAlign: "right" }}>Target (Sales)</th>
+          <th style={{ ...thStyle, textAlign: "right" }}>P1 Val</th>
+          <th style={{ ...thStyle, textAlign: "right" }}>P2 Val</th>
+          <th style={{ ...thStyle, textAlign: "right" }}>P3 Val</th>
+          <th style={{ ...thStyle, textAlign: "right", color: "#D1D9F3" }}>Inc (Sales)</th>
+          <th style={{ ...thStyle, textAlign: "right" }}>Target (TCFA)</th>
+          <th style={{ ...thStyle, textAlign: "right" }}>Target (TIC)</th>
+          <th style={{ ...thStyle, textAlign: "right" }}>Inc (TCFA)</th>
+          <th style={{ ...thStyle, textAlign: "right" }}>Inc (TIC)</th>
+          <th style={{ ...thStyle, textAlign: "right", color: "#D1D9F3" }}>Field Work</th>
+          <th style={{ ...thStyle, textAlign: "right", color: "#D1D9F3" }}>Total Incentive</th>
         </tr>
       </thead>
-      <tbody className="divide-y divide-slate-100">
-        {computedRows.map((row, i) => (
-          <tr key={`${row.name}-summary-${i}`} className="hover:bg-slate-50/80 transition-colors animate-in fade-in duration-300">
-            <td className="px-6 py-4 text-center text-slate-500 font-mono text-xs">{i + 1 + startIndex}</td>
-            
-            <td className="px-6 py-4">
-               <div className="flex flex-col">
-                  <span className="font-bold text-blue-600 hover:underline cursor-pointer text-sm whitespace-nowrap">{row.name}</span>
-                  <div className="flex items-center gap-1 text-[11px] text-slate-500 mt-1 max-w-[180px]">
+      <tbody>
+        {computedRows.map((row, i) => {
+          const isEven = i % 2 === 0;
+          return (
+            <tr
+              key={`${row.name}-summary-${i}`}
+              className="animate-in fade-in duration-300"
+              style={{
+                backgroundColor: isEven ? "#FFFFFF" : "#F7FAFC",
+                borderBottom: "1px solid #D0DCE8",
+                transition: "background-color 0.15s ease",
+              }}
+              onMouseEnter={e => (e.currentTarget.style.backgroundColor = "rgba(0,87,168,0.04)")}
+              onMouseLeave={e => (e.currentTarget.style.backgroundColor = isEven ? "#FFFFFF" : "#F7FAFC")}
+            >
+              <td className="px-5 py-4 text-center font-mono text-xs" style={{ color: "#8FA0C8" }}>
+                {i + 1 + startIndex}
+              </td>
+
+              <td className="px-5 py-4">
+                <div className="flex flex-col">
+                  <span className="font-bold text-sm whitespace-nowrap cursor-pointer hover:underline" style={{ color: "#2C49E4" }}>
+                    {row.name}
+                  </span>
+                  <div className="flex items-center gap-1 text-[11px] mt-1 max-w-[180px]" style={{ color: "#8FA0C8" }}>
                     <MapPin className="w-3 h-3 flex-shrink-0" />
                     <span className="truncate" title={row.position}>{row.position}</span>
                   </div>
                 </div>
-            </td>
-            
-            <td className="px-6 py-4 text-right text-slate-600 font-medium tabular-nums">{formatNum(Math.round(row.targetForQuarterLC))}</td>
-            <td className="px-6 py-4 text-center text-slate-500">{row.reimbursablePct}%</td>
-            <td className="px-6 py-4 text-right font-medium text-slate-700 tabular-nums">{formatNum(Math.round(row.targetBaseLC))}</td>
-            <td className="px-6 py-4 text-right text-slate-600 tabular-nums">{formatNum(Math.round(row.targetSalesResult))}</td>
-            <td className="px-6 py-4 text-right text-slate-500 tabular-nums">{formatNum(row.product1Amount)}</td>
-            <td className="px-6 py-4 text-right text-slate-500 tabular-nums">{formatNum(row.product2Amount)}</td>
-            <td className="px-6 py-4 text-right text-slate-500 tabular-nums">{formatNum(row.product3Amount)}</td>
-            
-            <td className="px-6 py-4 text-right bg-slate-50/30 font-semibold text-slate-800 tabular-nums">{formatNum(row.incSalesResult)}</td>
-            
-            <td className="px-6 py-4 text-right text-slate-600 tabular-nums">{formatNum(Math.round(row.targetTCFA))}</td>
-            <td className="px-6 py-4 text-right text-slate-600 tabular-nums">{formatNum(Math.round(row.targetCoaching))}</td>
-            <td className="px-6 py-4 text-right text-slate-600 tabular-nums">{formatNum(row.incTCFA)}</td>
-            <td className="px-6 py-4 text-right text-slate-600 tabular-nums">{formatNum(row.incCoaching)}</td>
-            
-            <td className="px-6 py-4 text-right bg-slate-50/30 font-semibold text-slate-800 tabular-nums">{formatNum(row.fieldWork)}</td>
-            
-            <td className="px-6 py-4 text-right">
+              </td>
+
+              <td className="px-5 py-4 text-right tabular-nums font-medium" style={{ color: "#5B6A9A" }}>
+                {formatNum(Math.round(row.targetForQuarterLC))}
+              </td>
+              <td className="px-5 py-4 text-center" style={{ color: "#5B6A9A" }}>{row.reimbursablePct}%</td>
+              <td className="px-5 py-4 text-right tabular-nums font-semibold" style={{ color: "#0B0B3B" }}>
+                {formatNum(Math.round(row.targetBaseLC))}
+              </td>
+              <td className="px-5 py-4 text-right tabular-nums" style={{ color: "#5B6A9A" }}>
+                {formatNum(Math.round(row.targetSalesResult))}
+              </td>
+              <td className="px-5 py-4 text-right tabular-nums" style={{ color: "#8FA0C8" }}>
+                {formatNum(row.product1Amount)}
+              </td>
+              <td className="px-5 py-4 text-right tabular-nums" style={{ color: "#8FA0C8" }}>
+                {formatNum(row.product2Amount)}
+              </td>
+              <td className="px-5 py-4 text-right tabular-nums" style={{ color: "#8FA0C8" }}>
+                {formatNum(row.product3Amount)}
+              </td>
+
+              <td
+                className="px-5 py-4 text-right tabular-nums font-semibold"
+                style={{ backgroundColor: "rgba(0,87,168,0.04)", color: "#0F1827" }}
+              >
+                {formatNum(row.incSalesResult)}
+              </td>
+
+              <td className="px-5 py-4 text-right tabular-nums" style={{ color: "#5B6A9A" }}>
+                {formatNum(Math.round(row.targetTCFA))}
+              </td>
+              <td className="px-5 py-4 text-right tabular-nums" style={{ color: "#5B6A9A" }}>
+                {formatNum(Math.round(row.targetCoaching))}
+              </td>
+              <td className="px-5 py-4 text-right tabular-nums" style={{ color: "#5B6A9A" }}>
+                {formatNum(row.incTCFA)}
+              </td>
+              <td className="px-5 py-4 text-right tabular-nums" style={{ color: "#5B6A9A" }}>
+                {formatNum(row.incCoaching)}
+              </td>
+
+              <td
+                className="px-5 py-4 text-right tabular-nums font-semibold"
+                style={{ backgroundColor: "rgba(0,87,168,0.04)", color: "#0F1827" }}
+              >
+                {formatNum(row.fieldWork)}
+              </td>
+
+              <td className="px-5 py-4 text-right">
                 <div className="flex flex-col items-end gap-0.5">
-                  <span className={`text-[1.1rem] font-black tabular-nums tracking-tight ${row.totalIncentiveLC > 0 ? 'text-emerald-600' : 'text-slate-600'}`}>
+                  <span
+                    className="text-[1.1rem] font-black tabular-nums tracking-tight"
+                    style={{ color: "#0057A8" }}
+                  >
                     {row.totalIncentiveLC > 0 ? formatNum(row.totalIncentiveLC) : "0"}
                   </span>
-                  <span className="text-[9px] font-bold text-slate-500 uppercase tracking-widest">LC</span>
+                  <span className="text-[9px] font-bold uppercase tracking-widest" style={{ color: "#8FA0C8" }}>LC</span>
                 </div>
-            </td>
-          </tr>
-        ))}
+              </td>
+            </tr>
+          );
+        })}
       </tbody>
     </table>
   );
