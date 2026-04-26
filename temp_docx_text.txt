@@ -1,0 +1,1986 @@
+
+
+  Abbott Laboratories
+
+  Established Pharmaceuticals Division
+
+EPD Incentive Management Platform
+
+Enterprise Proposal — Global Rollout for 70+ Countries
+
+
+
+
+
+Prepared By
+
+Technology Solutions Team
+
+Document Version
+
+1.0 — Initial Client Pitch
+
+Classification
+
+Abbott Confidential
+
+Date
+
+April 2026
+
+Current POC
+
+Kazakhstan · 86 Reps · 8 Quarters
+
+Target Scale
+
+70+ Countries · 5,000–10,000 Reps
+
+
+
+1. Executive Summary
+
+Abbott's Established Pharmaceuticals Division (EPD) operates across 70+ countries with hundreds of sales representatives, multiple promo lines, and complex quarter-over-quarter incentive structures. Today, incentive calculations are managed through disconnected Excel models and manual approval chains — a process that is slow, error-prone, and impossible to audit at scale.
+
+We propose to design, build, and deploy an enterprise-grade Sales Incentive Compensation (SIC) platform — purpose-built for Abbott EPD's pharmaceutical environment — that will deliver:
+
+Automate incentive calculations in real-time across all countries, promo lines, and products
+
+Enforce a multi-level digital approval workflow (NSM → GM → HR → Finance Director)
+
+Support country-by-country flexible compensation configurations
+
+Scale to 70+ countries through a phased rollout with a proven 4-country POC
+
+Deliver the intelligence of enterprise tools like Salesforce Spiff and Xactly Incent — at a fraction of the cost, without vendor lock-in, and tailored entirely to Abbott's model
+
+
+
+  ℹ  The platform will serve as the single source of truth for all incentive data, eliminating manual reconciliation and cutting the monthly close cycle from 2–3 weeks to under 48 hours.  
+
+
+
+2. The Problem We Solve
+
+Current Pain Points
+
+Pain Point
+
+Business Impact
+
+Excel-based calculations per country
+
+High error rate, no version control
+
+No multi-level digital approval
+
+Signatures collected via paper/email
+
+No audit trail
+
+Compliance risk, SOX exposure
+
+Country configs hardcoded per file
+
+Impossible to scale to 70+ markets
+
+No real-time visibility for managers
+
+Blind spots between quarter close and payout
+
+No single platform for HR + Finance + Sales
+
+3 separate systems, manual reconciliation
+
+No standardized rep-level reporting
+
+Each country builds its own format
+
+
+
+  ℹ  75.0M LC in total incentive payouts are currently managed through a manually intensive process. A 2% calculation error rate on this volume equates to millions in incorrect payouts annually. The risk of regulatory non-compliance, rep dissatisfaction, and lost productivity is compounding each quarter.  
+
+
+
+3. Current Solution — What We Have Built
+
+We have built a fully functional working prototype of the EPD Incentive Platform using a modern, enterprise-ready tech stack. This is not a mockup — it is a live, data-connected application currently managing Kazakhstan EPD data across 86 representatives and 8 quarters.
+
+
+
+Technology Stack (Current POC)
+
+Layer
+
+Technology
+
+Frontend
+
+Next.js 16 (React, TypeScript)
+
+Database
+
+Supabase (PostgreSQL)
+
+Authentication
+
+Role-based session authentication
+
+Hosting
+
+Node.js / Vercel-compatible
+
+Data Integration
+
+CSV → SQL migration pipeline
+
+Export
+
+Excel export (XLSX)
+
+
+
+Current Roles Supported
+
+Role
+
+Access Level
+
+Regional Manager
+
+Full access to all reps, all countries
+
+FLM (First Line Manager)
+
+Access restricted to own team only
+
+DVP
+
+Kazakhstan-specific records only
+
+
+
+Current Data Coverage
+
+86 Medical Representatives tracked
+
+8 Quarters of data (Q1–Q4 across multiple years)
+
+6 Promo Lines configured: Line 1, Line 2, Line 2 Big Cities, Line 3 Big Cities, Pharma Line, Regional Manager-1
+
+15 Products tracked: CREON, HEPTRAL, DUPHASTON, DUPHALAC, PHYSIOTENS, FEMOSTON, BETASERC, GANATON, DUSPATALIN, IRS 19, IMUDON, OMACOR, TRICOR/LIPANTHYL, OVATEL, GASTRO
+
+
+
+4. User Guide — Current Platform Walkthrough
+
+The following pages provide a detailed walkthrough of every screen in the current EPD Incentive Platform prototype.
+
+Page 1 — Login / Authentication
+
+[Login screenshot]
+
+What it shows:
+
+Abbott-branded login screen with navy/cobalt gradient background
+
+Corporate email authentication (yourname@abbott.com)
+
+Role is automatically assigned based on email mapping
+
+"Authorized Personnel Only · Abbott Confidential" security notice
+
+No password required in POC (email-only auth; full Azure AD SSO in production)
+
+
+
+Access Credentials Currently Configured
+
+Email
+
+Name
+
+Role
+
+arslansohail@abbott.com
+
+Arslan Sohail
+
+Regional Manager
+
+abdulmanan@abbott.com
+
+Abdul Manan
+
+FLM
+
+fahad.ayub@abbott.com
+
+Fahad Ayub
+
+FLM
+
+Page 2 — Landing / Home Dashboard
+
+[Landing screenshot]
+
+What it shows:
+
+Personalized greeting with role badge (e.g., "Good evening, Arslan 👋")
+
+Role & Region context: Regional Manager · Kazakhstan · EPD Programme
+
+Overall Achievement badge — live calculated (112.3% shown)
+
+4 Live KPI Cards: Active Reps (86), Total Actual (78.8M LC), Total Incentive (75.0M LC), Quarters Tracked (8)
+
+3 Module Navigation Cards: Performance Dashboard, Staff Directory, Product Promo
+
+Top 5 Performers ranked by % achievement (Kaderov Nursultan at 197%)
+
+
+
+Page 3 — Performance Dashboard (Actual vs Plan View)
+
+[Performance screenshot]
+
+What it shows:
+
+Header KPI Strip: Overall Achievement (112.3%), Total Incentive (74.97M LC), Active Reps (86), Avg Target Base (966K LC)
+
+5-Dimension Filter Bar: Country, Year, Quarter (year-dependent), Promo Line, Representative (searchable)
+
+View Format Toggle: Actual vs Plan | Summary | To Sign
+
+
+
+Data Table Columns
+
+Column
+
+Description
+
+Representative
+
+Name, position, country with flag
+
+Team / Period
+
+Promo Line + Quarter
+
+Plan (LC)
+
+Target revenue in local currency
+
+Actual (LC)
+
+Achieved revenue with % badge (green/amber/red)
+
+Product Breakdown
+
+3 products with sub-bar progress (Actual/Plan each)
+
+TCFA %
+
+Coaching/field activity score
+
+Target Base
+
+Base incentive amount for the quarter
+
+Final Incentive (LC)
+
+Computed total incentive payout
+
+
+
+Page 4 — Summary View
+
+[Summary screenshot]
+
+A detailed financial computation table for all 86 representatives showing the full incentive calculation breakdown:
+
+
+
+Column
+
+Description
+
+No
+
+Row number
+
+Representative
+
+Name + Position
+
+Target Inc (QTR)
+
+Quarterly incentive target
+
+Reimb. %
+
+Reimbursable percentage
+
+Target Base LC
+
+Base incentive amount in local currency
+
+Target (Sales)
+
+Sales performance target
+
+P1 Val, P2 Val, P3 Val
+
+Product 1, 2, 3 achievement values
+
+Inc (Sales)
+
+Sales incentive earned
+
+Target (TCFA)
+
+Coaching/field work target
+
+Target (TIC)
+
+Total incentive coaching target
+
+Inc (TCFA) / Inc (TIC)
+
+TCFA and TIC incentives earned
+
+Field Work
+
+Field work incentive component
+
+Total Incentive (LC)
+
+Grand total incentive payout
+
+
+
+  ℹ  Export to Excel button allows Finance team to download the full dataset instantly in XLSX format.  
+
+
+
+Page 5 — Sign-Off / Statement of Bonuses
+
+[Sign-off screenshot]
+
+A formal corporate document — "Statement of Bonuses" — ready for management sign-off:
+
+Abbott Laboratories letterhead with EPD branding
+
+Region / Period context (e.g., All Regions · Q1 2017)
+
+Color-coded Payout vs Target badges: Green (≥100%), Amber (>0%), Red (0%)
+
+TOTAL SUMMARY aggregated row across all representatives
+
+
+
+5-Role Signature Block
+
+Signatory Role
+
+Approval Authority
+
+National Sales Manager
+
+Sales performance sign-off
+
+General Manager
+
+Country-level authority
+
+Regional SFE Director Turkey & CIS
+
+Regional oversight
+
+HR Manager
+
+Compensation validation
+
+CIS Finance Director EPD
+
+Final financial approval
+
+
+
+Page 6 — Staff Directory
+
+[Staff screenshot]
+
+Complete staff roster for all 86 medical representatives:
+
+
+
+Column
+
+Description
+
+#
+
+Row number
+
+Name & Position
+
+Full name, job title, country
+
+Promo Line
+
+Assigned promotional line (badge-styled)
+
+Maternity
+
+Maternity leave status indicator
+
+Q1 / Q2 / Q3 / Q4
+
+Quarterly activity: ✓ = active, — = inactive
+
+Country filter dropdown to isolate specific markets
+
+Total staff count badge (86 Staff)
+
+Paginated display (10 records per page)
+
+Global header search inherited (search by name or position)
+
+
+
+Page 7 — Product Promo Analytics
+
+[Product Promo screenshot]
+
+Section A — Hero KPI Cards:
+
+KPI
+
+Value
+
+Description
+
+Total Products
+
+10
+
+Top N configurable (default 10)
+
+Total Plan (LC)
+
+32.6M
+
+Planned revenue across all products
+
+Total Actual (LC)
+
+36.2M
+
+Actual achieved revenue
+
+Overall Achievement
+
+111%
+
+Above target 🎯
+
+
+
+Section B — Product Performance Breakdown:
+
+Top N slicer (configurable, default 10 products)
+
+Sort by: Plan / Actual / Achievement
+
+Columns: #, Product, Promo Lines, Plan (LC), Actual (LC), Achievement (%, color-coded), Portfolio Share (% bar)
+
+
+
+Section C — Portfolio Share Configuration:
+
+Per Promo Line product weight breakdown with stacked bar visualizations
+
+Quarter filter for time-specific analysis
+
+Portfolio group compositions configurable per country/line
+
+
+
+5. Vision — Enterprise-Grade Platform (Spiff / Xactly Level)
+
+Benchmarking vs. Salesforce Spiff & Xactly Incent
+
+Capability
+
+Salesforce Spiff
+
+Xactly Incent
+
+Our EPD Platform
+
+Real-time incentive calculation
+
+✅
+
+✅
+
+✅ Planned
+
+Multi-tier approval workflow
+
+✅
+
+✅
+
+✅ Planned
+
+Country-level config
+
+✅
+
+✅
+
+✅ Planned
+
+Custom formula builder
+
+✅
+
+✅
+
+✅ Planned
+
+CRM integration
+
+Salesforce only
+
+Salesforce/SAP
+
+✅ API-first
+
+White-labeled branding
+
+❌
+
+❌
+
+✅ Abbott branded
+
+Pharma-specific logic
+
+❌
+
+Partial
+
+✅ Built-in
+
+Per-country TCFA/TIC rules
+
+❌
+
+❌
+
+✅ Native
+
+Pricing model
+
+Per seat (high cost)
+
+Per seat (high cost)
+
+✅ Fixed-fee build
+
+Vendor lock-in
+
+High
+
+High
+
+✅ None — owned IP
+
+Time to add new country
+
+Weeks + consulting
+
+Weeks + consulting
+
+✅ Hours via admin UI
+
+Approval chain flexibility
+
+Rigid
+
+Configurable
+
+✅ Fully configurable
+
+
+
+Key Differentiators
+
+1. Flexible Compensation Configuration Engine
+
+Every country can have unique, independently configured:
+
+Incentive formula parameters (Sales %, TCFA %, Field Work %)
+
+Product portfolio weights per Promo Line
+
+Reimbursable % rules by rep category and seniority
+
+Currency handling (LC ↔ USD conversion with live rates)
+
+Maternity/leave proration rules
+
+Quarter weighting (equal or stepped across Q1–Q4)
+
+All configurable via a no-code admin panel — no developer involvement needed for each new country.
+
+
+
+2. Multi-Level Digital Approval Workflow
+
+The production platform will implement a fully digital, tracked approval chain:
+
+
+
+Rep Data Submitted  →  FLM Review  →  Regional Manager / NSM  →  General Manager  →  HR Manager  →  Finance Director  →  LOCKED & PAID
+
+
+
+Features of the approval engine:
+
+Email notifications triggered at each stage transition
+
+Comments and rejection with mandatory reason field
+
+Full audit trail with timestamps and user attribution
+
+Delegation of authority during leave (auto-rerouting)
+
+Conditional routing for above-threshold payouts
+
+Bulk approval for standard low-risk records
+
+Mobile-friendly approval interface
+
+
+
+3. Multi-Tenant Global Architecture
+
+The system is built from Day 1 as a multi-tenant, multi-country platform — ready to onboard new countries without any code changes. Country configurations are stored as data, not code.
+
+
+
+6. Global Rollout Strategy — 70+ Countries
+
+Overview
+
+Metric
+
+Detail
+
+Total target countries
+
+70+
+
+Estimated employees covered
+
+5,000–10,000 sales reps
+
+Current POC
+
+Kazakhstan (1 country, 86 reps)
+
+Phase 1 (POC Expansion)
+
+4 countries
+
+Phase 2 (Regional Rollout)
+
+20 countries
+
+Phase 3 (Global Scale)
+
+70+ countries
+
+Estimated full deployment
+
+24 months from Phase 1 kick-off
+
+
+
+Suggested Phase 1 POC Countries
+
+Country selection criteria: mix of complexity, geographic spread, clean historical data, and local stakeholder buy-in.
+
+
+
+Country
+
+Rationale
+
+Complexity
+
+Kazakhstan
+
+Already live — serve as reference model
+
+High
+
+UAE
+
+Regional HQ, high visibility, strong existing data
+
+Medium
+
+Pakistan
+
+Large rep base, complex promo lines
+
+High
+
+Egypt
+
+Africa hub, relatively standardized incentive model
+
+Medium
+
+
+
+Country Onboarding Framework
+
+Each new country follows a standardized 4-week onboarding sprint:
+
+
+
+Week
+
+Activities
+
+Week 1
+
+Requirements gathering, formula collection, rep data export from local HR
+
+Week 2
+
+Country configuration build in admin panel, data migration and validation
+
+Week 3
+
+UAT with local NSM/HR team, approval chain setup and testing
+
+Week 4
+
+Go-live, user training sessions, hypercare period begins
+
+
+
+7. Phased Project Plan
+
+Phase 0 — Foundation & Architecture (Weeks 1–6)
+
+Goal: Transform the Kazakhstan POC into an enterprise-ready, multi-country architecture.
+
+Task
+
+Description
+
+Duration
+
+Multi-tenant DB design
+
+Schema redesign for country isolation with Row-Level Security
+
+2 weeks
+
+Auth & RBAC overhaul
+
+Azure AD SSO integration, full role permission matrix
+
+1 week
+
+Admin configuration panel
+
+No-code country config UI for formula & portfolio setup
+
+2 weeks
+
+CI/CD pipeline
+
+Automated deployments, staging/prod environments
+
+1 week
+
+  ℹ  Milestone M1: Production-ready platform deployed to staging with Kazakhstan migrated.  
+
+
+
+Phase 1 — POC: 4-Country Rollout (Weeks 7–20)
+
+Goal: Onboard 4 countries, validate compensation engine, implement full approval workflow.
+
+Task
+
+Description
+
+Duration
+
+Multi-approval workflow engine
+
+Digital sign-off chain with full audit trail
+
+3 weeks
+
+Kazakhstan onboarding
+
+Migration + upgrade to enterprise schema
+
+1 week
+
+UAE onboarding
+
+Configuration + data migration
+
+1 week
+
+Pakistan onboarding
+
+Configuration + data migration
+
+1 week
+
+Egypt onboarding
+
+Configuration + data migration
+
+1 week
+
+POC UAT & stabilization
+
+User acceptance testing, bug fixes
+
+2 weeks
+
+Reporting & analytics enhancement
+
+Charts, trends, quarter-over-quarter comparisons
+
+2 weeks
+
+  ℹ  Milestone M3: 4 countries live, 200+ reps managed, full digital approval operational.  
+
+
+
+Phase 2 — Regional Scale: 20 Countries (Months 6–12)
+
+Goal: Systematically onboard 16 additional countries using the proven POC framework.
+
+Task
+
+Description
+
+Duration
+
+Batch country onboarding (4×4 sprints)
+
+4 countries per sprint across 4 sprints
+
+16 weeks
+
+Performance & scalability optimization
+
+DB indexing, caching, global CDN
+
+2 weeks
+
+Advanced analytics module
+
+Cohort analysis, trend forecasting, leaderboards
+
+4 weeks
+
+Mobile application
+
+iOS + Android apps for approvals and dashboards
+
+6 weeks
+
+ERP integration planning
+
+SAP/Oracle connectivity scoping
+
+3 weeks
+
+  ℹ  Milestone M5: 20 countries live, 1,500+ reps managed, mobile app released.  
+
+
+
+Phase 3 — Global Deployment: 70+ Countries (Months 12–24)
+
+Goal: Complete global rollout, enterprise integrations, advanced AI-driven features.
+
+Task
+
+Description
+
+Duration
+
+Bulk country onboarding
+
+50+ countries via template import
+
+20 weeks
+
+SAP/CRM integration
+
+Bi-directional data sync with ERP systems
+
+6 weeks
+
+AI-powered anomaly detection
+
+Flag unusual payout patterns automatically
+
+4 weeks
+
+Predictive quota setting
+
+ML-based target recommendations per rep
+
+6 weeks
+
+SOC 2 Type II compliance
+
+Full security audit and certification
+
+8 weeks
+
+Localization (15 languages)
+
+Full UI translation including RTL languages
+
+4 weeks
+
+  ℹ  Milestone M7: Full global platform live, 70+ countries, 5,000+ reps managed, AI features active.  
+
+
+
+8. Resource Plan & Team Structure
+
+Core Team
+
+Role
+
+Level
+
+Phase 0
+
+Phase 1
+
+Phase 2
+
+Phase 3
+
+Solution Architect
+
+Senior
+
+100%
+
+50%
+
+25%
+
+25%
+
+Lead Full-Stack Developer
+
+Senior
+
+100%
+
+100%
+
+100%
+
+75%
+
+Backend Developer
+
+Mid
+
+100%
+
+100%
+
+100%
+
+100%
+
+Frontend Developer
+
+Mid
+
+50%
+
+100%
+
+100%
+
+75%
+
+DevOps / Cloud Engineer
+
+Mid
+
+75%
+
+50%
+
+50%
+
+25%
+
+Business Analyst
+
+Senior
+
+100%
+
+100%
+
+75%
+
+50%
+
+QA Engineer
+
+Mid
+
+50%
+
+100%
+
+100%
+
+75%
+
+UX Designer
+
+Mid
+
+50%
+
+50%
+
+25%
+
+25%
+
+Project Manager
+
+Senior
+
+100%
+
+100%
+
+100%
+
+100%
+
+Country Onboarding Specialist ×2
+
+Junior
+
+—
+
+100%
+
+100%
+
+100%
+
+Data Migration Engineer
+
+Mid
+
+100%
+
+100%
+
+75%
+
+50%
+
+
+
+Extended Team (As Needed)
+
+Security / Compliance Consultant (Phase 3 — SOC 2)
+
+Mobile Developer — iOS + Android (Phase 2)
+
+ML/AI Engineer (Phase 3)
+
+Translation/Localization Vendor (Phase 3)
+
+SAP Integration Specialist (Phase 2–3)
+
+
+
+9. Hour Breakdown by Phase & Role
+
+Phase 0 — Foundation & Architecture (6 Weeks)
+
+Role
+
+Hours
+
+Key Activities
+
+Solution Architect
+
+160
+
+Architecture design, tech decisions, schema design
+
+Lead Full-Stack Developer
+
+200
+
+Multi-tenant setup, auth system, core API
+
+Backend Developer
+
+200
+
+DB redesign, Supabase migration, API layer
+
+Frontend Developer
+
+80
+
+Admin panel foundation, design system
+
+DevOps Engineer
+
+120
+
+CI/CD, environments, Docker, secrets management
+
+Business Analyst
+
+160
+
+Requirements workshops, process mapping
+
+QA Engineer
+
+60
+
+Test plan setup, environment testing
+
+UX Designer
+
+80
+
+Admin UI wireframes, design system tokens
+
+Project Manager
+
+120
+
+Project setup, stakeholder comms, risk register
+
+Data Migration Engineer
+
+160
+
+POC data model migration, ETL pipeline
+
+PHASE 0 TOTAL
+
+1,340 hours
+
+
+
+
+
+Phase 1 — POC: 4-Country Rollout (14 Weeks)
+
+Role
+
+Hours
+
+Key Activities
+
+Solution Architect
+
+140
+
+Approval engine design, country config schema
+
+Lead Full-Stack Developer
+
+400
+
+Approval workflow, notification engine, country admin
+
+Backend Developer
+
+400
+
+Multi-approval API, audit trail, country onboarding APIs
+
+Frontend Developer
+
+350
+
+Approval UI, country dashboards, reporting views
+
+DevOps Engineer
+
+120
+
+Multi-region deployment, monitoring, alerting
+
+Business Analyst
+
+280
+
+4-country requirements, UAT coordination
+
+QA Engineer
+
+240
+
+End-to-end test suites, UAT support
+
+UX Designer
+
+120
+
+Approval flow UI, mobile-first improvements
+
+Project Manager
+
+200
+
+Sprint management, stakeholder updates, go-live
+
+Country Onboarding Specialists ×2
+
+320
+
+Data collection, config build, local training
+
+Data Migration Engineer
+
+240
+
+4-country data migration and validation
+
+PHASE 1 TOTAL
+
+2,810 hours
+
+
+
+
+
+Phase 2 — Regional Scale: 20 Countries (26 Weeks)
+
+Role
+
+Hours
+
+Key Activities
+
+Solution Architect
+
+200
+
+Scalability review, integration architecture
+
+Lead Full-Stack Developer
+
+600
+
+Analytics module, mobile API, performance optimization
+
+Backend Developer
+
+600
+
+Auto-scaling, caching, ERP integration planning
+
+Frontend Developer
+
+500
+
+Mobile-responsive overhaul, analytics charts
+
+DevOps Engineer
+
+300
+
+Load testing, CDN, global deployment infrastructure
+
+Business Analyst
+
+400
+
+16-country requirements, change management
+
+QA Engineer
+
+400
+
+Regression automation, performance testing
+
+UX Designer
+
+200
+
+Mobile UX design, analytics dashboard UI
+
+Project Manager
+
+400
+
+Sprint ceremonies, exec reporting, risk management
+
+Country Onboarding Specialists ×2
+
+800
+
+16 country onboardings (~50 hrs each)
+
+Data Migration Engineer
+
+400
+
+16-country data migrations
+
+Mobile Developer (iOS + Android)
+
+600
+
+Mobile application build and deployment
+
+PHASE 2 TOTAL
+
+5,400 hours
+
+
+
+
+
+Phase 3 — Global Deployment: 70+ Countries (48 Weeks)
+
+Role
+
+Hours
+
+Key Activities
+
+Solution Architect
+
+300
+
+AI integration, SOC 2 prep, global architecture
+
+Lead Full-Stack Developer
+
+800
+
+AI/ML features, SAP integration, localization
+
+Backend Developer
+
+800
+
+Global scale, SAP connectors, anomaly detection
+
+Frontend Developer
+
+600
+
+15-language localization, AI dashboard features
+
+DevOps Engineer
+
+400
+
+Multi-region, 99.99% uptime, disaster recovery
+
+Business Analyst
+
+400
+
+50+ country requirements, training curriculum
+
+QA Engineer
+
+500
+
+Global regression, localization QA
+
+UX Designer
+
+200
+
+RTL language support, accessibility upgrade
+
+Project Manager
+
+600
+
+Global rollout coordination, executive reporting
+
+Country Onboarding Specialists ×4
+
+2,500
+
+50+ country onboardings
+
+Data Migration Engineer
+
+400
+
+Ongoing migrations + SAP sync
+
+ML/AI Engineer
+
+600
+
+Quota prediction model, anomaly detection
+
+Security Consultant
+
+300
+
+SOC 2 Type II, GDPR compliance audit
+
+PHASE 3 TOTAL
+
+8,400 hours
+
+
+
+
+
+Total Project Hour Summary
+
+Phase
+
+Duration
+
+Hours
+
+Cumulative Hours
+
+Phase 0 — Foundation
+
+6 weeks
+
+1,340
+
+1,340
+
+Phase 1 — 4-Country POC
+
+14 weeks
+
+2,810
+
+4,150
+
+Phase 2 — 20 Countries
+
+26 weeks
+
+5,400
+
+9,550
+
+Phase 3 — 70+ Countries
+
+48 weeks
+
+8,400
+
+17,950
+
+GRAND TOTAL
+
+~24 months
+
+17,950 hrs
+
+17,950
+
+
+
+10. Project Management Approach
+
+Methodology: Agile-Waterfall Hybrid
+
+We will use a hybrid delivery model combining the structure of Waterfall for phase-level architecture decisions with the flexibility of Agile Scrum within each phase.
+
+Waterfall: Fixed phase milestones, architecture sign-offs, waterfall-gated go/no-go reviews
+
+Agile Scrum: 2-week sprints within each phase with continuous delivery
+
+
+
+Sprint Structure
+
+Event
+
+Timing
+
+Duration
+
+Sprint Planning
+
+Day 1 of every sprint
+
+2 hours
+
+Daily Standup
+
+Every business day
+
+15 minutes
+
+Sprint Review & Demo
+
+Day 14 of every sprint
+
+1 hour
+
+Sprint Retrospective
+
+Day 14 of every sprint
+
+45 minutes
+
+
+
+Governance Model
+
+Meeting
+
+Frequency
+
+Participants
+
+Steering Committee
+
+Monthly
+
+CTO, NSM, HR Director, Finance Director, PM
+
+Country Sponsor Review
+
+Bi-weekly
+
+Country GM, Regional Manager, PM, BA
+
+Technical Review
+
+Weekly
+
+Solution Architect, Lead Dev, DevOps
+
+Sprint Demo
+
+Bi-weekly
+
+All stakeholders
+
+Risk Review
+
+Monthly
+
+PM, Solution Architect, Country Sponsors
+
+
+
+Key Milestones
+
+Milestone
+
+Target
+
+Success Criteria
+
+M0 — Architecture Approved
+
+Week 2
+
+Sign-off from CTO + Solution Architect
+
+M1 — Foundation Complete
+
+Week 6
+
+Multi-tenant platform staging-deployed
+
+M2 — Approval Engine Live
+
+Week 10
+
+Digital approval chain tested end-to-end
+
+M3 — 4-Country POC Live
+
+Week 20
+
+4 countries active, 200+ reps managed
+
+M4 — POC Business Review
+
+Week 22
+
+Stakeholder sign-off on POC outcomes
+
+M5 — 20-Country Go-Live
+
+Month 12
+
+20 countries, 1,500+ reps managed
+
+M6 — Mobile App Launch
+
+Month 12
+
+iOS + Android apps in app stores
+
+M7 — Global Platform Live
+
+Month 24
+
+70+ countries, 5,000+ reps managed
+
+
+
+Change Management & Training
+
+Each country rollout includes a structured change management package:
+
+Train-the-Trainer sessions for local HR/NSM (4 hours per country)
+
+End-user role-specific video guides (5–10 min per module)
+
+Quick-reference laminated card for each role (1-pager)
+
+Helpdesk ticketing system integration for issue logging
+
+30-day hypercare period with dedicated support post-go-live
+
+
+
+11. Technology Architecture
+
+Key Technology Decisions
+
+Decision
+
+Choice
+
+Rationale
+
+Frontend
+
+Next.js 16 (TypeScript)
+
+Proven, SEO-ready, TypeScript native, already built
+
+Database
+
+PostgreSQL (Supabase)
+
+Row-level security, real-time subscriptions, scalable
+
+Authentication
+
+Azure AD SSO
+
+Enterprise SSO, Abbott corporate standard
+
+Hosting
+
+AWS Multi-region
+
+99.99% SLA, HIPAA/GDPR compliance capability
+
+Mobile
+
+React Native
+
+Single codebase covers iOS + Android
+
+Notifications
+
+SendGrid + Firebase
+
+Email + push notification coverage
+
+Monitoring
+
+Datadog
+
+Real-time APM, error tracking, alerting dashboards
+
+Security
+
+SOC 2 Type II
+
+Enterprise compliance requirement for global rollout
+
+API Gateway
+
+Kong
+
+Rate limiting, auth, multi-tenant routing
+
+
+
+Enterprise Architecture Layers
+
+Global CDN (Cloudflare) — edge caching, DDoS protection, global routing
+
+Web App + Mobile App + Admin Portal — Next.js 16 + React Native
+
+API Gateway (Kong) — rate limiting, auth validation, request routing
+
+Incentive Engine — TypeScript calculation engine, formula processor
+
+Approval Service — state machine, notification triggers, audit logger
+
+Notification Service — SendGrid email + Firebase push
+
+PostgreSQL (Supabase) — multi-tenant DB with row-level security per country
+
+SSO Provider (Azure AD / Okta) — enterprise identity management
+
+SAP/ERP Connector — bi-directional sync for Phase 3
+
+Data Lake (S3 + BigQuery) — historical analytics, AI model training
+
+
+
+12. Risk Register
+
+Risk
+
+Probability
+
+Impact
+
+Mitigation Strategy
+
+Country data quality issues
+
+High
+
+High
+
+Dedicated data audit sprint before each onboarding
+
+SSO integration delays
+
+Medium
+
+High
+
+Phase 0 prototype with email auth fallback
+
+Stakeholder UAT availability
+
+Medium
+
+Medium
+
+UAT windows pre-booked 4 weeks in advance
+
+Formula complexity per country
+
+High
+
+Medium
+
+Modular formula engine with country-override capability
+
+Scope creep from country-specific requests
+
+High
+
+Medium
+
+Formal change control board and backlog grooming
+
+Performance at 5,000+ users
+
+Low
+
+High
+
+Load testing at Phase 2, auto-scaling infra
+
+SAP integration complexity
+
+Medium
+
+High
+
+Discovery sprint before Phase 3 kick-off
+
+Key personnel dependency
+
+Low
+
+High
+
+Knowledge transfer sessions and documentation sprints
+
+
+
+13. Investment Summary
+
+  ℹ  Note: Pricing below is indicative based on team composition and hours. Final pricing subject to commercial agreement.  
+
+
+
+Phase Investment Estimate
+
+Phase
+
+Hours
+
+Indicative Cost (USD)
+
+Timeline
+
+Phase 0 — Foundation
+
+1,340 hrs
+
+$67,000 – $80,400
+
+6 weeks
+
+Phase 1 — 4-Country POC
+
+2,810 hrs
+
+$140,500 – $168,600
+
+14 weeks
+
+Phase 2 — 20 Countries
+
+5,400 hrs
+
+$270,000 – $324,000
+
+26 weeks
+
+Phase 3 — 70+ Countries
+
+8,400 hrs
+
+$420,000 – $504,000
+
+48 weeks
+
+TOTAL PROGRAM
+
+17,950 hrs
+
+$897,500 – $1,077,000
+
+~24 months
+
+
+
+Build vs Buy Comparison
+
+Solution
+
+Year 1 Cost
+
+Year 2+ Annual Cost
+
+Abbott IP
+
+Vendor Lock-in
+
+Salesforce Spiff
+
+$300K–$1M+
+
+$200K+ per year (per seat)
+
+None
+
+High
+
+Xactly Incent
+
+$500K–$2M+
+
+$300K+ per year
+
+None
+
+High
+
+Our Custom Platform
+
+$208K (P0+P1)
+
+Maintenance only
+
+Full ownership
+
+None
+
+
+
+  ℹ  The business case is clear: A custom build pays for itself in Year 1 vs Xactly Incent licensing alone — and Abbott retains full IP ownership, zero per-seat costs, and complete control over future changes.  
+
+
+
+  Next Steps
+
+We are ready to move forward immediately. The recommended path forward is:
+
+
+
+Step 1: Executive presentation and Q&A session (1 week)
+
+Step 2: Sign-off on Phase 0 scope and commercial terms (1 week)
+
+Step 3: Kick off Phase 0 — Architecture & Foundation (Week 1 start)
+
+Step 4: POC country selection finalized with regional leadership (within 2 weeks)
+
+
+
+
+
+Technology Solutions Team  |  Abbott EPD · Emerging Markets
+
+arslansohail@abbott.com
+
+© 2026 Abbott Laboratories · Established Pharmaceuticals Division · All Rights Reserved
+
+This document is confidential and intended solely for authorized Abbott personnel and its named recipients.
+
