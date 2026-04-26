@@ -252,7 +252,7 @@ export default function DetailedView({ data }: DetailedViewProps) {
                 </span>
               </td>
 
-              <td style={{ paddingRight: "32px", paddingLeft: "16px", padding: "20px 16px 20px 16px", paddingRight: "32px", textAlign: "right", verticalAlign: "top", paddingTop: "24px" }}>
+              <td style={{ paddingLeft: "16px", paddingRight: "32px", paddingTop: "24px", paddingBottom: "20px", textAlign: "right", verticalAlign: "top" }}>
                 <div className="flex flex-col items-end gap-0.5">
                   <span
                     className="text-xl font-black tabular-nums tracking-tight"
