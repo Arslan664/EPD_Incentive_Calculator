@@ -18,6 +18,7 @@ import StaffView from "@/components/dashboard/views/StaffView";
 import ProductPromoView from "@/components/dashboard/views/ProductPromoView";
 import LandingView from "@/components/dashboard/views/LandingView";
 import AdminPanelView from "@/components/dashboard/views/AdminPanelView";
+import IncentiveSimulator from "@/components/admin/IncentiveSimulator";
 import { TrendingUp, DollarSign, Users, Target } from "lucide-react";
 
 const DEFAULT_FILTERS: Filters = {
@@ -167,6 +168,8 @@ export default function Dashboard() {
           <StaffView data={dbData} filters={filters} user={user} />
         ) : activePage === "promo" ? (
           <ProductPromoView data={filteredData} filters={filters} />
+        ) : activePage === "simulator" ? (
+          <IncentiveSimulator />
         ) : activePage === "admin" ? (
           <AdminPanelView />
         ) : (

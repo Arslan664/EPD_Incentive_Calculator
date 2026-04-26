@@ -11,12 +11,13 @@ import ApprovalWorkflowModule from "@/components/admin/ApprovalWorkflowModule";
 import CountryOnboardingWizard from "@/components/admin/CountryOnboardingWizard";
 import UserTerritoryModule from "@/components/admin/UserTerritoryModule";
 import TargetSettingModule from "@/components/admin/TargetSettingModule";
+import IncentiveSimulator from "@/components/admin/IncentiveSimulator";
 import {
   Settings, Users, Target, Shield, FileCheck, Bell,
   ChevronRight, Globe, Lock, ClipboardList, AlertTriangle,
   CheckCircle2, Clock, DollarSign, Layers, BarChart3,
   Building2, UserCog, Sliders, BadgeCheck, FileCog, Upload,
-  MapPin, BarChart2, Workflow, Wand2,
+  MapPin, BarChart2, Workflow, Wand2, Calculator,
 } from "lucide-react";
 
 /* ── Design Tokens (matches project palette) ──────────────────── */
@@ -181,6 +182,7 @@ const PENDING = [
 
 const TABS = [
   { id: "overview",   label: "Overview",            icon: Settings     },
+  { id: "simulator",  label: "Incentive Simulator", icon: Calculator   },
   { id: "icp",        label: "ICP Config",           icon: Sliders      },
   { id: "targets",    label: "Target Setting",       icon: Target       },
   { id: "payout",     label: "Payout Grid",          icon: BarChart2    },
@@ -300,6 +302,7 @@ export default function AdminPanelView() {
       </div>
 
       {/* ── Functional Module Tabs ───────────────────────────────── */}
+      {activeTab === "simulator"  && <IncentiveSimulator />}
       {activeTab === "icp"        && <ICPConfigModule />}
       {activeTab === "targets"    && <TargetSettingModule />}
       {activeTab === "payout"     && <PayoutGridModule />}

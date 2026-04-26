@@ -1,4 +1,4 @@
-import { X, LayoutDashboard, Users, Package, Home, Settings } from "lucide-react";
+import { X, LayoutDashboard, Users, Package, Home, Settings, Calculator } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface SidebarProps {
@@ -17,11 +17,12 @@ const INACTIVE_TEXT = "rgba(160,191,206,0.80)";
 
 export default function Sidebar({ isOpen, onClose, activePage, onPageChange }: SidebarProps) {
   const menuItems = [
-    { id: "landing",   label: "Home",          icon: Home,            description: "Overview & KPIs" },
-    { id: "dashboard", label: "Dashboard",     icon: LayoutDashboard, description: "Performance Reports" },
-    { id: "staff",     label: "Staff",         icon: Users,           description: "HR Directory" },
-    { id: "promo",     label: "Product Promo", icon: Package,         description: "Product Analytics" },
-    { id: "admin",     label: "Admin Panel",   icon: Settings,        description: "Governance & Config" },
+    { id: "landing",    label: "Home",               icon: Home,            description: "Overview & KPIs" },
+    { id: "dashboard",  label: "Dashboard",          icon: LayoutDashboard, description: "Performance Reports" },
+    { id: "staff",      label: "Staff",              icon: Users,           description: "HR Directory" },
+    { id: "promo",      label: "Product Promo",      icon: Package,         description: "Product Analytics" },
+    { id: "simulator",  label: "Incentive Simulator",icon: Calculator,      description: "Annual Payout Calculator" },
+    { id: "admin",      label: "Admin Panel",        icon: Settings,        description: "Governance & Config" },
   ];
 
   return (
