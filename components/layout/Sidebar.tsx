@@ -1,4 +1,4 @@
-import { X, LayoutDashboard, Users, Package, Home } from "lucide-react";
+import { X, LayoutDashboard, Users, Package, Home, Settings } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface SidebarProps {
@@ -19,8 +19,9 @@ export default function Sidebar({ isOpen, onClose, activePage, onPageChange }: S
   const menuItems = [
     { id: "landing",   label: "Home",          icon: Home,            description: "Overview & KPIs" },
     { id: "dashboard", label: "Dashboard",     icon: LayoutDashboard, description: "Performance Reports" },
-    { id: "staff",     label: "Staff",         icon: Users,           description: "HR Directory" },  // renamed from "Staff Input"
+    { id: "staff",     label: "Staff",         icon: Users,           description: "HR Directory" },
     { id: "promo",     label: "Product Promo", icon: Package,         description: "Product Analytics" },
+    { id: "admin",     label: "Admin Panel",   icon: Settings,        description: "Governance & Config" },
   ];
 
   return (

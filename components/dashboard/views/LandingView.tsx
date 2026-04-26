@@ -7,7 +7,7 @@ import { buildPerformanceInputFromRecord, computeSummaryRow } from "@/lib/incent
 import {
   BarChart3, Users, Package, TrendingUp, TrendingDown,
   ChevronRight, Activity, Target, DollarSign, Globe,
-  Award, Layers, Sparkles, ArrowRight,
+  Award, Layers, Sparkles, ArrowRight, Settings,
 } from "lucide-react";
 
 /* ── Design Tokens ─────────────────────────────────────────── */
@@ -40,6 +40,12 @@ const NAV_CARDS = [
     description: "Product contribution shares, portfolio weights per promo line, and aggregated actual vs planned revenue by product.",
     icon: Package, accentColor: "#0E7A4F", accentBg: "rgba(14,122,79,0.07)", accentBorder: "rgba(14,122,79,0.18)",
     badge: "Analytics", badgeBg: "rgba(14,122,79,0.07)", badgeColor: "#0E7A4F", badgeBorder: "rgba(14,122,79,0.18)",
+  },
+  {
+    id: "admin", label: "Admin Panel",
+    description: "Plan configuration, target setting, payout governance and compliance management for CEx, HR, Finance and OEC roles.",
+    icon: Settings, accentColor: "#B45309", accentBg: "rgba(180,83,9,0.07)", accentBorder: "rgba(180,83,9,0.18)",
+    badge: "Governance", badgeBg: "rgba(180,83,9,0.08)", badgeColor: "#B45309", badgeBorder: "rgba(180,83,9,0.18)",
   },
 ];
 
