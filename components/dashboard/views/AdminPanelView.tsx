@@ -182,17 +182,16 @@ const PENDING = [
 
 const TABS = [
   { id: "overview",   label: "Overview",            icon: Settings     },
-  { id: "simulator",  label: "Incentive Simulator", icon: Calculator   },
+  { id: "uploader",   label: "Data Uploader",        icon: Upload       },
   { id: "icp",        label: "ICP Config",           icon: Sliders      },
   { id: "targets",    label: "Target Setting",       icon: Target       },
   { id: "payout",     label: "Payout Grid",          icon: BarChart2    },
-  { id: "oec",        label: "OEC Compliance",       icon: Shield       },
   { id: "kpis",       label: "Qualitative KPIs",     icon: FileCheck    },
   { id: "analytics",  label: "Analytics",            icon: BarChart3    },
   { id: "onboarding", label: "Country Wizard",        icon: Wand2        },
   { id: "users",      label: "Users & Territories",  icon: MapPin       },
   { id: "workflow",   label: "Approval Workflows",   icon: Workflow     },
-  { id: "uploader",   label: "Data Uploader",        icon: Upload       },
+  { id: "oec",        label: "OEC Compliance",       icon: Shield       },
 ];
 
 export default function AdminPanelView() {
@@ -279,8 +278,8 @@ export default function AdminPanelView() {
         </div>
       </div>
 
-      {/* ── Tab Switcher (scrollable) ────────────────────────────── */}
-      <div className="flex gap-1.5 p-1.5 rounded-xl overflow-x-auto" style={{ backgroundColor: BG, border: `1px solid ${BORDER}` }}>
+      {/* ── Tab Switcher (wrapping grid — no scrollbar) ─────────────────────────── */}
+      <div className="flex flex-wrap gap-1.5 p-1.5 rounded-xl" style={{ backgroundColor: BG, border: `1px solid ${BORDER}` }}>
         {TABS.map(tab => {
           const Icon = tab.icon;
           const isActive = activeTab === tab.id;
@@ -302,7 +301,6 @@ export default function AdminPanelView() {
       </div>
 
       {/* ── Functional Module Tabs ───────────────────────────────── */}
-      {activeTab === "simulator"  && <IncentiveSimulator />}
       {activeTab === "icp"        && <ICPConfigModule />}
       {activeTab === "targets"    && <TargetSettingModule />}
       {activeTab === "payout"     && <PayoutGridModule />}

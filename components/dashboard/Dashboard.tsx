@@ -19,7 +19,7 @@ import ProductPromoView from "@/components/dashboard/views/ProductPromoView";
 import LandingView from "@/components/dashboard/views/LandingView";
 import AdminPanelView from "@/components/dashboard/views/AdminPanelView";
 import IncentiveSimulator from "@/components/admin/IncentiveSimulator";
-import { TrendingUp, DollarSign, Users, Target } from "lucide-react";
+import { TrendingUp, DollarSign, Users, Target, UserSquare2, Calculator } from "lucide-react";
 
 const DEFAULT_FILTERS: Filters = {
   country: "all",
@@ -30,6 +30,50 @@ const DEFAULT_FILTERS: Filters = {
   search: "",
   view: "detailed",
 };
+
+/* ── Staff page with Simulator tab ─────────────────────────── */
+function StaffPageWithTabs({
+  data, filters, user
+}: {
+  data: any[]; filters: any; user: any;
+}) {
+  const [staffTab, setStaffTab] = useState<"directory" | "simulator">("directory");
+  const STAFF_TABS = [
+    { id: "directory" as const,  label: "Staff Directory",     icon: UserSquare2 },
+    { id: "simulator" as const,  label: "Incentive Simulator", icon: Calculator  },
+  ];
+  return (
+    <div className="space-y-4">
+      {/* Tab bar */}
+      <div
+        className="flex gap-1.5 p-1.5 rounded-xl"
+        style={{ backgroundColor: "#F0F4F8", border: "1px solid #D0DCE8" }}
+      >
+        {STAFF_TABS.map(tab => {
+          const Icon = tab.icon;
+          const active = staffTab === tab.id;
+          return (
+            <button
+              key={tab.id}
+              onClick={() => setStaffTab(tab.id)}
+              className="flex items-center gap-1.5 px-4 py-2 rounded-lg text-[12px] font-bold transition-all duration-200 whitespace-nowrap"
+              style={active
+                ? { backgroundColor: "#FFFFFF", color: "#0057A8", boxShadow: "0 1px 8px rgba(11,31,58,0.10)", border: "1px solid #D0DCE8" }
+                : { color: "#6B8499", border: "1px solid transparent" }
+              }
+            >
+              <Icon className="w-3.5 h-3.5" />
+              {tab.label}
+            </button>
+          );
+        })}
+      </div>
+      {/* Content */}
+      {staffTab === "directory"  && <StaffView data={data} filters={filters} user={user} />}
+      {staffTab === "simulator"  && <IncentiveSimulator />}
+    </div>
+  );
+}
 
 export default function Dashboard() {
   // ── Session persistence via localStorage ──────────────────────────────────
@@ -165,11 +209,9 @@ export default function Dashboard() {
         {activePage === "landing" ? (
           <LandingView data={dbData} user={user} onNavigate={setActivePage} />
         ) : activePage === "staff" ? (
-          <StaffView data={dbData} filters={filters} user={user} />
+          <StaffPageWithTabs data={dbData} filters={filters} user={user} />
         ) : activePage === "promo" ? (
           <ProductPromoView data={filteredData} filters={filters} />
-        ) : activePage === "simulator" ? (
-          <IncentiveSimulator />
         ) : activePage === "admin" ? (
           <AdminPanelView />
         ) : (

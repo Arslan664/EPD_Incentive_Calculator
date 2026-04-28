@@ -18,6 +18,8 @@ export default function Login({ onLogin }: { onLogin: (user: any) => void }) {
 
     if (mail === "arslansohail@abbott.com") {
       onLogin({ email: mail, name: "Arslan Sohail", role: "Regional Manager" });
+    } else if (mail === "sergey.incentive@abbott.com") {
+      onLogin({ email: mail, name: "Sergey", role: "Regional Manager" });
     } else if (mail === "abdulmanan@abbott.com") {
       onLogin({ email: mail, name: "Abdul Manan", role: "FLM" });
     } else if (mail === "fahad.ayub@abbott.com") {

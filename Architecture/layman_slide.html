@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>EPD Incentive Platform — How It Works</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Inter', sans-serif;
+  background: #f0f4f8;
+  min-height: 100vh;
+  padding: 32px 24px 48px;
+  color: #1a2332;
+}
+
+/* ── Page wrapper ── */
+.page {
+  max-width: 1160px;
+  margin: 0 auto;
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 4px 40px rgba(0,0,0,.10);
+  overflow: hidden;
+}
+
+/* ── Header ── */
+.page-header {
+  background: #ffffff;
+  border-bottom: 2px solid #e8edf4;
+  padding: 28px 44px 22px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+.ph-left { display: flex; flex-direction: column; gap: 4px; }
+.ph-eyebrow {
+  font-size: 10.5px; font-weight: 700; letter-spacing: 1.6px;
+  text-transform: uppercase; color: #2563eb;
+}
+.ph-title {
+  font-size: 26px; font-weight: 800; color: #0f172a; line-height: 1.2;
+}
+.ph-sub {
+  font-size: 13px; color: #64748b; font-weight: 400; margin-top: 2px;
+}
+.ph-badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  border-radius: 20px;
+  padding: 6px 14px;
+  font-size: 11px; color: #1d4ed8; font-weight: 600;
+  white-space: nowrap;
+  margin-top: 4px;
+}
+
+/* ── Main diagram area ── */
+.diagram {
+  padding: 36px 44px 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+/* ── Section label ── */
+.sec-label {
+  display: inline-flex; align-items: center; gap: 8px;
+  margin-bottom: 14px;
+}
+.sec-num {
+  width: 24px; height: 24px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px; font-weight: 800;
+  flex-shrink: 0;
+}
+.sec-text {
+  font-size: 11px; font-weight: 700;
+  letter-spacing: 1px; text-transform: uppercase;
+}
+
+/* colours per section */
+.col-blue   .sec-num { background: #dbeafe; color: #1d4ed8; }
+.col-blue   .sec-text { color: #1d4ed8; }
+.col-purple .sec-num { background: #ede9fe; color: #6d28d9; }
+.col-purple .sec-text { color: #6d28d9; }
+.col-green  .sec-num { background: #dcfce7; color: #15803d; }
+.col-green  .sec-text { color: #15803d; }
+.col-amber  .sec-num { background: #fef3c7; color: #b45309; }
+.col-amber  .sec-text { color: #b45309; }
+
+/* ── Row of cards ── */
+.card-row {
+  display: flex; gap: 14px;
+}
+
+/* ── Card ── */
+.card {
+  flex: 1;
+  border-radius: 12px;
+  padding: 18px 18px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  border: 1.5px solid #e2e8f0;
+  background: #ffffff;
+  position: relative;
+  transition: box-shadow .2s, transform .2s;
+}
+.card:hover {
+  box-shadow: 0 6px 24px rgba(0,0,0,.08);
+  transform: translateY(-2px);
+}
+
+/* top accent bar */
+.card::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0;
+  height: 4px; border-radius: 12px 12px 0 0;
+}
+.card-blue::before   { background: linear-gradient(90deg,#3b82f6,#60a5fa); }
+.card-purple::before { background: linear-gradient(90deg,#8b5cf6,#a78bfa); }
+.card-green::before  { background: linear-gradient(90deg,#22c55e,#4ade80); }
+.card-amber::before  { background: linear-gradient(90deg,#f59e0b,#fbbf24); }
+
+.card-blue   { background: #f8fbff; border-color: #bfdbfe; }
+.card-purple { background: #faf8ff; border-color: #ddd6fe; }
+.card-green  { background: #f7fdf9; border-color: #bbf7d0; }
+.card-amber  { background: #fffbf3; border-color: #fde68a; }
+
+.card-icon {
+  font-size: 28px; line-height: 1; margin-bottom: 4px;
+}
+.card-title {
+  font-size: 13px; font-weight: 700; color: #0f172a; line-height: 1.3;
+}
+.card-desc {
+  font-size: 11.5px; color: #475569; line-height: 1.6; font-weight: 400;
+}
+
+/* ── Flow connector between rows ── */
+.connector {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 0;
+  position: relative;
+}
+.connector-line {
+  width: 2px;
+  height: 40px;
+  background: linear-gradient(180deg, #93c5fd, #c4b5fd);
+  border-radius: 2px;
+  position: relative;
+}
+.connector-line::after {
+  content: '';
+  position: absolute; bottom: -6px; left: 50%;
+  transform: translateX(-50%);
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-top: 8px solid #c4b5fd;
+}
+.connector-label {
+  position: absolute;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 20px;
+  padding: 3px 14px;
+  font-size: 10px; color: #64748b; font-weight: 600;
+  letter-spacing: .5px; text-transform: uppercase;
+  white-space: nowrap;
+  left: 50%;
+  transform: translateX(-50%);
+  top: 50%; margin-top: -11px;
+}
+
+/* ── Bottom row: users + security ── */
+.bottom-row {
+  display: flex; gap: 24px; align-items: flex-start;
+}
+.bottom-users { flex: 3; }
+.bottom-security { flex: 1.15; }
+
+/* ── Security mini cards ── */
+.mini-card {
+  display: flex; align-items: center; gap: 12px;
+  padding: 12px 14px;
+  border-radius: 10px;
+  border: 1.5px solid #fde68a;
+  background: #fffbf3;
+  margin-bottom: 10px;
+}
+.mini-card:last-child { margin-bottom: 0; }
+.mini-icon { font-size: 20px; flex-shrink: 0; }
+.mini-text { display: flex; flex-direction: column; gap: 1px; }
+.mini-title { font-size: 11.5px; font-weight: 700; color: #0f172a; }
+.mini-desc  { font-size: 10.5px; color: #78716c; }
+
+/* ── Footer ── */
+.page-footer {
+  background: #f8fafc;
+  border-top: 1.5px solid #e8edf4;
+  padding: 14px 44px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.pf-left  { font-size: 11px; color: #94a3b8; }
+.pf-right { font-size: 11px; color: #94a3b8; }
+
+/* ── Legend ── */
+.legend {
+  display: flex; gap: 18px; align-items: center;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 10px 18px;
+  margin-bottom: 26px;
+  flex-wrap: wrap;
+}
+.legend-item { display: flex; align-items: center; gap: 6px; }
+.legend-dot {
+  width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0;
+}
+.legend-text { font-size: 11px; color: #475569; font-weight: 500; }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- ── Header ── -->
+  <div class="page-header">
+    <div class="ph-left">
+      <div class="ph-eyebrow">BSS — Business Solutions &amp; Services</div>
+      <div class="ph-title">EPD Incentive Platform</div>
+      <div class="ph-sub">How It All Works Together &nbsp;—&nbsp; A Simple Overview for Everyone</div>
+    </div>
+    <div style="display:flex;flex-direction:column;align-items:flex-end;gap:8px;">
+      <div class="ph-badge">🌍 47 Markets Supported</div>
+      <div class="ph-badge">👥 Field Reps · Managers · Admins</div>
+    </div>
+  </div>
+
+  <!-- ── Diagram ── -->
+  <div class="diagram">
+
+    <!-- Legend -->
+    <div class="legend">
+      <span style="font-size:11px;font-weight:700;color:#334155;margin-right:4px;">Legend:</span>
+      <div class="legend-item"><div class="legend-dot" style="background:#3b82f6;"></div><div class="legend-text">Data Sources / Integrations</div></div>
+      <div class="legend-item"><div class="legend-dot" style="background:#8b5cf6;"></div><div class="legend-text">Platform Core Engine</div></div>
+      <div class="legend-item"><div class="legend-dot" style="background:#22c55e;"></div><div class="legend-text">User-Facing Application</div></div>
+      <div class="legend-item"><div class="legend-dot" style="background:#f59e0b;"></div><div class="legend-text">Security &amp; Reliability</div></div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════
+         ROW 1 — INTEGRATIONS (data sources first)
+    ════════════════════════════════════════════ -->
+    <div class="col-blue">
+      <div class="sec-label">
+        <div class="sec-num">1</div>
+        <div class="sec-text">Where Data Comes From &nbsp;·&nbsp; Integrations</div>
+      </div>
+    </div>
+
+    <div class="card-row">
+
+      <div class="card card-blue">
+        <div class="card-icon">🏢</div>
+        <div class="card-title">Sales / CRM System</div>
+        <div class="card-desc">Microsoft Dynamics &amp; Salesforce automatically send sales data to the platform. No manual entry — it's always up to date.</div>
+      </div>
+
+      <div class="card card-blue">
+        <div class="card-icon">💰</div>
+        <div class="card-title">Finance / ERP System</div>
+        <div class="card-desc">SAP and finance tools provide real revenue and payout figures so every incentive calculation is based on live business data.</div>
+      </div>
+
+      <div class="card card-blue">
+        <div class="card-icon">📋</div>
+        <div class="card-title">OEC / Compliance Lists</div>
+        <div class="card-desc">Government and internal watchlists are checked automatically to ensure every payout stays fully compliant — no manual review needed.</div>
+      </div>
+
+      <div class="card card-blue">
+        <div class="card-icon">📬</div>
+        <div class="card-title">Email &amp; SMS Notifications</div>
+        <div class="card-desc">The platform instantly notifies field reps, managers and admins whenever approvals, updates, or important actions are required.</div>
+      </div>
+
+    </div>
+
+    <!-- ── Flow Connector ── -->
+    <div class="connector">
+      <div class="connector-line"></div>
+      <div class="connector-label">Data flows into the platform core ↓</div>
+    </div>
+
+    <!-- ═══════════════════════════════════
+         ROW 2 — PLATFORM CORE ENGINE
+    ════════════════════════════════════ -->
+    <div class="col-purple">
+      <div class="sec-label">
+        <div class="sec-num">2</div>
+        <div class="sec-text">What the Platform Does &nbsp;·&nbsp; Core Engine</div>
+      </div>
+    </div>
+
+    <div class="card-row">
+
+      <div class="card card-purple">
+        <div class="card-icon">🔐</div>
+        <div class="card-title">Smart Login &amp; Access Control</div>
+        <div class="card-desc">Each person only sees what's relevant to them. Field reps see their own data. Managers see their team. Admins see everything.</div>
+      </div>
+
+      <div class="card card-purple">
+        <div class="card-icon">📊</div>
+        <div class="card-title">Automatic Incentive Calculation</div>
+        <div class="card-desc">Instantly calculates each rep's bonus based on their sales targets, NPI goals, and territory results — fair, fast, and accurate.</div>
+      </div>
+
+      <div class="card card-purple">
+        <div class="card-icon">📈</div>
+        <div class="card-title">Analytics &amp; Reports</div>
+        <div class="card-desc">Raw numbers become clear charts and dashboards — see who's on track, who needs support, and how the whole business is performing.</div>
+      </div>
+
+      <div class="card card-purple">
+        <div class="card-icon">✅</div>
+        <div class="card-title">Digital Approvals &amp; Audit</div>
+        <div class="card-desc">Managers approve payouts with a click. Every action is logged in a full audit trail — transparent, auditable, and regulation-ready.</div>
+      </div>
+
+    </div>
+
+    <!-- ── Flow Connector ── -->
+    <div class="connector">
+      <div class="connector-line"></div>
+      <div class="connector-label">Results delivered to users ↓</div>
+    </div>
+
+    <!-- ═══════════════════════════════════
+         ROW 3 — USERS + SECURITY
+    ════════════════════════════════════ -->
+    <div class="bottom-row">
+
+      <!-- Users -->
+      <div class="bottom-users">
+        <div class="col-green">
+          <div class="sec-label">
+            <div class="sec-num">3</div>
+            <div class="sec-text">Who Uses It &nbsp;·&nbsp; All Roles</div>
+          </div>
+        </div>
+        <div class="card-row">
+
+          <div class="card card-green">
+            <div class="card-icon">👨‍💼</div>
+            <div class="card-title">Field Representatives</div>
+            <div class="card-desc">View their own sales vs. target, estimated incentive pay, and NPI performance — on any device, anytime.</div>
+          </div>
+
+          <div class="card card-green">
+            <div class="card-icon">👩‍💼</div>
+            <div class="card-title">Managers</div>
+            <div class="card-desc">Monitor team performance across territories, approve payouts, and spot coaching opportunities early.</div>
+          </div>
+
+          <div class="card card-green">
+            <div class="card-icon">🛠️</div>
+            <div class="card-title">Admin / Super Admin</div>
+            <div class="card-desc">Configure incentive plans, upload targets, manage users, and oversee the full system across all 47 markets.</div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Vertical divider -->
+      <div style="width:1.5px;background:#e2e8f0;border-radius:2px;align-self:stretch;margin-top:34px;"></div>
+
+      <!-- Security -->
+      <div class="bottom-security">
+        <div class="col-amber">
+          <div class="sec-label">
+            <div class="sec-num">4</div>
+            <div class="sec-text">Always Safe &amp; Always On</div>
+          </div>
+        </div>
+
+        <div class="mini-card">
+          <div class="mini-icon">🌍</div>
+          <div class="mini-text">
+            <div class="mini-title">Works on Any Device</div>
+            <div class="mini-desc">Web, mobile &amp; offline — 47 markets</div>
+          </div>
+        </div>
+
+        <div class="mini-card">
+          <div class="mini-icon">🔒</div>
+          <div class="mini-text">
+            <div class="mini-title">Data Privacy by Country</div>
+            <div class="mini-desc">Each market sees only its own data</div>
+          </div>
+        </div>
+
+        <div class="mini-card">
+          <div class="mini-icon">🔐</div>
+          <div class="mini-text">
+            <div class="mini-title">Secure Company Login</div>
+            <div class="mini-desc">Single sign-on, no shared passwords</div>
+          </div>
+        </div>
+
+        <div class="mini-card">
+          <div class="mini-icon">📈</div>
+          <div class="mini-text">
+            <div class="mini-title">99.9% Uptime</div>
+            <div class="mini-desc">Auto-scaling, always available</div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div><!-- /diagram -->
+
+  <!-- ── Footer ── -->
+  <div class="page-footer">
+    <div class="pf-left">BSS — Business Solutions &amp; Services &nbsp;|&nbsp; EPD Incentive Platform</div>
+    <div class="pf-right">Architecture Overview · Simplified View · Confidential</div>
+  </div>
+
+</div>
+</body>
+</html>
